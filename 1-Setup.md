@@ -19,6 +19,7 @@
 
 ## Configuration de Mattermost
 
+0. S'enregistrer dans Mattermost avec le lien d'invitation suivant : https://mattermost-hitema.doca.cloud/signup_user_complete/?id=xuwdhgmp5tgempynw4zwpzk4xw
 0. Télécharger et installer Mattermost à partir de https://mattermost.com/download/#mattermostApps (Documentation : https://docs.mattermost.com/install/desktop.html)
 1. Configurer le server Mattermost privé au démarrage en mettant l'url suivante : https://mattermost-hitema.doca.cloud
 
