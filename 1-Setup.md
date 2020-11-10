@@ -94,7 +94,7 @@ Connectez-vous à l'url suivante : https://code-hitema.doca.cloud et créez votr
 1. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_rsa.pub` dans la liste de clé du compte Scaleway (https://console.scaleway.com/project/)
 2. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_rsa.pub` dans son compte Gitlab: https://gitlab.com/profile/keys
     
-    **Attention** : copier coller correctement les clés générées (Pas de retour à la ligne vide, inclure les `-----BEGIN OPENSSH PRIVATE KEY-----`  et `-----END OPENSSH PRIVATE KEY-----` dans la sélection avant de copier, inclure `ssh-ed25519` et `gitlab` dans la sélection de la clé publique)
+    **Attention** : copier coller correctement les clés publiques générées (Pas de retour à la ligne vide, inclure `ssh-rsa` et `Prénom` dans la sélection de la clé publique)
     {: .note }
 
 ### Création du Gitlab Personnal Token
