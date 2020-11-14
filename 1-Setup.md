@@ -107,7 +107,11 @@ Connectez-vous à l'url suivante : https://code-hitema.doca.cloud et créez votr
 
     ![Group](images/gitlab-0.png)
 2. Récupérer le token
-3. Configurer l'extension Gitlab Workflow
+3. Configurer l'extension Gitlab Workflow (Ctrl+Shift+P)
+
+    3.1. Rechercher "GitLab: Set GitLab Personal Access Token" ensuite taper sur la touche 'Entrée'.
+
+    3.2. Coller votre token et taper ensuite sur la touche 'Entrée'.
 
    ![Group](images/code-server-6.png)
 
