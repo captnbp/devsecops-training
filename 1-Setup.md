@@ -79,6 +79,8 @@ Connectez-vous à l'url suivante : https://code-hitema.doca.cloud et créez votr
     - Docker
     - hadolint
 
+Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les extensions 
+
    ![Group](images/code-server-4.png)
 
 0. Ouvrir un terminal (`Ctrl+Shift+C`)
