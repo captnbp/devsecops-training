@@ -143,10 +143,10 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     cd image
     git checkout <branche créée dans la merge request de l issue>
 
-    mkdir packer terraform terraform/dev terraform/prd doc postconf_vm
-    touch README.md LICENSE .gitignore .gitlab-ci.yml terraform/dev/main.tf terraform/prd/main.tf packer/packer.json
+    mkdir packer doc
+    touch README.md LICENSE .gitignore .gitlab-ci.yml  packer/packer.json
 
-    git add packer terraform terraform/dev terraform/prd doc postconf_vm README.md LICENSE .gitignore .gitlab-ci.yml terraform/dev/main.tf terraform/prd/main.tf packer/packer.json
+    git add packer doc postconf_vm README.md LICENSE .gitignore .gitlab-ci.yml  packer/packer.json
     git commit -a -m ":tada: Initial commit for folder structure"
     git push
     ```
@@ -178,10 +178,10 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     cd infrastructure
     git checkout <branche créée dans la merge request de l issue>
 
-    mkdir packer terraform terraform/dev terraform/prd doc postconf_vm
-    touch README.md LICENSE .gitignore .gitlab-ci.yml terraform/dev/main.tf terraform/prd/main.tf packer/packer.json
+    mkdir terraform terraform/dev terraform/prd doc postconf_vm
+    touch README.md LICENSE .gitignore .gitlab-ci.yml terraform/dev/main.tf terraform/prd/main.tf
 
-    git add packer terraform terraform/dev terraform/prd doc postconf_vm README.md LICENSE .gitignore .gitlab-ci.yml terraform/dev/main.tf terraform/prd/main.tf packer/packer.json
+    git add  terraform terraform/dev terraform/prd doc postconf_vm README.md LICENSE .gitignore .gitlab-ci.yml terraform/dev/main.tf terraform/prd/main.tf
     git commit -a -m ":tada: Initial commit for folder structure"
     git push
     ```
