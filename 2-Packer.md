@@ -88,7 +88,8 @@
 
 Afin de mieux sécuriser les clés d'API Scaleway, nous allons les stocker dans Hashicorp Vault (un secret manager incontournable !) et faire en sorte que Gitlab CI aille lire les clés d'API dans Vault lors de l'exécution de notre pipeline précédement créé.
 
-0. Connectez-vous à https://vault-hitema.doca.cloud/ui/vault/secrets/secret/list
+0. Connectez-vous à https://vault-hitema.doca.cloud/ui/vault/secrets/secret/list (Method = `OIDC`, Role = `groupe-<group_number>`)
+    ![vault](images/vault-2.png)
     ![vault](images/vault-0.png)
 1. Créez un nouveau secret ayant comme path `groupe-<group_number>/scaleway` et ajoutez les variables suivantes :
    - **SCW_DEFAULT_PROJECT_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
