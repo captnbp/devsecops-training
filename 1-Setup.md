@@ -219,6 +219,17 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     git push
     ```
 
+## Création d'un jeu d'API keys Scaleway
+
+0. Se rendre sur la page https://console.scaleway.com/project/credentials
+1. Clicker sur `Generate new API Key`
+2. **Dans le champ `API Key purpose`, mettre `group_<group_number>`**
+3. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (cocher `Masked`, décocher `Protected`) du dépôts Gitlab `image` : `Settings -> CI / CD -> Variables`:
+    - **SCW_DEFAULT_PROJECT_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
+    - **SCW_ACCESS_KEY** : Votre Access key Scaleway
+    - **SCW_SECRET_KEY** : Votre Secret key Scaleway
+    - **SCW_DEFAULT_ZONE** : fr-par-1
+
 ## Configuration des variables d'environnement de Gitlab CI dans nos 3 dépôts
 
 0. Création d'un jeu de clé publique ssh pour Gitlab (1 jeu par groupe)
@@ -261,32 +272,22 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     
     rm -R ${TEMP_DIR}
     ```
-1. Pour le mainteneur des dépôts -> ajouter les clés ssh générées précédemment dans les variables des 3 dépôts Gitlab (`image`, `infrastructure`, `application`): `Settings -> CI / CD -> Variables`:
+1. Pour le mainteneur des dépôts -> ajouter les clés ssh générées précédemment dans les variables (cocher `Masked`, décocher `Protected`) des 2 dépôts Gitlab `infrastructure` et `application` (mais pas `image`): `Settings -> CI / CD -> Variables`:
     - **SSH_PRIV_KEY**
     - **SSH_PUB_KEY**
     
     **Attention** : copier coller correctement les clés générées (Pas de retour à la ligne vide, inclure les `-----BEGIN OPENSSH PRIVATE KEY-----`  et `-----END OPENSSH PRIVATE KEY-----` dans la sélection avant de copier, inclure `ssh-ed25519` et `gitlab` dans la sélection de la clé publique)
     {: .note }
 
-2. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables du dépôts Gitlab `image` : `Settings -> CI / CD -> Variables`:
-    - **SCW_DEFAULT_PROJECT_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
-    - **SCW_ACCESS_KEY** : Votre Access key Scaleway (https://console.scaleway.com/account/credentials)
-    - **SCW_SECRET_KEY** : Votre Secret key Scaleway (https://console.scaleway.com/account/credentials)
-    - **SCW_DEFAULT_ZONE** : fr-par-1
-
-3. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables du dépôts Gitlab `infrastructure` : `Settings -> CI / CD -> Variables`:
-    - **ANSIBLE_HOST_KEY_CHECKING** : False
-    - **SCW_SECRET_KEY** : Votre Secret key Scaleway (https://console.scaleway.com/account/credentials)
-    - **SCW_ACCESS_KEY** : Votre Access key Scaleway (https://console.scaleway.com/account/credentials)
-    - **SCW_DEFAULT_ORGANIZATION_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
-    - **SCW_DEFAULT_ZONE** : fr-par-1
-    - **SCW_TOKEN** : Votre Secret key Scaleway (https://console.scaleway.com/account/credentials)
-
-4. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables du dépôts Gitlab `application` : `Settings -> CI / CD -> Variables`:
+2. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (cocher `Masked`, décocher `Protected`) du dépôts Gitlab `infrastructure` : `Settings -> CI / CD -> Variables`:
     - **ANSIBLE_HOST_KEY_CHECKING** : False
     - **SCW_DEFAULT_ORGANIZATION_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
     - **SCW_DEFAULT_ZONE** : fr-par-1
-    - **SCW_TOKEN** : Votre Secret key Scaleway (https://console.scaleway.com/account/credentials)
+
+3. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (cocher `Masked`, décocher `Protected`) du dépôts Gitlab `application` : `Settings -> CI / CD -> Variables`:
+    - **ANSIBLE_HOST_KEY_CHECKING** : False
+    - **SCW_DEFAULT_ORGANIZATION_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
+    - **SCW_DEFAULT_ZONE** : fr-par-1
 
 ### Devoirs du soir
 Lire
