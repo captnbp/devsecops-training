@@ -219,13 +219,17 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     git push
     ```
 
-## Création d'un jeu d'API keys Scaleway
+## Création d'un jeu d'API keys Scaleway dans votre projet Scaleway
 
-0. Se rendre sur la page https://console.scaleway.com/project/credentials
-1. Clicker sur `Generate new API Key`
-2. **Dans le champ `API Key purpose`, mettre `group_<group_number>`**
-3. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (cocher `Masked`, décocher `Protected`) du dépôts Gitlab `image` : `Settings -> CI / CD -> Variables`:
+0. Se rendre sur la page https://console.scaleway.com/
+1. Sélectionner dans la liste des projects votre groupe
+
+   ![Group](images/scaleway-0.png)
+2. Clicker sur `Generate new API Key`
+3. **Dans le champ `API Key purpose`, mettre `groupe_<group_number>`**
+4. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (cocher `Masked`, décocher `Protected`) du dépôts Gitlab `image` : `Settings -> CI / CD -> Variables`:
     - **SCW_DEFAULT_PROJECT_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
+    - **SCW_DEFAULT_ORGANIZATION_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
     - **SCW_ACCESS_KEY** : Votre Access key Scaleway
     - **SCW_SECRET_KEY** : Votre Secret key Scaleway
     - **SCW_DEFAULT_ZONE** : fr-par-1

@@ -83,6 +83,7 @@
    - Créer un job `build_packer` dans le stage `build` qui buildera l'image Packer (https://www.packer.io/docs/commands/build)
       
       ![packer](images/packer.png)
+   - Aller vérifier que l'image a été créée dans https://console.scaleway.com/instance/images
 
 ## Stockage des secrets Scaleway dans Hashicorp Vault
 
@@ -93,10 +94,10 @@ Afin de mieux sécuriser les clés d'API Scaleway, nous allons les stocker dans 
     ![vault](images/vault-0.png)
 1. Créez un nouveau secret ayant comme path `groupe-<group_number>/scaleway` et ajoutez les variables suivantes :
    - **SCW_DEFAULT_PROJECT_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
+   - **SCW_DEFAULT_ORGANIZATION_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
    - **SCW_ACCESS_KEY** : Votre Access key Scaleway
    - **SCW_SECRET_KEY** : Votre Secret key Scaleway
    - **SCW_DEFAULT_ZONE** : fr-par-1
-   - **SCW_TOKEN** : Votre Secret key Scaleway
     ![vault](images/vault-1.png)
 2. Supprimez les variables correspondantes dans le dépôts Gitlab `image` : `Settings -> CI / CD -> Variables`.
 3. Créez une nouvell issue nommée `Migration vers Vault` puis créez sa Merge Request. Ensuite pullez le code, et changez de branche pour utiliser la nouvelle branche
@@ -116,9 +117,11 @@ Afin de mieux sécuriser les clés d'API Scaleway, nous allons les stocker dans 
        fi
        export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=packer-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
        export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
+       export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
        export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<group_number>/scaleway)"
        export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
        export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<group_number>/scaleway)"
-       export SCW_TOKEN="$(vault kv get -field=SCW_TOKEN secret/groupe-<group_number>/scaleway)"
+       export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
      ```
-6. Demandez une revue de code à votre professeur, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche master en `1.0.1`
+6. Aller vérifier que l'image a été créée dans https://console.scaleway.com/instance/images
+7. Demandez une revue de code à votre professeur, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche master en `1.0.1`
