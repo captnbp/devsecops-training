@@ -12,13 +12,13 @@ resource "vault_ssh_secret_backend_role" "students" {
     name = "students"
     backend = vault_mount.ssh.path
     allow_user_certificates = true
-    allowed_users = "ubuntu"
+    allowed_users = "ubuntu,root"
     allowed_extensions = "permit-pty,permit-port-forwarding"
     default_extensions = {
         permit-pty = ""
     }
     key_type = "ca"
-    default_user = "ubuntu"
+    default_user = "root"
     ttl = "36000"
     max_ttl = "36000"
 }
@@ -33,7 +33,7 @@ resource "vault_ssh_secret_backend_role" "gitlab" {
         permit-pty = ""
     }
     key_type = "ca"
-    default_user = "ubuntu"
+    default_user = "root"
     ttl = "300"
     max_ttl = "600"
 }

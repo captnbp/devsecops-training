@@ -83,8 +83,8 @@ Voici le détail :
      ```
 4. Une fois votre infrastructure déployée avec succès, récupérez l'adresse IP de votre VM dans l'interface Scaleway (https://console.scaleway.com/instance/servers)
    ```bash
-   vault write -field=signed_key ssh/sign/students public_key=@$HOME/.ssh/id_rsa.pub > $HOME/.ssh/id_rsa-cert.pub
-   ssh -i $HOME/.ssh/id_rsa-cert.pub -i $HOME/.ssh/id_rsa ubuntu@<Addresse IP de votre VM>
+   vault write -field=signed_key ssh/sign/students public_key=@$HOME/.ssh/id_ed25519.pub > $HOME/.ssh/id_ed25519-cert.pub
+   ssh -i $HOME/.ssh/id_ed25519-cert.pub -i $HOME/.ssh/id_ed25519 root@<Addresse IP de votre VM>
    ```
 5. Faites une petite démo à votre professeur si ça a marché !
 6. Maintenant que votre déploiement Terraform est fonctionnel en test, nous allons le **destroy** pour passer à l'industrialisation :

@@ -89,11 +89,11 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
 
 ### Création des clés SSH
 
-0. Créer un jeu de clé ssh avec `ssh-keygen -t rsa -b 4096 -C <Prénom> -N ""` dans le Terminal VSCode
-1. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_rsa.pub` dans la liste de clé du compte Scaleway (https://console.scaleway.com/project/)
-2. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_rsa.pub` dans son compte Gitlab: https://gitlab.com/profile/keys
+0. Créer un jeu de clé ssh avec `ssh-keygen -t ed25519 -C <Prénom> -N ""` dans le Terminal VSCode
+1. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_ed25519.pub` dans la liste de clé du compte Scaleway (https://console.scaleway.com/project/)
+2. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_ed25519.pub` dans son compte Gitlab: https://gitlab.com/profile/keys
     
-    > **Attention** : copier coller correctement les clés publiques générées (Pas de retour à la ligne vide, inclure `ssh-rsa` et `Prénom` dans la sélection de la clé publique)
+    > **Attention** : copier coller correctement les clés publiques générées (Pas de retour à la ligne vide, inclure `ssh-ed25519` et `Prénom` dans la sélection de la clé publique)
 
 ### Création du Gitlab Personnal Token
 
