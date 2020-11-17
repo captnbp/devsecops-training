@@ -25,6 +25,7 @@
      },
      "builders": [
        {
+         "type":"scaleway",
          ...
        }
      ],
@@ -60,7 +61,23 @@
      "curl -o /etc/ssh/trusted-user-ca-keys.pem https://vault-hitema.doca.cloud/v1/ssh/public_key",
      "chmod 644 /etc/ssh/sshd_config.d/vault.conf /etc/ssh/trusted-user-ca-keys.pem" 
      ```
-7. Demandez une revue de code à votre professeur, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche master en `1.0.0`
+7. Pour tester en local depuis le terminal de code-hitema avant de commiter :
+   - Exportez les les variables d'environnement nécessaire à l'exécution de Packer :
+     ```bash
+     export SCW_DEFAULT_PROJECT_ID=<votre project_id>
+     export SCW_DEFAULT_ORGANIZATION_ID=<votre project_id>
+     export SCW_ACCESS_KEY=<votre access key>
+     export SCW_SECRET_KEY=<votre secret key>
+     export SCW_DEFAULT_ZONE=fr-par-1
+     export IMAGE_TAG=0.0.1
+     ```
+   - Puis :
+     ```bash
+     cd packer
+     packer validate packer.json
+     packer build packer.json
+     ```
+8. Demandez une revue de code à votre professeur, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche master en `1.0.0`
 
 ## Packer dans Gitlab CI
 
@@ -88,6 +105,8 @@
 ## Stockage des secrets Scaleway dans Hashicorp Vault
 
 Afin de mieux sécuriser les clés d'API Scaleway, nous allons les stocker dans Hashicorp Vault (un secret manager incontournable !) et faire en sorte que Gitlab CI aille lire les clés d'API dans Vault lors de l'exécution de notre pipeline précédement créé.
+
+> **Attention :** Si vous avez l'erreur `The provider window was closed before authentication was complete. Please click Sign In to try again.` c'est que votre navigateur ou une extension du navigateur bloque les popups. A vous de corriger de votre côté.
 
 0. Connectez-vous à https://vault-hitema.doca.cloud/ui/vault/secrets/secret/list (Method = `OIDC`, Role = `groupe-<group_number>`)
     ![vault](images/vault-2.png)

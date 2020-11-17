@@ -6,16 +6,14 @@
 0. Se faire ajouter comme membre **Maintainer** de vrotre groupe Gitlab
     - Créer un compte Gitlab par élève (sauf si déjà fait). 
       
-      **Attention** : merci de mettre votre prénom et nom en tant que Full Name dans votre compte, sinon on ne vous retrouvera pas pour la notation...)
-      {: .note }
+      > **Attention** : merci de mettre votre prénom et nom en tant que Full Name dans votre compte, sinon on ne vous retrouvera pas pour la notation...)
 
     - Venir voir un prof pour se faire ajouter au sous-groupe **group_< number >**
 0. Création du compte cloud Scaleway
     - Demandez à votre professeur de vous ajouter à l'organisation Scaleway Hitema
     - Vous allez recevoir un mail pour créer votre compte Scaleway
       
-      **Attention** : merci de mettre votre prénom et nom dans votre profile Scaleway, sinon on ne vous retrouvera pas pour la notation...)
-      {: .note }
+      > **Attention** : merci de mettre votre prénom et nom dans votre profile Scaleway, sinon on ne vous retrouvera pas pour la notation...)
 
 ## Configuration de Mattermost
 
@@ -45,8 +43,7 @@
 
 Créer 2 projets Gitlab (**`infrastructure`** et **`application`**) dans votre sous-groupe Gitlab **group_< number >**
   
-**Attention** : merci de mettre les noms de projets en minuscules
-{: .note }
+> **Attention** : merci de mettre les noms de projets en minuscules
 
 ## Connexion à Visual Studio Code Hub puis configuration
 
@@ -96,8 +93,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
 1. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_rsa.pub` dans la liste de clé du compte Scaleway (https://console.scaleway.com/project/)
 2. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_rsa.pub` dans son compte Gitlab: https://gitlab.com/profile/keys
     
-    **Attention** : copier coller correctement les clés publiques générées (Pas de retour à la ligne vide, inclure `ssh-rsa` et `Prénom` dans la sélection de la clé publique)
-    {: .note }
+    > **Attention** : copier coller correctement les clés publiques générées (Pas de retour à la ligne vide, inclure `ssh-rsa` et `Prénom` dans la sélection de la clé publique)
 
 ### Création du Gitlab Personnal Token
 
@@ -158,10 +154,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
 0. Création de la structure de répertoire du projet **`infrastructure`**
     ```sh
     ./terraform/
-    ./terraform/dev/
-    ./terraform/prd/
-    ./terrraform/dev/main.tf
-    ./terrraform/prd/main.tf
+    ./terraform/main.tf
     ./postconf_vm/
     ./doc/
     README.md
@@ -178,10 +171,10 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     cd infrastructure
     git checkout <branche créée dans la merge request de l issue>
 
-    mkdir terraform terraform/dev terraform/prd doc postconf_vm
-    touch README.md LICENSE .gitignore .gitlab-ci.yml terraform/dev/main.tf terraform/prd/main.tf
+    mkdir terraform doc postconf_vm
+    touch README.md LICENSE .gitignore .gitlab-ci.yml terraform/main.tf
 
-    git add  terraform terraform/dev terraform/prd doc postconf_vm README.md LICENSE .gitignore .gitlab-ci.yml terraform/dev/main.tf terraform/prd/main.tf
+    git add  terraform terraform doc postconf_vm README.md LICENSE .gitignore .gitlab-ci.yml terraform/main.tf
     git commit -a -m ":tada: Initial commit for folder structure"
     git push
     ```
@@ -234,6 +227,8 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     - **SCW_SECRET_KEY** : Votre Secret key Scaleway
     - **SCW_DEFAULT_ZONE** : fr-par-1
 
+
+
 ## Configuration des variables d'environnement de Gitlab CI dans nos 3 dépôts
 
 0. Création d'un jeu de clé publique ssh pour Gitlab (1 jeu par groupe)
@@ -280,8 +275,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     - **SSH_PRIV_KEY**
     - **SSH_PUB_KEY**
     
-    **Attention** : copier coller correctement les clés générées (Pas de retour à la ligne vide, inclure les `-----BEGIN OPENSSH PRIVATE KEY-----`  et `-----END OPENSSH PRIVATE KEY-----` dans la sélection avant de copier, inclure `ssh-ed25519` et `gitlab` dans la sélection de la clé publique)
-    {: .note }
+    > **Attention** : copier coller correctement les clés générées (Pas de retour à la ligne vide, inclure les `-----BEGIN OPENSSH PRIVATE KEY-----`  et `-----END OPENSSH PRIVATE KEY-----` dans la sélection avant de copier, inclure `ssh-ed25519` et `gitlab` dans la sélection de la clé publique)
 
 2. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (cocher `Masked`, décocher `Protected`) du dépôts Gitlab `infrastructure` : `Settings -> CI / CD -> Variables`:
     - **ANSIBLE_HOST_KEY_CHECKING** : False
