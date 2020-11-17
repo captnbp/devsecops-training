@@ -26,6 +26,7 @@
      "builders": [
        {
          "type":"scaleway",
+         "remove_volume": true,
          ...
        }
      ],
