@@ -49,7 +49,7 @@ Créer 2 projets Gitlab (**`infrastructure`** et **`application`**) dans votre s
 
 Il faut maintenant configurer votre environnement de développement dans votre instance **Visual Studio Code Hub**.
 
-Connectez-vous à l'url suivante : https://code-hitema.doca.cloud et créez votre *server* :
+Connectez-vous à l'url suivante : https://code-hitema.doca.cloud avec le navigateur Chrome ou Edge Chromium (pas le vieux Edge ni Firefox ni Safari) et créez votre *server* :
 
 0. Connectez-vous à l'url suivante : https://code-hitema.doca.cloud
 
