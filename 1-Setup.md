@@ -271,7 +271,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     
     rm -R ${TEMP_DIR}
     ```
-1. Pour le mainteneur des dépôts -> ajouter les clés ssh générées précédemment dans les variables (cocher `Masked`, décocher `Protected`) des 2 dépôts Gitlab `infrastructure` et `application` (mais pas `image`): `Settings -> CI / CD -> Variables`:
+1. Pour le mainteneur des dépôts -> ajouter les clés ssh générées précédemment dans les variables (décocher `Masked`, décocher `Protected`) des 2 dépôts Gitlab `infrastructure` et `application` (mais pas `image`): `Settings -> CI / CD -> Variables`:
     - **SSH_PRIV_KEY**
     - **SSH_PUB_KEY**
     

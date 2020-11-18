@@ -84,7 +84,7 @@
 
 0. Cours sur Gitlab CI
 1. Intégration de Packer à Gitlab CI dans le fichier `.gitlab-ci.yml` du dépôt `image` :
-   - Pour tous les jobs, utiliser l'image Docker `captnbp/gitlab-ci-image:v2.9.4`
+   - Pour tous les jobs, utiliser l'image Docker `captnbp/gitlab-ci-image:v2.9.5`
    - Ajoutez le `before_script` suivant à votre fichier `.gitlab-ci.yml`
      ```yaml
        before_script:
