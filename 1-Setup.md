@@ -6,16 +6,14 @@
 0. Se faire ajouter comme membre **Maintainer** de vrotre groupe Gitlab
     - Créer un compte Gitlab par élève (sauf si déjà fait). 
       
-      **Attention** : merci de mettre votre prénom et nom en tant que Full Name dans votre compte, sinon on ne vous retrouvera pas pour la notation...)
-      {: .note }
+      > **Attention** : merci de mettre votre prénom et nom en tant que Full Name dans votre compte, sinon on ne vous retrouvera pas pour la notation...)
 
     - Venir voir un prof pour se faire ajouter au sous-groupe **group_< number >**
 0. Création du compte cloud Scaleway
     - Demandez à votre professeur de vous ajouter à l'organisation Scaleway Hitema
     - Vous allez recevoir un mail pour créer votre compte Scaleway
       
-      **Attention** : merci de mettre votre prénom et nom dans votre profile Scaleway, sinon on ne vous retrouvera pas pour la notation...)
-      {: .note }
+      > **Attention** : merci de mettre votre prénom et nom dans votre profile Scaleway, sinon on ne vous retrouvera pas pour la notation...)
 
 ## Configuration de Mattermost
 
@@ -45,14 +43,13 @@
 
 Créer 2 projets Gitlab (**`infrastructure`** et **`application`**) dans votre sous-groupe Gitlab **group_< number >**
   
-**Attention** : merci de mettre les noms de projets en minuscules
-{: .note }
+> **Attention** : merci de mettre les noms de projets en minuscules
 
 ## Connexion à Visual Studio Code Hub puis configuration
 
 Il faut maintenant configurer votre environnement de développement dans votre instance **Visual Studio Code Hub**.
 
-Connectez-vous à l'url suivante : https://code-hitema.doca.cloud et créez votre *server* :
+Connectez-vous à l'url suivante : https://code-hitema.doca.cloud avec le navigateur Chrome ou Edge Chromium (pas le vieux Edge ni Firefox ni Safari) et créez votre *server* :
 
 0. Connectez-vous à l'url suivante : https://code-hitema.doca.cloud
 
@@ -92,12 +89,11 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
 
 ### Création des clés SSH
 
-0. Créer un jeu de clé ssh avec `ssh-keygen -t rsa -b 4096 -C <Prénom> -N ""` dans le Terminal VSCode
-1. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_rsa.pub` dans la liste de clé du compte Scaleway (https://console.scaleway.com/project/)
-2. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_rsa.pub` dans son compte Gitlab: https://gitlab.com/profile/keys
+0. Créer un jeu de clé ssh avec `ssh-keygen -t ed25519 -C <Prénom> -N ""` dans le Terminal VSCode
+1. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_ed25519.pub` dans la liste de clé du compte Scaleway (https://console.scaleway.com/project/)
+2. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_ed25519.pub` dans son compte Gitlab: https://gitlab.com/profile/keys
     
-    **Attention** : copier coller correctement les clés publiques générées (Pas de retour à la ligne vide, inclure `ssh-rsa` et `Prénom` dans la sélection de la clé publique)
-    {: .note }
+    > **Attention** : copier coller correctement les clés publiques générées (Pas de retour à la ligne vide, inclure `ssh-ed25519` et `Prénom` dans la sélection de la clé publique)
 
 ### Création du Gitlab Personnal Token
 
@@ -158,10 +154,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
 0. Création de la structure de répertoire du projet **`infrastructure`**
     ```sh
     ./terraform/
-    ./terraform/dev/
-    ./terraform/prd/
-    ./terrraform/dev/main.tf
-    ./terrraform/prd/main.tf
+    ./terraform/main.tf
     ./postconf_vm/
     ./doc/
     README.md
@@ -178,10 +171,10 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     cd infrastructure
     git checkout <branche créée dans la merge request de l issue>
 
-    mkdir terraform terraform/dev terraform/prd doc postconf_vm
-    touch README.md LICENSE .gitignore .gitlab-ci.yml terraform/dev/main.tf terraform/prd/main.tf
+    mkdir terraform doc postconf_vm
+    touch README.md LICENSE .gitignore .gitlab-ci.yml terraform/main.tf
 
-    git add  terraform terraform/dev terraform/prd doc postconf_vm README.md LICENSE .gitignore .gitlab-ci.yml terraform/dev/main.tf terraform/prd/main.tf
+    git add  terraform terraform doc postconf_vm README.md LICENSE .gitignore .gitlab-ci.yml terraform/main.tf
     git commit -a -m ":tada: Initial commit for folder structure"
     git push
     ```
@@ -219,16 +212,22 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     git push
     ```
 
-## Création d'un jeu d'API keys Scaleway
+## Création d'un jeu d'API keys Scaleway dans votre projet Scaleway
 
-0. Se rendre sur la page https://console.scaleway.com/project/credentials
-1. Clicker sur `Generate new API Key`
-2. **Dans le champ `API Key purpose`, mettre `group_<group_number>`**
-3. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (cocher `Masked`, décocher `Protected`) du dépôts Gitlab `image` : `Settings -> CI / CD -> Variables`:
+0. Se rendre sur la page https://console.scaleway.com/
+1. Sélectionner dans la liste des projects votre groupe
+
+   ![Group](images/scaleway-0.png)
+2. Clicker sur `Generate new API Key`
+3. **Dans le champ `API Key purpose`, mettre `groupe_<group_number>`**
+4. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (cocher `Masked`, décocher `Protected`) du dépôts Gitlab `image` : `Settings -> CI / CD -> Variables`:
     - **SCW_DEFAULT_PROJECT_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
+    - **SCW_DEFAULT_ORGANIZATION_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
     - **SCW_ACCESS_KEY** : Votre Access key Scaleway
     - **SCW_SECRET_KEY** : Votre Secret key Scaleway
     - **SCW_DEFAULT_ZONE** : fr-par-1
+
+
 
 ## Configuration des variables d'environnement de Gitlab CI dans nos 3 dépôts
 
@@ -272,19 +271,18 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     
     rm -R ${TEMP_DIR}
     ```
-1. Pour le mainteneur des dépôts -> ajouter les clés ssh générées précédemment dans les variables (cocher `Masked`, décocher `Protected`) des 2 dépôts Gitlab `infrastructure` et `application` (mais pas `image`): `Settings -> CI / CD -> Variables`:
+1. Pour le mainteneur des dépôts -> ajouter les clés ssh générées précédemment dans les variables (décocher `Masked`, décocher `Protected`) des 2 dépôts Gitlab `infrastructure` et `application` (mais pas `image`): `Settings -> CI / CD -> Variables`:
     - **SSH_PRIV_KEY**
     - **SSH_PUB_KEY**
     
-    **Attention** : copier coller correctement les clés générées (Pas de retour à la ligne vide, inclure les `-----BEGIN OPENSSH PRIVATE KEY-----`  et `-----END OPENSSH PRIVATE KEY-----` dans la sélection avant de copier, inclure `ssh-ed25519` et `gitlab` dans la sélection de la clé publique)
-    {: .note }
+    > **Attention** : copier coller correctement les clés générées (Pas de retour à la ligne vide, inclure les `-----BEGIN OPENSSH PRIVATE KEY-----`  et `-----END OPENSSH PRIVATE KEY-----` dans la sélection avant de copier, inclure `ssh-ed25519` et `gitlab` dans la sélection de la clé publique)
 
-2. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (cocher `Masked`, décocher `Protected`) du dépôts Gitlab `infrastructure` : `Settings -> CI / CD -> Variables`:
+2. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (décocher `Masked`, décocher `Protected`) du dépôts Gitlab `infrastructure` : `Settings -> CI / CD -> Variables`:
     - **ANSIBLE_HOST_KEY_CHECKING** : False
     - **SCW_DEFAULT_ORGANIZATION_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
     - **SCW_DEFAULT_ZONE** : fr-par-1
 
-3. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (cocher `Masked`, décocher `Protected`) du dépôts Gitlab `application` : `Settings -> CI / CD -> Variables`:
+3. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (décocher `Masked`, décocher `Protected`) du dépôts Gitlab `application` : `Settings -> CI / CD -> Variables`:
     - **ANSIBLE_HOST_KEY_CHECKING** : False
     - **SCW_DEFAULT_ORGANIZATION_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
     - **SCW_DEFAULT_ZONE** : fr-par-1
