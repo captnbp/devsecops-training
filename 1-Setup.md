@@ -277,12 +277,12 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     
     > **Attention** : copier coller correctement les clés générées (Pas de retour à la ligne vide, inclure les `-----BEGIN OPENSSH PRIVATE KEY-----`  et `-----END OPENSSH PRIVATE KEY-----` dans la sélection avant de copier, inclure `ssh-ed25519` et `gitlab` dans la sélection de la clé publique)
 
-2. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (cocher `Masked`, décocher `Protected`) du dépôts Gitlab `infrastructure` : `Settings -> CI / CD -> Variables`:
+2. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (décocher `Masked`, décocher `Protected`) du dépôts Gitlab `infrastructure` : `Settings -> CI / CD -> Variables`:
     - **ANSIBLE_HOST_KEY_CHECKING** : False
     - **SCW_DEFAULT_ORGANIZATION_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
     - **SCW_DEFAULT_ZONE** : fr-par-1
 
-3. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (cocher `Masked`, décocher `Protected`) du dépôts Gitlab `application` : `Settings -> CI / CD -> Variables`:
+3. Pour le mainteneur des dépôts -> ajouter les credentials de l'API Scaleway dans les variables (décocher `Masked`, décocher `Protected`) du dépôts Gitlab `application` : `Settings -> CI / CD -> Variables`:
     - **ANSIBLE_HOST_KEY_CHECKING** : False
     - **SCW_DEFAULT_ORGANIZATION_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
     - **SCW_DEFAULT_ZONE** : fr-par-1
