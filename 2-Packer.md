@@ -80,6 +80,11 @@
      ```
 8. Demandez une revue de code à votre professeur, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche master en `1.0.0`
 
+Tip: 
+``` git tag -a v1.0.0
+git push origin v1.0.0 
+```
+
 ## Packer dans Gitlab CI
 
 0. Cours sur Gitlab CI
