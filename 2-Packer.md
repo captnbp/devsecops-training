@@ -90,9 +90,9 @@
        before_script:
          - |
            if [[ -z "$CI_COMMIT_TAG" ]]; then
-             export IMAGE_TAG=${$CI_COMMIT_SHA}
+             export IMAGE_TAG=${CI_COMMIT_SHA}
            else
-             export IMAGE_TAG=${$CI_COMMIT_TAG}
+             export IMAGE_TAG=${CI_COMMIT_TAG}
            fi
      ```
    - Créer un stage `test`
@@ -131,9 +131,9 @@ Afin de mieux sécuriser les clés d'API Scaleway, nous allons les stocker dans 
    before_script:
      - |
        if [[ -z "$CI_COMMIT_TAG" ]]; then
-         export IMAGE_TAG=${$CI_COMMIT_SHA}
+         export IMAGE_TAG=${CI_COMMIT_SHA}
        else
-         export IMAGE_TAG=${$CI_COMMIT_TAG}
+         export IMAGE_TAG=${CI_COMMIT_TAG}
        fi
        export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=packer-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
        export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
