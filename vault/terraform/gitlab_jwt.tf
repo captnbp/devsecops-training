@@ -3,7 +3,7 @@ resource "vault_jwt_auth_backend" "gitlab_jwt" {
   description  = "Use Gitlab JWT provider for Gitlab CI"
   path = "jwt"
   jwks_url = "https://gitlab.com/-/jwks"
-  bound_issuer = "https://gitlab.com/"
+  bound_issuer = "gitlab.com"
 }
 
 resource "vault_jwt_auth_backend_role" "packer" {
