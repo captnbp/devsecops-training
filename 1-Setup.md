@@ -41,7 +41,7 @@
 
 ## Création des dépôts Gitlab
 
-Créer 2 projets Gitlab (**`infrastructure`** et **`application`**) dans votre sous-groupe Gitlab **group_< number >**
+Créer 3 projets Gitlab (**`image`**, **`infrastructure`** et **`application`**) dans votre sous-groupe Gitlab **group_< number >**
   
 > **Attention** : merci de mettre les noms de projets en minuscules
 
@@ -75,6 +75,7 @@ Connectez-vous à l'url suivante : https://code-hitema.doca.cloud avec le naviga
     - Hashicorp Terraform
     - Docker
     - hadolint
+    - ansible
 
 Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les extensions 
 
@@ -226,8 +227,6 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     - **SCW_ACCESS_KEY** : Votre Access key Scaleway
     - **SCW_SECRET_KEY** : Votre Secret key Scaleway
     - **SCW_DEFAULT_ZONE** : fr-par-1
-
-
 
 ## Configuration des variables d'environnement de Gitlab CI dans nos 3 dépôts
 

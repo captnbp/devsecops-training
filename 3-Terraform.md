@@ -19,9 +19,9 @@ Voici le détail :
 - Créer un groupe de sécurité (attaché à la VM) qui va contenir les règles suivantes :
   - Nom : variable `environnement`
   - Inbound : policy par défaut -> drop
-    - Port 22 (SSH) depuis `0.0.0.0/0`
-    - Port 80 (HTTP) depuis `0.0.0.0/0`
-    - Port 443 (HTTPS) depuis `0.0.0.0/0`
+    - Port TCP 22 (SSH) depuis `0.0.0.0/0`
+    - Port TCP 80 (HTTP) depuis `0.0.0.0/0`
+    - Port TCP 443 (HTTPS) depuis `0.0.0.0/0`
   - Outbound : policy par défaut -> accept
 - Un volume de données :
   - Nom : variable `environnement`
@@ -39,7 +39,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 ## Terraform
 
 0. Cours sur Terraform
-1. Créez une nouvelle issue nommée `Création d'une infrastructure Scaleway avec Terraform` puis créez sa Merge Request. Ensuite pullez le code, et changez de branche pour utiliser la nouvelle branche
+1. Créez une nouvelle issue nommée `Création d'une infrastructure Scaleway avec Terraform` puis créez sa Merge Request dans le dépôt `infrastructure`. Ensuite clonez le code de votre dépôt `infrastructure`, et changez de branche pour utiliser la nouvelle branche
 2. A partir des spécifications ci-dessus, créez le fichier `terraform/main.tf` et ajoutez l'ensemble des resources nécessaires pour créer notre infrastructure. 
    
    Voici le début qui déclare les 2 variables à passer en argument de la commande terraform et l'import du plugin de provide Terraform à la bonne version :
@@ -73,6 +73,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      export SCW_ACCESS_KEY=$(vault read -field=SCW_ACCESS_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
      export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
      export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUPE_NUMBER}/scaleway)
+     export SCW_DEFAULT_REGION=$(vault read -field=SCW_DEFAULT_REGION secret/groupe-${GROUPE_NUMBER}/scaleway)
      export IMAGE_TAG=1.0.1
      ```
    - Puis :
@@ -97,6 +98,12 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 
 ## Intégration à Gitlab CI pour gérer automatiquement l'infrastructure
 
+0. Créez le fichier `.gitignore` à la racine de votre dépôt `infrastructure`
+   ```
+   terraform/.terraform
+   terraform/terraform.tfstate
+   terraform/terraform.tfstate.backup
+   ```
 1. Modifiez votre fichier `terraform/main.tf` pour ajouter la ligne `backend "http" {}` :
    ```hcl
    variable image {}
@@ -115,7 +122,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 2. Intégration de Terraform à Gitlab CI dans le fichier `.gitlab-ci.yml` du dépôt `infrastructure`. Créez le `.gitlab-ci.yml` suivant :
    ```yaml
    default:
-     image: captnbp/gitlab-ci-image:v2.9.5
+     image: captnbp/gitlab-ci-image:v2.9.7
 
      cache:
        key: production
@@ -129,18 +136,19 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 
    before_script:
      - cd ${TF_ROOT}
-     - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=infrastructure-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
-     - export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
-     - export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
-     - export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<group_number>/scaleway)"
-     - export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
-     - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<group_number>/scaleway)"
-     - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
+       export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=infrastructure-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
+       export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
+       export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
+       export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<group_number>/scaleway)"
+       export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
+       export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
+       export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<group_number>/scaleway)"
+       export SCW_DEFAULT_REGION="$(vault kv get -field=SCW_DEFAULT_REGION secret/groupe-<group_number>/scaleway)"
 
    stages:
      - prepare
      - validate
-     - build
+     - plan
      - deploy
 
    init:
@@ -154,7 +162,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
        - gitlab-terraform validate -var image="ubuntu-hitema-1.0.1" -var environnement="production"
 
    plan:
-     stage: build
+     stage: plan
      script:
        - gitlab-terraform plan -var image="ubuntu-hitema-1.0.1" -var environnement="production"
        - gitlab-terraform plan-json  -var image="ubuntu-hitema-1.0.1" -var environnement="production"
