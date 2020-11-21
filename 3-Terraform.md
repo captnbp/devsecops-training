@@ -115,7 +115,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 2. Intégration de Terraform à Gitlab CI dans le fichier `.gitlab-ci.yml` du dépôt `infrastructure`. Créez le `.gitlab-ci.yml` suivant :
    ```yaml
    default:
-     image: captnbp/gitlab-ci-image:v2.9.5`
+     image: captnbp/gitlab-ci-image:v2.9.5
 
      cache:
        key: production
@@ -123,6 +123,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
          - ${TF_ROOT}/.terraform
 
    variables:
+     VAULT_ADDR: https://vault-hitema.doca.cloud:443
      TF_ROOT: ${CI_PROJECT_DIR}/terraform
      TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/production
 
