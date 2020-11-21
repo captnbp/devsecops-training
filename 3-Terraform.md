@@ -129,7 +129,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 
    before_script:
      - cd ${TF_ROOT}
-       export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=packer-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
+       export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=infrastructure-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
        export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
        export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
        export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<group_number>/scaleway)"

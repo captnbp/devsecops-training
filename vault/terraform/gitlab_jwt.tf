@@ -56,6 +56,21 @@ resource "vault_jwt_auth_backend_role" "prd" {
   role_type       = "jwt"
 }
 
+resource "vault_jwt_auth_backend_role" "infrastructure" {
+  count = 54
+  backend         = vault_jwt_auth_backend.gitlab_jwt.path
+  role_name       = "infrastructure-groupe-${count.index}"
+  token_policies  = ["default", "gitlab-ssh", "groupe-${count.index}-gitlab", "db-groupe-${count.index}-dev", "rundeck-groupe-${count.index}-dev", "db-groupe-${count.index}-prd", "rundeck-groupe-${count.index}-prd", "beats-role-${count.index}"]
+  token_explicit_max_ttl = 600
+
+  bound_claims = {
+    project_path = "hitema-devsecops-2020/group_${count.index}/infrastructure"
+  }
+
+  user_claim      = "user_email"
+  role_type       = "jwt"
+}
+
 resource "vault_policy" "gitlab" {
   count = 54
   name = "groupe-${count.index}-gitlab"
