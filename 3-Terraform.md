@@ -129,13 +129,13 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 
    before_script:
      - cd ${TF_ROOT}
-       export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=infrastructure-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
-       export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
-       export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
-       export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<group_number>/scaleway)"
-       export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
-       export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<group_number>/scaleway)"
-       export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
+     - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=infrastructure-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
+     - export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
+     - export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
+     - export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<group_number>/scaleway)"
+     - export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
+     - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<group_number>/scaleway)"
+     - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
 
    stages:
      - prepare
