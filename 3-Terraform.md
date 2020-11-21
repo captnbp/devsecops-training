@@ -170,7 +170,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      environment:
        name: production
      script:
-       - gitlab-terraform apply -var image="ubuntu-hitema-1.0.1" -var environnement="production"
+       - gitlab-terraform apply
      dependencies:
        - plan
      when: manual
