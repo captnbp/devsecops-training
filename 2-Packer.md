@@ -70,6 +70,7 @@
      export SCW_ACCESS_KEY=<votre access key>
      export SCW_SECRET_KEY=<votre secret key>
      export SCW_DEFAULT_ZONE=fr-par-1
+     export SCW_DEFAULT_REGION=fr-par
      export IMAGE_TAG=0.0.1
      ```
    - Puis :
@@ -89,7 +90,7 @@ git push origin v1.0.0
 
 0. Cours sur Gitlab CI
 1. Intégration de Packer à Gitlab CI dans le fichier `.gitlab-ci.yml` du dépôt `image` :
-   - Pour tous les jobs, utiliser l'image Docker `captnbp/gitlab-ci-image:v2.9.5`
+   - Pour tous les jobs, utiliser l'image Docker `captnbp/gitlab-ci-image:v2.9.7`
    - Ajoutez le `before_script` suivant à votre fichier `.gitlab-ci.yml`
      ```yaml
        before_script:
@@ -123,6 +124,7 @@ Afin de mieux sécuriser les clés d'API Scaleway, nous allons les stocker dans 
    - **SCW_ACCESS_KEY** : Votre Access key Scaleway
    - **SCW_SECRET_KEY** : Votre Secret key Scaleway
    - **SCW_DEFAULT_ZONE** : fr-par-1
+   - **SCW_DEFAULT_REGION** : fr-par
     ![vault](images/vault-1.png)
 2. Supprimez les variables correspondantes dans le dépôts Gitlab `image` : `Settings -> CI / CD -> Variables`.
 3. Créez une nouvell issue nommée `Migration vers Vault` puis créez sa Merge Request. Ensuite pullez le code, et changez de branche pour utiliser la nouvelle branche
@@ -146,6 +148,7 @@ Afin de mieux sécuriser les clés d'API Scaleway, nous allons les stocker dans 
        export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<group_number>/scaleway)"
        export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
        export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<group_number>/scaleway)"
+       export SCW_DEFAULT_REGION="$(vault kv get -field=SCW_DEFAULT_REGION secret/groupe-<group_number>/scaleway)"
        export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
      ```
 6. Aller vérifier que l'image a été créée dans https://console.scaleway.com/instance/images
