@@ -74,7 +74,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
      export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUPE_NUMBER}/scaleway)
      export SCW_DEFAULT_REGION=$(vault read -field=SCW_DEFAULT_REGION secret/groupe-${GROUPE_NUMBER}/scaleway)
-     export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.1 -o json | jq ".[0].ID")
+     export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.1 -o json | jq -r ".[0].ID")
      ```
    - Puis :
      ```bash
@@ -144,7 +144,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
      - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<group_number>/scaleway)"
      - export SCW_DEFAULT_REGION="$(vault kv get -field=SCW_DEFAULT_REGION secret/groupe-<group_number>/scaleway)"
-     - export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.1 -o json | jq ".[0].ID")
+     - export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.1 -o json | jq -r ".[0].ID")
 
    stages:
      - prepare
