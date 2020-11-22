@@ -16,6 +16,12 @@ Voici le détail :
   - Image OS : variable `image`
   - Activer IPv6 sur la VM
   - Tags : hitema,group-<group number>,variable `environnement`
+  - L'option suivante activée dans la VM de type `scaleway_instance_server` :
+    ```hcl
+    root_volume {
+      delete_on_termination = true
+    }
+    ```
 - Créer un groupe de sécurité (attaché à la VM) qui va contenir les règles suivantes :
   - Nom : variable `environnement`
   - Inbound : policy par défaut -> drop
