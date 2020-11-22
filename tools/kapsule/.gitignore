@@ -1,0 +1,4 @@
+dev.log
+terraform.tfstate
+terraform.tfstate.backup
+.terraform

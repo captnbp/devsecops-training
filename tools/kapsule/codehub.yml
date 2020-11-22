@@ -1,0 +1,162 @@
+ingress:
+  enabled: true
+  annotations:
+    # add an annotation indicating the issuer to use.
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: http
+  hosts:
+    - code-hitema.doca.cloud
+  tls:
+    - hosts:
+        - code-hitema.doca.cloud
+      secretName: code-hitema.doca.cloud-tls
+proxy:
+  secretToken: "b861e9d16e05ec88a51eb1c6f96de2e6c37821c4bdcae4cd5c1c60b8abcf5f48"
+  service:
+    type: ClusterIP
+  https:
+    enabled: false
+    type: secret
+    secret:
+      name: code-hitema.doca.cloud-tls
+      key: tls.key
+      crt: tls.crt
+
+auth:
+  type: gitlab
+
+hub:
+  extraConfig:
+    gitlab: |
+      from oauthenticator.gitlab import GitLabOAuthenticator
+      c.JupyterHub.authenticator_class = GitLabOAuthenticator
+      c.GitLabOAuthenticator.gitlab_group_whitelist = ["9851441"]
+      c.GitLabOAuthenticator.client_id = '398680707f2c0decc610c54ea7906597abe8fc8884d0da0823cb2904da042ba5'
+      c.GitLabOAuthenticator.client_secret = '66ad616723b8514f3410b31b45721aa802e5850e7e4552ecb13d3ace883660f7'
+      c.Authenticator.admin_users = {'captnbp', 'nizaraouissaoui', 'zkrichen'}
+  db:
+    type: sqlite-pvc
+    upgrade:
+    pvc:
+      annotations: {}
+      selector: {}
+      accessModes:
+        - ReadWriteOnce
+      storage: 1Gi
+      subPath:
+
+singleuser:
+  # Mandatory for Bare Metal installation
+  cloudMetadata:
+    enabled: true
+  # Defines the default image
+  image:
+    name: registry.gitlab.com/captnbp/code-server-hub/code-server
+    tag: 1.4.3
+  cpu:
+    limit: 1
+    guarantee: 0.1
+  memory:
+    limit: 2G
+    guarantee: 500M
+  profileList:
+    - description: code-server
+      default: true
+      display_name: VScode
+      kubespawner_override:
+        cmd:
+          - code-server
+        image: registry.gitlab.com/captnbp/code-server-hub/code-server:1.4.3
+        uid: 1000
+        gid: 1000
+        fs_gid: 1000
+        privileged: false
+        environment:
+          VAULT_ADDR: https://vault-hitema.doca.cloud:443
+        extra_containers:
+          - name: nginx
+            image: registry.gitlab.com/captnbp/code-server-hub/nginx:1.4.3
+            ports:
+              - containerPort: 8888
+                name: http
+                protocol: TCP
+            resources:
+              requests:
+                cpu: 100m
+                memory: 50Mi
+              limits:
+                cpu: 100m
+                memory: 100Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              runAsUser: 101
+              runAsGroup: 101
+              privileged: false
+              runAsNonRoot: true
+              capabilities:
+                drop:
+                  - ALL
+          - name: oauth
+            image: registry.gitlab.com/captnbp/code-server-hub/oauth:1.4.3
+            ports:
+              - containerPort: 9095
+                name: oauth
+                protocol: TCP
+            resources:
+              requests:
+                cpu: 100m
+                memory: 50Mi
+              limits:
+                cpu: 100m
+                memory: 100Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              runAsUser: 33
+              runAsGroup: 33
+              privileged: false
+              runAsNonRoot: true
+              capabilities:
+                drop:
+                  - ALL
+  storage:
+    type: dynamic
+    extraLabels: {}
+    extraVolumes:
+      - name: shm-volume
+        emptyDir:
+          medium: Memory
+    extraVolumeMounts: []
+    static:
+      pvcName:
+      subPath: '{username}'
+    capacity: 5Gi
+    homeMountPath: /home/coder
+    dynamic:
+      pvcNameTemplate: claim-{username}{servername}
+      volumeNameTemplate: volume-{username}{servername}
+      storageAccessModes: [ReadWriteOnce]
+
+## Configure metrics exporter
+##
+metrics:
+  enabled: true
+  service:
+    annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port: '8081'
+  serviceMonitor:
+    enabled: true
+    additionalLabels: {}
+    # namespace: monitoring
+    # interval: 30s
+    # scrapeTimeout: 10s
+  ## Custom PrometheusRule to be defined
+  ## The value is evaluated as a template, so, for example, the value can depend on .Release or .Chart
+  ## ref: https://github.com/coreos/prometheus-operator#customresourcedefinitions
+  ##
+  prometheusRule:
+    enabled: false
+    additionalLabels: {}
+    namespace: ""
+    rules: []

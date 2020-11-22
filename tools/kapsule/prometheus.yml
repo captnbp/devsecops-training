@@ -1,0 +1,861 @@
+# Default values for kube-prometheus-stack.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## Provide a name in place of kube-prometheus-stack for `app:` labels
+##
+nameOverride: ""
+
+## Override the deployment namespace
+##
+namespaceOverride: ""
+
+## Provide a k8s version to auto dashboard import script example: kubeTargetVersionOverride: 1.16.6
+##
+kubeTargetVersionOverride: ""
+
+## Provide a name to substitute for the full names of resources
+##
+fullnameOverride: ""
+
+## Labels to apply to all resources
+##
+commonLabels: {}
+# scmhash: abc123
+# myLabel: aakkmd
+
+## Create default rules for monitoring the cluster
+##
+defaultRules:
+  create: true
+  rules:
+    alertmanager: true
+    etcd: true
+    general: true
+    k8s: true
+    kubeApiserver: true
+    kubeApiserverAvailability: true
+    kubeApiserverError: true
+    kubeApiserverSlos: true
+    kubelet: false
+    kubePrometheusGeneral: true
+    kubePrometheusNodeAlerting: true
+    kubePrometheusNodeRecording: true
+    kubernetesAbsent: true
+    kubernetesApps: true
+    kubernetesResources: true
+    kubernetesStorage: true
+    kubernetesSystem: true
+    kubeScheduler: true
+    kubeStateMetrics: true
+    network: true
+    node: true
+    prometheus: true
+    prometheusOperator: true
+    time: true
+
+  ## Runbook url prefix for default rules
+  runbookUrl: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#
+  ## Reduce app namespace alert scope
+  appNamespacesTarget: ".*"
+
+  ## Labels for default rules
+  labels: {}
+  ## Annotations for default rules
+  annotations: {}
+
+## Provide custom recording or alerting rules to be deployed into the cluster.
+##
+additionalPrometheusRules: []
+#  - name: my-rule-file
+#    groups:
+#      - name: my_group
+#        rules:
+#        - record: my_record
+#          expr: 100 * my_record
+
+##
+global:
+  rbac:
+    create: true
+    pspEnabled: true
+    pspAnnotations: {}
+      ## Specify pod annotations
+      ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#apparmor
+      ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#seccomp
+      ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#sysctl
+      ##
+      # seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+      # seccomp.security.alpha.kubernetes.io/defaultProfileName: 'docker/default'
+      # apparmor.security.beta.kubernetes.io/defaultProfileName: 'runtime/default'
+
+  ## Reference to one or more secrets to be used when pulling images
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ##
+  imagePullSecrets:
+    - name: "docker.io"
+
+## Configuration for alertmanager
+## ref: https://prometheus.io/docs/alerting/alertmanager/
+##
+alertmanager:
+
+  ## Deploy alertmanager
+  ##
+  enabled: true
+
+  ## Api that prometheus will use to communicate with alertmanager. Possible values are v1, v2
+  ##
+  apiVersion: v2
+
+  ## Service account for Alertmanager to use.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+  ##
+  serviceAccount:
+    create: true
+    name: ""
+    annotations: {}
+
+  ## Configure pod disruption budgets for Alertmanager
+  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/#specifying-a-poddisruptionbudget
+  ## This configuration is immutable once created and will require the PDB to be deleted to be changed
+  ## https://github.com/kubernetes/kubernetes/issues/45398
+  ##
+  podDisruptionBudget:
+    enabled: false
+    minAvailable: 1
+    maxUnavailable: ""
+
+  ## Alertmanager configuration directives
+  ## ref: https://prometheus.io/docs/alerting/configuration/#configuration-file
+  ##      https://prometheus.io/webtools/alerting/routing-tree-editor/
+  ##
+  config:
+    global:
+      resolve_timeout: 5m
+    route:
+      group_by: ['job']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      receiver: 'opsgenie'
+      routes:
+      - match:
+          alertname: Watchdog
+        receiver: 'null'
+    receivers:
+    - name: 'null'
+    - name: 'opsgenie'
+      opsgenie_configs:
+        - send_resolved: true
+          api_key: 457f8917-1490-4312-8615-fc3a5fec87f3
+
+  ## Pass the Alertmanager configuration directives through Helm's templating
+  ## engine. If the Alertmanager configuration contains Alertmanager templates,
+  ## they'll need to be properly escaped so that they are not interpreted by
+  ## Helm
+  ## ref: https://helm.sh/docs/developing_charts/#using-the-tpl-function
+  ##      https://prometheus.io/docs/alerting/configuration/#%3Ctmpl_string%3E
+  ##      https://prometheus.io/docs/alerting/notifications/
+  ##      https://prometheus.io/docs/alerting/notification_examples/
+  tplConfig: false
+
+  ## Alertmanager template files to format alerts
+  ## ref: https://prometheus.io/docs/alerting/notifications/
+  ##      https://prometheus.io/docs/alerting/notification_examples/
+  ##
+  templateFiles: {}
+  #
+  ## An example template:
+  #   template_1.tmpl: |-
+  #       {{ define "cluster" }}{{ .ExternalURL | reReplaceAll ".*alertmanager\\.(.*)" "$1" }}{{ end }}
+  #
+  #       {{ define "slack.myorg.text" }}
+  #       {{- $root := . -}}
+  #       {{ range .Alerts }}
+  #         *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+  #         *Cluster:*  {{ template "cluster" $root }}
+  #         *Description:* {{ .Annotations.description }}
+  #         *Graph:* <{{ .GeneratorURL }}|:chart_with_upwards_trend:>
+  #         *Runbook:* <{{ .Annotations.runbook }}|:spiral_note_pad:>
+  #         *Details:*
+  #           {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+  #           {{ end }}
+  #       {{ end }}
+  #       {{ end }}
+
+  ingress:
+    ## If true, alertmanager Ingress will be created
+    ##
+    enabled: true
+
+    ## alertmanager Ingress annotations
+    ##
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+
+    ## alertmanager Ingress additional labels
+    ##
+    extraLabels: {}
+
+    ## alertmanager Ingress hostnames with optional path
+    ## Must be provided if Ingress is enabled
+    ##
+    hosts:
+      - alertmanager-hitema.doca.cloud
+
+    ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
+    extraPaths: []
+    # - path: /*
+    #   backend:
+    #     serviceName: ssl-redirect
+    #     servicePort: use-annotation
+
+    ## alertmanager Ingress TLS configuration
+    ## Secrets must be manually created in the namespace
+    ##
+    tls:
+      - secretName: alertmanager-hitema-doca-cloud-tls
+        hosts:
+          - alertmanager-hitema.doca.cloud
+
+  ## Configuration for Alertmanager secret
+  ##
+  secret:
+    annotations: {}
+
+  ## Configuration for creating an Ingress that will map to each Alertmanager replica service
+  ## alertmanager.servicePerReplica must be enabled
+  ##
+  ingressPerReplica:
+    enabled: false
+    annotations: {}
+    labels: {}
+
+    ## Final form of the hostname for each per replica ingress is
+    ## {{ ingressPerReplica.hostPrefix }}-{{ $replicaNumber }}.{{ ingressPerReplica.hostDomain }}
+    ##
+    ## Prefix for the per replica ingress that will have `-$replicaNumber`
+    ## appended to the end
+    hostPrefix: ""
+    ## Domain that will be used for the per replica ingress
+    hostDomain: ""
+
+    ## Paths to use for ingress rules
+    ##
+    paths: []
+    # - /
+
+    ## Secret name containing the TLS certificate for alertmanager per replica ingress
+    ## Secret must be manually created in the namespace
+    tlsSecretName: ""
+
+    ## Separated secret for each per replica Ingress. Can be used together with cert-manager
+    ##
+    tlsSecretPerReplica:
+      enabled: false
+      ## Final form of the secret for each per replica ingress is
+      ## {{ tlsSecretPerReplica.prefix }}-{{ $replicaNumber }}
+      ##
+      prefix: "alertmanager"
+
+  ## Configuration for Alertmanager service
+  ##
+  service:
+    annotations: {}
+    labels: {}
+    clusterIP: ""
+
+    ## Port for Alertmanager Service to listen on
+    ##
+    port: 9093
+    ## To be used with a proxy extraContainer port
+    ##
+    targetPort: 9093
+    ## Port to expose on each node
+    ## Only used if service.type is 'NodePort'
+    ##
+    nodePort: 30903
+    ## List of IP addresses at which the Prometheus server service is available
+    ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+    ##
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    ## Service type
+    ##
+    type: ClusterIP
+
+  ## Configuration for creating a separate Service for each statefulset Alertmanager replica
+  ##
+  servicePerReplica:
+    enabled: false
+    annotations: {}
+
+    ## Port for Alertmanager Service per replica to listen on
+    ##
+    port: 9093
+
+    ## To be used with a proxy extraContainer port
+    targetPort: 9093
+
+    ## Port to expose on each node
+    ## Only used if servicePerReplica.type is 'NodePort'
+    ##
+    nodePort: 30904
+
+    ## Loadbalancer source IP ranges
+    ## Only used if servicePerReplica.type is "loadbalancer"
+    loadBalancerSourceRanges: []
+    ## Service type
+    ##
+    type: ClusterIP
+
+  ## If true, create a serviceMonitor for alertmanager
+  ##
+  serviceMonitor:
+    ## Scrape interval. If not set, the Prometheus default scrape interval is used.
+    ##
+    interval: ""
+    selfMonitor: true
+
+    ## 	metric relabel configs to apply to samples before ingestion.
+    ##
+    metricRelabelings: []
+    # - action: keep
+    #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+    #   sourceLabels: [__name__]
+
+    # 	relabel configs to apply to samples before ingestion.
+    ##
+    relabelings: []
+    # - sourceLabels: [__meta_kubernetes_pod_node_name]
+    #   separator: ;
+    #   regex: ^(.*)$
+    #   targetLabel: nodename
+    #   replacement: $1
+    #   action: replace
+
+  ## Settings affecting alertmanagerSpec
+  ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#alertmanagerspec
+  ##
+  alertmanagerSpec:
+    ## Standard object’s metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata
+    ## Metadata Labels and Annotations gets propagated to the Alertmanager pods.
+    ##
+    podMetadata: {}
+
+    ## If true then the user will be responsible to provide a secret with alertmanager configuration
+    ## So when true the config part will be ignored (including templateFiles) and the one in the secret will be used
+    ##
+    useExistingSecret: false
+
+    ## Secrets is a list of Secrets in the same namespace as the Alertmanager object, which shall be mounted into the
+    ## Alertmanager Pods. The Secrets are mounted into /etc/alertmanager/secrets/.
+    ##
+    secrets: []
+
+    ## ConfigMaps is a list of ConfigMaps in the same namespace as the Alertmanager object, which shall be mounted into the Alertmanager Pods.
+    ## The ConfigMaps are mounted into /etc/alertmanager/configmaps/.
+    ##
+    configMaps: []
+
+    ## ConfigSecret is the name of a Kubernetes Secret in the same namespace as the Alertmanager object, which contains configuration for
+    ## this Alertmanager instance. Defaults to 'alertmanager-' The secret is mounted into /etc/alertmanager/config.
+    ##
+    # configSecret:
+
+    ## Define Log Format
+    # Use logfmt (default) or json-formatted logging
+    logFormat: logfmt
+
+    ## Log level for Alertmanager to be configured with.
+    ##
+    logLevel: info
+
+    ## Size is the expected size of the alertmanager cluster. The controller will eventually make the size of the
+    ## running cluster equal to the expected size.
+    replicas: 1
+
+    ## Time duration Alertmanager shall retain data for. Default is '120h', and must match the regular expression
+    ## [0-9]+(ms|s|m|h) (milliseconds seconds minutes hours).
+    ##
+    retention: 120h
+
+    ## Storage is the definition of how storage will be used by the Alertmanager instances.
+    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
+    ##
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
+    #  selector: {}
+
+
+    ## 	The external URL the Alertmanager instances will be available under. This is necessary to generate correct URLs. This is necessary if Alertmanager is not served from root of a DNS name.	string	false
+    ##
+    externalUrl: https://alertmanager-hitema.doca.cloud
+
+    ## 	The route prefix Alertmanager registers HTTP handlers for. This is useful, if using ExternalURL and a proxy is rewriting HTTP routes of a request, and the actual ExternalURL is still true,
+    ## but the server serves requests under a different route prefix. For example for use with kubectl proxy.
+    ##
+    routePrefix: /
+
+    ## If set to true all actions on the underlying managed objects are not going to be performed, except for delete actions.
+    ##
+    paused: false
+
+    ## Define which Nodes the Pods are scheduled on.
+    ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+    ##
+    nodeSelector: {}
+
+    ## Define resources requests and limits for single Pods.
+    ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+    ##
+    resources:
+      requests:
+        cpu: 10m
+        memory: 26Mi
+      limits:
+        cpu: 20m
+        memory: 50Mi
+
+## Pod anti-affinity can prevent the scheduler from placing Prometheus replicas on the same node.
+    ## The default value "soft" means that the scheduler should *prefer* to not schedule two replica pods onto the same node but no guarantee is provided.
+    ## The value "hard" means that the scheduler is *required* to not schedule two replica pods onto the same node.
+    ## The value "" will disable pod anti-affinity so that no anti-affinity rules will be configured.
+    ##
+    podAntiAffinity: ""
+
+    ## If anti-affinity is enabled sets the topologyKey to use for anti-affinity.
+    ## This can be changed to, for example, failure-domain.beta.kubernetes.io/zone
+    ##
+    podAntiAffinityTopologyKey: kubernetes.io/hostname
+
+    ## Assign custom affinity rules to the alertmanager instance
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+    ##
+    affinity: {}
+    # nodeAffinity:
+    #   requiredDuringSchedulingIgnoredDuringExecution:
+    #     nodeSelectorTerms:
+    #     - matchExpressions:
+    #       - key: kubernetes.io/e2e-az-name
+    #         operator: In
+    #         values:
+    #         - e2e-az1
+    #         - e2e-az2
+
+    ## If specified, the pod's tolerations.
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    ##
+    tolerations: []
+    # - key: "key"
+    #   operator: "Equal"
+    #   value: "value"
+    #   effect: "NoSchedule"
+
+    ## SecurityContext holds pod-level security attributes and common container settings.
+    ## This defaults to non root user with uid 1000 and gid 2000.	*v1.PodSecurityContext	false
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+    ##
+    securityContext:
+      runAsGroup: 2000
+      runAsNonRoot: true
+      runAsUser: 1000
+      fsGroup: 2000
+
+    ## ListenLocal makes the Alertmanager server listen on loopback, so that it does not bind against the Pod IP.
+    ## Note this is only for the Alertmanager UI, not the gossip communication.
+    ##
+    listenLocal: false
+
+    ## Containers allows injecting additional containers. This is meant to allow adding an authentication proxy to an Alertmanager pod.
+    ##
+    containers: []
+
+    ## Priority class assigned to the Pods
+    ##
+    priorityClassName: ""
+
+    ## AdditionalPeers allows injecting a set of additional Alertmanagers to peer with to form a highly available cluster.
+    ##
+    additionalPeers: []
+
+    ## PortName to use for Alert Manager.
+    ##
+    portName: "web"
+
+
+## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
+##
+grafana:
+  enabled: true
+
+  ## Grafana's primary configuration
+  ## NOTE: values in map will be converted to ini format
+  ## ref: http://docs.grafana.org/installation/configuration/
+  ##
+  grafana.ini:
+    ## grafana Authentication can be enabled with the following values on grafana.ini
+    server:
+      # The full public facing url you use in browser, used for redirects and emails
+      root_url: https://grafana-hitema.doca.cloud
+    # https://grafana.com/docs/grafana/latest/auth/generic-oauth/
+    auth.generic_oauth:
+      enabled: true
+      scopes: profile
+      client_id: grafana-hitema
+      client_secret: e0def243-b529-45f4-be9e-ef9ce268f3e7
+      auth_url: https://keycloak.bplease.eu/auth/realms/master/protocol/openid-connect/auth
+      token_url: https://keycloak.bplease.eu/auth/realms/master/protocol/openid-connect/token
+      api_url: https://keycloak.bplease.eu/auth/realms/master/protocol/openid-connect/userinfo
+      allowed_domains: grafana-hitema.doca.cloud gmail.com bplease.eu doca-consulting.fr
+      allow_sign_up: true
+
+  ## Deploy default dashboards.
+  ##
+  defaultDashboardsEnabled: true
+
+  #adminPassword: 
+
+  ingress:
+    ## If true, Grafana Ingress will be created
+    ##
+    enabled: true
+
+    ## Annotations for Grafana Ingress
+    ##
+    annotations: 
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+
+    ## Labels to be added to the Ingress
+    ##
+    labels: {}
+
+    ## Hostnames.
+    ## Must be provided if Ingress is enable.
+    ##
+    # hosts:
+    #   - grafana.domain.com
+    hosts:
+      - grafana-hitema.doca.cloud
+
+    ## Path for grafana ingress
+    path: /
+
+    ## TLS configuration for grafana Ingress
+    ## Secret must be manually created in the namespace
+    ##
+    tls:
+      - secretName: grafana-hitema-doca-cloud-tls
+        hosts:
+          - grafana-hitema.doca.cloud
+
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+    datasources:
+      enabled: true
+      defaultDatasourceEnabled: true
+
+      ## Annotations for Grafana datasource configmaps
+      ##
+      annotations: {}
+
+      ## Create datasource for each Pod of Prometheus StatefulSet;
+      ## this uses headless service `prometheus-operated` which is
+      ## created by Prometheus Operator
+      ## ref: https://git.io/fjaBS
+      createPrometheusReplicasDatasources: false
+      label: grafana_datasource
+
+  ## Pass the plugins you want installed as a list.
+  ##
+  plugins:
+    - grafana-clock-panel
+    - natel-discrete-panel
+    - grafana-piechart-panel
+
+  ## Configure additional grafana datasources (passed through tpl)
+  ## ref: http://docs.grafana.org/administration/provisioning/#datasources
+  additionalDataSources: []
+  # - name: prometheus-sample
+  #   access: proxy
+  #   basicAuth: true
+  #   basicAuthPassword: pass
+  #   basicAuthUser: daco
+  #   editable: false
+  #   jsonData:
+  #       tlsSkipVerify: true
+  #   orgId: 1
+  #   type: prometheus
+  #   url: https://{{ printf "%s-prometheus.svc" .Release.Name }}:9090
+  #   version: 1
+
+  ## Passed to grafana subchart and used by servicemonitor below
+  ##
+  service:
+    portName: service
+
+  ## If true, create a serviceMonitor for grafana
+  ##
+  serviceMonitor:
+    ## Scrape interval. If not set, the Prometheus default scrape interval is used.
+    ##
+    interval: ""
+    selfMonitor: true
+
+    ## 	metric relabel configs to apply to samples before ingestion.
+    ##
+    metricRelabelings: []
+    # - action: keep
+    #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+    #   sourceLabels: [__name__]
+
+    # 	relabel configs to apply to samples before ingestion.
+    ##
+    relabelings: []
+    # - sourceLabels: [__meta_kubernetes_pod_node_name]
+    #   separator: ;
+    #   regex: ^(.*)$
+    #   targetLabel: nodename
+    #   replacement: $1
+    #   action: replace
+  persistence:
+    enabled: true
+    size: 1Gi
+    accessModes:
+      - ReadWriteOnce
+
+  image:
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ##
+    pullSecrets:
+      - docker.io
+
+## Component scraping etcd
+##
+kubeEtcd:
+  enabled: false
+
+## Configuration for kube-state-metrics subchart
+##
+kube-state-metrics:
+  namespaceOverride: ""
+  rbac:
+    create: true
+  podSecurityPolicy:
+    enabled: true
+
+## Configuration for prometheus-node-exporter subchart
+##
+prometheus-node-exporter:
+  podLabels:
+    ## Add the 'node-exporter' label to be used by serviceMonitor to match standard common usage in rules and grafana dashboards
+    ##
+    jobLabel: node-exporter
+  extraArgs:
+    - --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+)($|/)
+    - --collector.filesystem.ignored-fs-types=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
+
+## Manages Prometheus and Alertmanager components
+##
+prometheusOperator:
+  enabled: true
+
+  # If true prometheus operator will create and update its CRDs on startup
+  # Only for prometheusOperator.image.tag < v0.39.0
+  manageCrds: true
+
+  tlsProxy:
+    enabled: true
+
+  ## Resource limits & requests
+  ##
+  resources:
+    limits:
+      cpu: 50m
+      memory: 500Mi
+    requests:
+      cpu: 20m
+      memory: 200Mi
+
+## Deploy a Prometheus instance
+##
+prometheus:
+  enabled: true
+
+  ## Annotations for Prometheus
+  ##
+  annotations: {}
+
+  ## Service account for Prometheuses to use.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+  ##
+  serviceAccount:
+    create: true
+    name: ""
+
+  ## Configuration for creating a separate Service for each statefulset Prometheus replica
+  ##
+  servicePerReplica:
+    enabled: false
+
+  ## Configure pod disruption budgets for Prometheus
+  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/#specifying-a-poddisruptionbudget
+  ## This configuration is immutable once created and will require the PDB to be deleted to be changed
+  ## https://github.com/kubernetes/kubernetes/issues/45398
+  ##
+  podDisruptionBudget:
+    enabled: false
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    labels: {}
+
+    ## Hostnames.
+    ## Must be provided if Ingress is enabled.
+    ##
+    # hosts:
+    #   - prometheus.domain.com
+    hosts:
+      - prometheus-hitema.doca.cloud
+
+    ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
+    ##
+    paths: []
+    # - /
+
+    ## TLS configuration for Prometheus Ingress
+    ## Secret must be manually created in the namespace
+    ##
+    tls:
+      - secretName: prometheus-hitema-doca-cloud-tls
+        hosts:
+          - prometheus-hitema.doca.cloud
+
+  ## Configuration for creating an Ingress that will map to each Prometheus replica service
+  ## prometheus.servicePerReplica must be enabled
+  ##
+  ingressPerReplica:
+    enabled: false
+
+  ## Configure additional options for default pod security policy for Prometheus
+  ## ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
+  podSecurityPolicy:
+    allowedCapabilities: []
+
+  serviceMonitor:
+    ## Scrape interval. If not set, the Prometheus default scrape interval is used.
+    ##
+    interval: ""
+    selfMonitor: true
+
+  ## Settings affecting prometheusSpec
+  ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
+  ##
+  prometheusSpec:
+    ## If true, pass --storage.tsdb.max-block-duration=2h to prometheus. This is already done if using Thanos
+    ##
+    disableCompaction: false
+
+    ## ListenLocal makes the Prometheus server listen on loopback, so that it does not bind against the Pod IP.
+    ##
+    listenLocal: false
+
+    ## EnableAdminAPI enables Prometheus the administrative HTTP API which includes functionality such as deleting time series.
+    ## This is disabled by default.
+    ## ref: https://prometheus.io/docs/prometheus/latest/querying/api/#tsdb-admin-apis
+    ##
+    enableAdminAPI: false
+
+    ## If true, a nil or {} value for prometheus.prometheusSpec.ruleSelector will cause the
+    ## prometheus resource to be created with selectors based on values in the helm deployment,
+    ## which will also match the PrometheusRule resources created
+    ##
+    ruleSelectorNilUsesHelmValues: false
+
+    ## If true, a nil or {} value for prometheus.prometheusSpec.serviceMonitorSelector will cause the
+    ## prometheus resource to be created with selectors based on values in the helm deployment,
+    ## which will also match the servicemonitors created
+    ##
+    serviceMonitorSelectorNilUsesHelmValues: false
+
+    ## If true, a nil or {} value for prometheus.prometheusSpec.podMonitorSelector will cause the
+    ## prometheus resource to be created with selectors based on values in the helm deployment,
+    ## which will also match the podmonitors created
+    ##
+    podMonitorSelectorNilUsesHelmValues: true
+
+    ## How long to retain metrics
+    ##
+    retention: 15d
+
+    ## Maximum size of metrics
+    ##
+    retentionSize: ""
+
+    ## Enable compression of the write-ahead log using Snappy.
+    ##
+    walCompression: false
+
+    ## If true, the Operator won't process any Prometheus configuration changes
+    ##
+    paused: false
+
+    ## Number of Prometheus replicas desired
+    ##
+    replicas: 1
+
+    ## Log level for Prometheus be configured in
+    ##
+    logLevel: info
+
+    ## Log format for Prometheus be configured in
+    ##
+    logFormat: logfmt
+
+    ## Enable/Disable Grafana dashboards provisioning for prometheus remote write feature
+    remoteWriteDashboards: false
+
+    ## Resource limits & requests
+    ##
+    resources:
+      requests:
+        memory: 400Mi
+      limits:
+        memory: 1Gi
+
+    ## Prometheus StorageSpec for persistent data
+    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
+    ##
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 50Gi
+
+    ## SecurityContext holds pod-level security attributes and common container settings.
+    ## This defaults to non root user with uid 1000 and gid 2000.
+    ## https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md
+    ##
+    securityContext:
+      runAsGroup: 2000
+      runAsNonRoot: true
+      runAsUser: 1000
+      fsGroup: 2000
