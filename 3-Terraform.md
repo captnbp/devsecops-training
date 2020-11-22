@@ -80,9 +80,9 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      ```bash
      cd terraform
      terraform init
-     terraform validate -var image=${SCW_IMAGE}" -var environnement="cli"
-     terraform plan -var image=${SCW_IMAGE}" -var environnement="cli"
-     terraform apply -var image=${SCW_IMAGE}" -var environnement="cli"
+     terraform validate -var image=${SCW_IMAGE} -var environnement="cli"
+     terraform plan -var image=${SCW_IMAGE} -var environnement="cli"
+     terraform apply -var image=${SCW_IMAGE} -var environnement="cli"
      ```
 4. Une fois votre infrastructure déployée avec succès, récupérez l'adresse IP de votre VM dans l'interface Scaleway (https://console.scaleway.com/instance/servers)
    ```bash
