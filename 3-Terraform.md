@@ -44,7 +44,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 
 ## Terraform
 
-0. Cours sur Terraform
+0. Cours sur Terraform: https://docs.google.com/presentation/d/1c0TKqh1zTZJXDQriygVUj9eGUzEDgxzy0590rqt3mj8/edit#slide=id.ga20f2cb23d_0_73 
 1. Créez une nouvelle issue nommée `Création d'une infrastructure Scaleway avec Terraform` puis créez sa Merge Request dans le dépôt `infrastructure`. Ensuite clonez le code de votre dépôt `infrastructure`, et changez de branche pour utiliser la nouvelle branche
 2. A partir des spécifications ci-dessus, créez le fichier `terraform/main.tf` et ajoutez l'ensemble des resources nécessaires pour créer notre infrastructure. 
    
