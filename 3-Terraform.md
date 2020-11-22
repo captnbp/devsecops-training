@@ -98,7 +98,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 5. Faites une petite démo à votre professeur si ça a marché !
 6. Maintenant que votre déploiement Terraform est fonctionnel en test, nous allons le **destroy** pour passer à l'industrialisation :
    ```bash
-   terraform destroy -var image=${SCW_IMAGE}" -var environnement="cli"
+   terraform destroy -var image=${SCW_IMAGE} -var environnement="cli"
    ```
 7. Enfin commitez dans votre branche votre fichier `terraform/main.tf`
 
