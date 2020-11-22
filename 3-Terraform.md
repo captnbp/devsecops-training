@@ -66,7 +66,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      export VAULT_TOKEN=<Le token précédement récupéré>
      export GROUPE_NUMBER=<groupe number>
      ```
-   - Exportez les les variables d'environnement nécessaire à l'exécution de Packer :
+   - Exportez les les variables d'environnement nécessaire à l'exécution de Terraform :
      ```bash
      export SCW_DEFAULT_PROJECT_ID=$(vault read -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
      export SCW_DEFAULT_ORGANIZATION_ID=$(vault read -field=SCW_DEFAULT_ORGANIZATION_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
@@ -74,15 +74,15 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
      export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUPE_NUMBER}/scaleway)
      export SCW_DEFAULT_REGION=$(vault read -field=SCW_DEFAULT_REGION secret/groupe-${GROUPE_NUMBER}/scaleway)
-     export IMAGE_TAG=1.0.1
+     export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.1 -o json | jq ".[0].ID")
      ```
    - Puis :
      ```bash
      cd terraform
      terraform init
-     terraform validate -var image="ubuntu-hitema-1.0.1" -var environnement="cli"
-     terraform plan -var image="ubuntu-hitema-1.0.1" -var environnement="cli"
-     terraform apply -var image="ubuntu-hitema-1.0.1" -var environnement="cli"
+     terraform validate -var image=${SCW_IMAGE}" -var environnement="cli"
+     terraform plan -var image=${SCW_IMAGE}" -var environnement="cli"
+     terraform apply -var image=${SCW_IMAGE}" -var environnement="cli"
      ```
 4. Une fois votre infrastructure déployée avec succès, récupérez l'adresse IP de votre VM dans l'interface Scaleway (https://console.scaleway.com/instance/servers)
    ```bash
@@ -92,7 +92,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 5. Faites une petite démo à votre professeur si ça a marché !
 6. Maintenant que votre déploiement Terraform est fonctionnel en test, nous allons le **destroy** pour passer à l'industrialisation :
    ```bash
-   terraform destroy -var image="ubuntu-hitema-1.0.1" -var environnement="cli"
+   terraform destroy -var image=${SCW_IMAGE}" -var environnement="cli"
    ```
 7. Enfin commitez dans votre branche votre fichier `terraform/main.tf`
 
@@ -144,6 +144,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
      - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<group_number>/scaleway)"
      - export SCW_DEFAULT_REGION="$(vault kv get -field=SCW_DEFAULT_REGION secret/groupe-<group_number>/scaleway)"
+     - export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.1 -o json | jq ".[0].ID")
 
    stages:
      - prepare
@@ -159,13 +160,13 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
    validate:
      stage: validate
      script:
-       - gitlab-terraform validate -var image="ubuntu-hitema-1.0.1" -var environnement="production"
+       - gitlab-terraform validate -var image=${SCW_IMAGE} -var environnement="production"
 
    plan:
      stage: plan
      script:
-       - gitlab-terraform plan -var image="ubuntu-hitema-1.0.1" -var environnement="production"
-       - gitlab-terraform plan-json  -var image="ubuntu-hitema-1.0.1" -var environnement="production"
+       - gitlab-terraform plan -var image=${SCW_IMAGE} -var environnement="production"
+       - gitlab-terraform plan-json  -var image=${SCW_IMAGE} -var environnement="production"
      artifacts:
        name: plan
        paths:
@@ -190,7 +191,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
    ![Gitlab](images/terraform_plan_widget_v13_2.png)
 5. Cliquez également sur le bouton `View full log` du widget Terraform afin de voir la trace d'exécution du `terraform plan`
 6. Nous voulons maintenant ajouter un stage `cleanup` et son job `destroy` qui permettra via une action manuelle de détruire intégralement notre infrastructure. 
-   - Pour supprimer notre infrastructure, il faudra utiliser la commande `gitlab-terraform destroy -var image="ubuntu-hitema-1.0.1" -var environnement="production"` dans le job `destroy`.
+   - Pour supprimer notre infrastructure, il faudra utiliser la commande `gitlab-terraform destroy -var image=${SCW_IMAGE} -var environnement="production"` dans le job `destroy`.
    - Il faudra aussi modifier l'environnement dans le job `apply` en ajoutant le paramètre `on_stop` (https://docs.gitlab.com/ee/ci/environments/#stopping-an-environment)
    - La suppression du déploiement doit être manuelle.
 7. Mergez la branche via la merge request Gitlab et constatez le fonctionnement:

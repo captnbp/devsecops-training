@@ -44,6 +44,7 @@ Nous allons appliquer l'amélioration suivante de sécurité à notre image VM :
      export SCW_ACCESS_KEY=$(vault read -field=SCW_ACCESS_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
      export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
      export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUPE_NUMBER}/scaleway)
+     export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.2 -o json | jq ".[0].ID")
      export IMAGE_TAG=1.0.2
      ```
    - Puis :
@@ -204,6 +205,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
      export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
      export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUPE_NUMBER}/scaleway)
      export SCW_TOKEN=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
+     export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.3 -o json | jq ".[0].ID")
      ```
    - Puis :
      ```bash
@@ -254,6 +256,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
        only:
          - master
      ```
+     - Changez le tag de l'image dans `before_script` pour avoir `1.0.3` au lieu de `1.0.1`
 5. Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
 
 ### Traefik
@@ -338,7 +341,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
      export VAULT_TOKEN=<Le token précédement récupéré>
      export GROUPE_NUMBER=<groupe number>
      ```
-   - Exportez les les variables d'environnement nécessaire à l'exécution de Packer :
+   - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
      ```bash
      export SCW_DEFAULT_PROJECT_ID=$(vault read -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
      export SCW_DEFAULT_ORGANIZATION_ID=$(vault read -field=SCW_DEFAULT_ORGANIZATION_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
