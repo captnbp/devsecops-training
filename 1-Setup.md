@@ -41,6 +41,8 @@
 
 ## Création des dépôts Gitlab
 
+Cours sur Gitlab CI
+
 Créer 3 projets Gitlab (**`image`**, **`infrastructure`** et **`application`**) dans votre sous-groupe Gitlab **group_< number >**
   
 > **Attention** : merci de mettre les noms de projets en minuscules
