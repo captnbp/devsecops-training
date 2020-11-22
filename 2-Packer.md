@@ -123,6 +123,7 @@ Afin de mieux sécuriser les clés d'API Scaleway, nous allons les stocker dans 
    - **SCW_DEFAULT_ORGANIZATION_ID** : Votre Project ID Scaleway (https://console.scaleway.com/project/settings)
    - **SCW_ACCESS_KEY** : Votre Access key Scaleway
    - **SCW_SECRET_KEY** : Votre Secret key Scaleway
+   - **SCW_TOKEN** : Votre Secret key Scaleway
    - **SCW_DEFAULT_ZONE** : fr-par-1
    - **SCW_DEFAULT_REGION** : fr-par
     ![vault](images/vault-1.png)
