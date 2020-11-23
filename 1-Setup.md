@@ -185,35 +185,6 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
 ### Application hello-world
 
 0. Créer un projet (dépôt) nommé **`application`** dans votre sous-groupe `hitema-devsecops-2020/group_<group_number>`
-0. Créer une issue dans le dépôt **`application`** nommée `Création de la structure de base du dépôt`
-0. Depuis cette issue, créer une merge request (bouton en bas). Cela va aussi créer une branche de travail à utiliser ci-dessous
-0. Création de la structure de répertoire du projet **`application`**
-    ```sh
-    # Dans votre shell ubuntu
-    ./src/
-    ./src/Dockerfile
-    ./ansible/
-    ./doc/
-    README.md
-    .gitlab-ci.yml
-    .gitignore
-    LICENSE
-    ```
-    ```sh
-    mkdir $HOME/code
-    cd $HOME/code
-    git clone git@gitlab.com:hitema-devsecops-2020/group_<group_number>/group_<group_number>/application.git
-
-    cd application
-    git checkout <branche créée dans la merge request de l issue>
-
-    mkdir src ansible doc
-    touch src/Dockerfile README.md .gitlab-ci.yml .gitignore LICENSE
-
-    git add src/Dockerfile README.md .gitlab-ci.yml .gitignore LICENSE ansible
-    git commit -a -m ":tada: Initial commit for folder structure"
-    git push
-    ```
 
 ## Création d'un jeu d'API keys Scaleway dans votre projet Scaleway
 
