@@ -134,8 +134,8 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     LICENSE
     ```
     ```sh
-    # Dans votre shell ubuntu
-    mkdir $HOME/code
+    # Dans votre Terminal code-hitema
+    mkdir -p $HOME/code
     cd $HOME/code
     git clone git@gitlab.com:hitema-devsecops-2020/group_<group_number>/image.git
 
@@ -166,8 +166,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     LICENSE
     ```
     ```sh
-    # Dans votre shell ubuntu
-    mkdir $HOME/code
+    # Dans votre Terminal code-hitema
     cd $HOME/code
     git clone git@gitlab.com:hitema-devsecops-2020/group_<group_number>/infrastructure.git
 
