@@ -61,7 +61,7 @@ Connectez-vous à l'url suivante : https://code-hitema.doca.cloud avec le naviga
 
    ![Group](images/code-server-1.png)
 
-2. Créez votre *Server* (votre environnement de développement personnel dans VSCode)
+2. Créez votre *Server* (votre environnement de développement personnel dans Code-Hitema)
 
    ![Group](images/code-server-2.png)
 
@@ -92,7 +92,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
 
 ### Création des clés SSH
 
-0. Créer un jeu de clé ssh avec `ssh-keygen -t ed25519 -C <Prénom> -N ""` dans le Terminal VSCode
+0. Créer un jeu de clé ssh avec `ssh-keygen -t ed25519 -C <Prénom> -N ""` dans le Terminal Code-Hitema
 1. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_ed25519.pub` dans la liste de clé du compte Scaleway (https://console.scaleway.com/project/)
 2. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_ed25519.pub` dans son compte Gitlab: https://gitlab.com/profile/keys
     
