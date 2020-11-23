@@ -145,7 +145,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     mkdir packer doc
     touch README.md LICENSE .gitignore .gitlab-ci.yml  packer/packer.json
 
-    git add packer doc postconf_vm README.md LICENSE .gitignore .gitlab-ci.yml  packer/packer.json
+    git add packer doc README.md LICENSE .gitignore .gitlab-ci.yml  packer/packer.json
     git commit -a -m ":tada: Initial commit for folder structure"
     git push
     ```
