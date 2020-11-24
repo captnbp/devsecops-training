@@ -258,7 +258,19 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
          - master
      ```
      - Changez le tag de l'image dans `before_script` pour avoir `1.0.3` au lieu de `1.0.1`
-5. Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
+10. Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
+
+#### Amélioration de la sécurité des clés SSH de Gitlab CI
+
+Laisser des secrets statiques dans Gitlab n'est pas ce qui est de mieux en terme de sécurité. Nous préférons avoir des secrets temporaires, jetables et dynamiques. D'où la proposition suivant pour les clés SSH utilisées par Gitlab.
+
+1.  Nous allons maintenant faire une amélioration de sécurité pour la gestion du jeu de clé SSH de Gitlab, celui que nous avons mis dans les variables CI/CD des projets `infrastructure` et `application` :
+    - Supprimez ces variables des 2 projets
+    - Faites une issue `Suppression des clés SSH statiques Gitlab`, puis une Merge Request, et enfin pullez le code dans code-hitema, et checkoutez sur la branche nouvellement créée.
+    - Adaptez le job de `postconf` dans `.gitlab-ci.yml` pour ne plus utiliser les clés statiques depuis les variables CI/CD, en créant un nouveau jeu de clé SSH temporaire de type `ed25519`
+    - C'est ce nouveau jeu de clés temporaire qui sera signé par la commande `vault write -field=signed_key ssh/sign/gitlab public_key=${SSH_PUB_KEY} > ${HOME}/.ssh/id_ed25519.pub`
+2.  Commitez, pushez, et si tout se passe bien, montrez le résultat à votre professeur pour qu'il merge votre Merge Request.
+
 
 ### Traefik
 Nous voulons déployer Traefik afin d'exposer notre future application sur internet, et de la sécuriser automatiquement avec des certificats TLS Let's Encrypt.
@@ -270,7 +282,7 @@ Pour cela :
 
 Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ansible dans le répertoire `postconf_vm/roles` de notre dépôt `infrastructure` :
 
-0. Dans le dépôt `infrastructure`, créez une issue `Post-config - Traefik`, puis créez la Merge Request et sa branche associée.
+0. Dans le dépôt `infrastructure`, créez une issue `Post-config - Déploiement de Traefik`, puis créez la Merge Request et sa branche associée.
 1. Dans Code-Hitema, pullez le code et basculez sur la nouvelle branche.
 2. Créez la structure de répertoires suivante :
    ```bash
