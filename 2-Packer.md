@@ -1,5 +1,6 @@
 # Build d'une image VM automatiquement via Packer et Gitlab CI
 
+> ** Important** dès que vous avez votre instance Code-Hitema, lancez la commande suivante : `chmod 600 ${HOME}/.ssh/id_ed25519`
 ## Documentation
 
 *  Gitlab: https://docs.gitlab.com/ee/ci/introduction/
