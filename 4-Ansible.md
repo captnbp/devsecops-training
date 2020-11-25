@@ -228,7 +228,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
      ansible_lint:
        stage: validate
        script:
-         - cd postconf_vm
+         - cd ${CI_PROJECT_DIR}/postconf_vm
          - ansible-lint .
      
      postconf:
