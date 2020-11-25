@@ -216,6 +216,14 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
      ansible-lint .
      ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml
      ```
+     > Pour installer ansible-lint : 
+     > ```bash
+     > pip3 install ansible-lint
+     > ```
+     > Et pour l'utiliser :
+     > ```bash
+     > /home/coder/.local/bin/ansible-lint .
+     > ```
 8. Si le test manuel est passé, commitez votre code sur la branche et pushez
    ```bash
    git commit .gitlab-ci.yml postconf_vm/playbook.yml postconf_vm/scaleway-ansible-inventory.yml postconf_vm/roles/partitions/tasks/main.yml -m "Setup volume in VM"
