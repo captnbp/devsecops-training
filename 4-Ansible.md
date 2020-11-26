@@ -256,7 +256,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
          - chmod 700 ~/.ssh
 
          # Make Vault sign our public key and store the SSH certificate in .ssh/
-         - vault write -field=signed_key ssh/sign/gitlab public_key=${SSH_PUB_KEY} > ${HOME}/.ssh/id_ed25519.pub
+         - vault write -field=signed_key ssh/sign/gitlab public_key="${SSH_PUB_KEY}" > ${HOME}/.ssh/id_ed25519.pub
          
          # Deploy
          - cd postconf_vm
@@ -375,7 +375,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
      ```bash
      cd postconf_vm/
      vault write -field=signed_key ssh/sign/students public_key=@$HOME/.ssh/id_ed25519.pub > $HOME/.ssh/id_ed25519-cert.pub
-     ansible-lint .
+     /home/coder/.local/bin/ansible-lint .
      ansible-inventory --list -i scaleway-ansible-inventory.yml
      ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml --syntax-check
      ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml
