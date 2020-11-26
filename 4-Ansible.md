@@ -317,7 +317,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
            - "--providers.docker.exposedbydefault=false"
            - "--api.insecure=true"
            - "--providers.docker=true"
-           - "--providers.docker.network=traefik-public"
+           - "--providers.docker.network=web"
            - "--entrypoints.web.address=:80"
            - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
            - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
