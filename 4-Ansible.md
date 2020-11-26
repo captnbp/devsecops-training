@@ -341,7 +341,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
            # To persist certificates
            - traefik-certificates:/letsencrypt
          labels:
-           - "co.elastic.logs/module=traefik"
+           co.elastic.logs/module: traefik
      ```
    - Enable Fail2ban jail for Traefik
      - Créer le fichier `/etc/fail2ban/jail.d/traefik.conf` avec le contenu suivant :
