@@ -279,6 +279,33 @@ Laisser des secrets statiques dans Gitlab n'est pas ce qui est de mieux en terme
     - C'est ce nouveau jeu de clés temporaire qui sera signé par la commande `vault write -field=signed_key ssh/sign/gitlab public_key=${SSH_PUB_KEY} > ${HOME}/.ssh/id_ed25519.pub`
 2.  Commitez, pushez, et si tout se passe bien, montrez le résultat à votre professeur pour qu'il merge votre Merge Request.
 
+```yaml
+postconf:
+  stage: postconf
+  environment:
+    name: production
+  script:
+      # Install ssh-agent if not already installed
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval "$(ssh-agent -s)"
+
+    # Création du dossier
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+
+    - ssh-keygen -t ed25519 -C Gitlab -N "" -f ${HOME}/.ssh/id_ed25519
+    - ssh-add ${HOME}/.ssh/id_ed25519
+
+    # Make Vault sign our public key and store the SSH certificate in .ssh/
+    - vault write -field=signed_key ssh/sign/gitlab public_key=@${HOME}/.ssh/id_ed25519.pub > ${HOME}/.ssh/id_ed25519-cert.pub
+    - ssh-keygen -L -f ${HOME}/.ssh/id_ed25519-cert.pub
+
+    # Deploy
+    - cd ${CI_PROJECT_DIR}/postconf_vm
+    - ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml --syntax-check
+    - ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml
+```
+
 
 ### Traefik
 Nous voulons déployer Traefik afin d'exposer notre future application sur internet, et de la sécuriser automatiquement avec des certificats TLS Let's Encrypt.
