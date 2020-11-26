@@ -213,7 +213,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
      cd postconf_vm/
      vault write -field=signed_key ssh/sign/students public_key=@$HOME/.ssh/id_ed25519.pub > $HOME/.ssh/id_ed25519-cert.pub
      ansible-inventory --list -i scaleway-ansible-inventory.yml
-     ansible-lint .
+     /home/coder/.local/bin/ansible-lint .
      ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml
      ```
      > Pour installer ansible-lint : 
