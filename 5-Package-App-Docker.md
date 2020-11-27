@@ -49,7 +49,32 @@ Il va donc falloir tester le build directement dans Gitlab CI.
 ## Build de l'image Docker
 
 0. Créez une issue `Build Dockerfile` dans le dépôt Gitlab `application`, puis une Merge Request
-1. Nous allons builder l'image Docker avec l'outil kaniko (https://github.com/GoogleContainerTools/kaniko)
+1. Afin d'éviter de se faire blacklister par Docker Hub (rate limit) :
+   - Inscrivez-vous sur le site https://hub.docker.com/, pusi créez un Access Token ici : https://hub.docker.com/settings/security
+   - Stockez votre access token Docker Hub dans Vault dans le secret nommé : `groupe-<group number>/dockerhub` en mettant les 2 keys suivantes :
+     - `DOCKERHUB_USERNAME` -> votre username de votre compte Docker Hub
+     - `DOCKERHUB_ACCESS_TOKEN` -> votre access token
+     - `URL` = `https://index.docker.io/v1/` (cf. https://github.com/GoogleContainerTools/kaniko#pushing-to-docker-hub)
+   - Dans `.gitlab-ci.yml`, créez un stage `prepare` et un job `vault` associé à ce stage
+   - Dans notre job `vault`, il faudra aller faire un `vault read groupe-<group number>/dockerhub` pour chaque key du secret afin de les intégrer à la création du fichier `/kaniko/.docker/config.json` (en plus des creds déjà settés dans l'exemple de la doc Gitlab)
+     - Créer un job qui récupère le compte Docker Hub depuis Vault, construit le fichier `docker.json`, et le met en cache.
+       ```yaml
+       vault:
+         stage: prepare
+         image: captnbp/gitlab-ci-image:v2.9.7
+         variables:
+           VAULT_ADDR: https://vault-hitema.doca.cloud:443
+         scripts:
+           - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
+           - mkdir .docker
+           - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}},{\"`vault kv get -field=URL secret/groupe-<group_number>/dockerhub`\":{\"username\":\"`vault kv get -field=DOCKERHUB_USERNAME secret/groupe-<group_number>/dockerhub`\",\"password\":\"`vault kv get -field=DOCKERHUB_ACCESS_TOKEN secret/groupe-<group_number>/dockerhub`\"}}}" > ${CI_PROJECT_DIR}/.docker/config.json
+           - vault token revoke -self
+         cache:
+           key: dockerconfig
+           paths:
+             - ".docker/config.json"
+       ```
+2. Nous allons builder l'image Docker avec l'outil kaniko (https://github.com/GoogleContainerTools/kaniko)
    - Voici un peu de documentation : https://docs.gitlab.com/ee/ci/docker/using_kaniko.html
    - Créez le job `build` rattaché au stage `build`
    - Ajoutez le `before_script` suivant :
@@ -64,17 +89,6 @@ Il va donc falloir tester le build directement dans Gitlab CI.
            export CI_APPLICATION_TAG=${CI_APPLICATION_TAG:-$CI_COMMIT_TAG}
          fi
      ```
-   - Afin d'éviter de se faire blacklister par Docker Hub (rate limit) inscrivez-vous sur le site https://hub.docker.com/, pusi créez un Access Token ici : https://hub.docker.com/settings/security
-   - Stockez votre access token Docker Hub dans Vault dans le secret nommé : `groupe-<group number>/dockerhub` en mettant les 2 keys suivantes :
-     - `DOCKERHUB_USERNAME` -> votre username de votre compte Docker Hub
-     - `DOCKERHUB_ACCESS_TOKEN` -> votre access token
-     - `URL` = `https://index.docker.io/v1/` (cf. https://github.com/GoogleContainerTools/kaniko#pushing-to-docker-hub)
-   - Dans notre job `build`, il faudra aller faire un `vault read groupe-<group number>/dockerhub` pour chaque key du secret afin de les intégrer à la création du fichier `/kaniko/.docker/config.json` (en plus des creds déjà settés dans l'exemple de la doc Gitlab)
-     - Créer un job qui récupère le compte Docker Hub depuis Vault, construit le fichier `docker.json`, et le met en cache.
-       ```yaml
-                - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-
-       ```
      Voici un exemple à adapter :
      ```yaml
      docker-build:
@@ -82,10 +96,15 @@ Il va donc falloir tester le build directement dans Gitlab CI.
        image:
          name: gcr.io/kaniko-project/executor:debug
          entrypoint: [""]
+       cache:
+         key: dockerconfig
+         paths:
+           - ".docker/config.json"
        script:
-         - /kaniko/executor --context $CI_PROJECT_DIR/dockerfiles/browser --dockerfile Dockerfile --destination $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG
+         - cp -a .docker /kaniko/.docker
+         - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile Dockerfile --destination $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG
      ```
-2. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
+3. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
 
 ## Scan de l'image Docker à la recherche de packages vulnérables
 
