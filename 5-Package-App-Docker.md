@@ -156,6 +156,7 @@ Il va donc falloir tester le build directement dans Gitlab CI.
        # for details
        GIT_STRATEGY: none
        CS_ANALYZER_IMAGE: $SECURE_ANALYZERS_PREFIX/klar:$CS_MAJOR_VERSION
+       DOCKER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
      allow_failure: true
      services:
        - name: $CLAIR_DB_IMAGE
