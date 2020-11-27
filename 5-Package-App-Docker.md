@@ -106,6 +106,27 @@ Il va donc falloir tester le build directement dans Gitlab CI.
          - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"},${DOCKER_CREDS}}}" > /kaniko/.docker/config.json
          - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
      ```
+     - Modifiez le contenu de `requirements.txt` avec:
+       ```
+       alembic==0.9.1
+       appdirs==1.4.3
+       click==6.7
+       Flask==1.0
+       Flask-Migrate==2.0.3
+       Flask-Script==2.0.5
+       Flask-SQLAlchemy==2.2
+       itsdangerous==0.24
+       Jinja2==2.9.6
+       Mako==1.0.6
+       MarkupSafe==1.1.1
+       packaging==16.8
+       psycopg2==2.8.4
+       pyparsing==2.2.0
+       python-editor==1.0.3
+       six==1.10.0
+       SQLAlchemy==1.3.20
+       Werkzeug==0.15.5
+       ```
 3. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
 
 ## Scan de l'image Docker à la recherche de packages vulnérables
