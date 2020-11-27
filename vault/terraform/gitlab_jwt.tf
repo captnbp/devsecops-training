@@ -99,5 +99,8 @@ resource "vault_policy" "gitlab" {
     path "secret/groupe-${count.index}/scaleway" {
       capabilities = [ "read", "list" ]
     }
+    path "secret/groupe-${count.index}/scaleway" {
+      capabilities = [ "read", "list" ]
+    }
   EOT
 }

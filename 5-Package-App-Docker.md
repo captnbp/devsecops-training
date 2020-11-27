@@ -101,7 +101,7 @@ Il va donc falloir tester le build directement dans Gitlab CI.
          paths:
            - ".docker/config.json"
        script:
-         - cp -a .docker /kaniko/.docker
+         - cp -a .docker/config.json /kaniko/.docker/config.json
          - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile Dockerfile --destination $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG
      ```
 3. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
