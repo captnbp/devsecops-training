@@ -122,7 +122,7 @@ Il va donc falloir tester le build directement dans Gitlab CI.
 2. Créez un stage `security`
 3. Ajoutez le scan d'image image façon Gitlab https://docs.gitlab.com/ee/user/application_security/container_scanning/
    ```yaml
-   container_scanning_nginx:
+   container_scanning:
      stage: security
      image: $SECURE_ANALYZERS_PREFIX/klar:$CS_MAJOR_VERSION
      variables:
