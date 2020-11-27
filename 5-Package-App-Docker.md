@@ -50,7 +50,7 @@ Il va donc falloir tester le build directement dans Gitlab CI.
 
 0. Créez une issue `Build Dockerfile` dans le dépôt Gitlab `application`, puis une Merge Request
 1. Afin d'éviter de se faire blacklister par Docker Hub (rate limit) :
-   - Inscrivez-vous sur le site https://hub.docker.com/, pusi créez un Access Token ici : https://hub.docker.com/settings/security
+   - Inscrivez-vous sur le site https://hub.docker.com/, puis créez un Access Token ici : https://hub.docker.com/settings/security
    - Stockez votre access token Docker Hub dans Vault dans le secret nommé : `groupe-<group number>/dockerhub` en mettant les 2 keys suivantes :
      - `DOCKERHUB_USERNAME` -> votre username de votre compte Docker Hub
      - `DOCKERHUB_ACCESS_TOKEN` -> votre access token
@@ -67,7 +67,7 @@ Il va donc falloir tester le build directement dans Gitlab CI.
          scripts:
            - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
            - mkdir .docker
-           - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}},{\"`vault kv get -field=URL secret/groupe-<group_number>/dockerhub`\":{\"username\":\"`vault kv get -field=DOCKERHUB_USERNAME secret/groupe-<group_number>/dockerhub`\",\"password\":\"`vault kv get -field=DOCKERHUB_ACCESS_TOKEN secret/groupe-<group_number>/dockerhub`\"}}}" > ${CI_PROJECT_DIR}/.docker/config.json
+           - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"},\"`vault kv get -field=URL secret/groupe-<group_number>/dockerhub`\":{\"username\":\"`vault kv get -field=DOCKERHUB_USERNAME secret/groupe-<group_number>/dockerhub`\",\"password\":\"`vault kv get -field=DOCKERHUB_ACCESS_TOKEN secret/groupe-<group_number>/dockerhub`\"}}}" > ${CI_PROJECT_DIR}/.docker/config.json
            - vault token revoke -self
          cache:
            key: dockerconfig
