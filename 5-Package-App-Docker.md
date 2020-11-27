@@ -42,7 +42,7 @@ Il va donc falloir tester le build directement dans Gitlab CI.
    > include:
    >   - template: Jobs/Code-Quality.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab-foss/blob/master/lib/gitlab/ci/templates/Jobs/Code-Quality.gitlab-ci.yml
    >   - template: Security/SAST.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab-foss/blob/master/lib/gitlab/ci/templates/Security/SAST.gitlab-ci.yml
-   >   - template: Code-Quality.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab-foss/blob/master/lib/gitlab/ci/templates/Code-Quality.gitlab-ci.yml
+   >   - template: Security/Dependency-Scanning.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Security/Dependency-Scanning.gitlab-ci.yml
    > ```
 4. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
 
@@ -70,6 +70,11 @@ Il va donc falloir tester le build directement dans Gitlab CI.
      - `DOCKERHUB_ACCESS_TOKEN` -> votre access token
      - `URL` = `https://index.docker.io/v1/` (cf. https://github.com/GoogleContainerTools/kaniko#pushing-to-docker-hub)
    - Dans notre job `build`, il faudra aller faire un `vault read groupe-<group number>/dockerhub` pour chaque key du secret afin de les intégrer à la création du fichier `/kaniko/.docker/config.json` (en plus des creds déjà settés dans l'exemple de la doc Gitlab)
+     - Créer un job qui récupère le compte Docker Hub depuis Vault, construit le fichier `docker.json`, et le met en cache.
+       ```yaml
+                - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+
+       ```
      Voici un exemple à adapter :
      ```yaml
      docker-build:
@@ -78,7 +83,6 @@ Il va donc falloir tester le build directement dans Gitlab CI.
          name: gcr.io/kaniko-project/executor:debug
          entrypoint: [""]
        script:
-         - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
          - /kaniko/executor --context $CI_PROJECT_DIR/dockerfiles/browser --dockerfile Dockerfile --destination $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG
      ```
 2. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
