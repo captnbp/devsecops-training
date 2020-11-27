@@ -67,7 +67,7 @@ Il va donc falloir tester le build directement dans Gitlab CI.
          scripts:
            - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
            - mkdir .docker
-           - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"},\"`vault kv get -field=URL secret/groupe-<group_number>/dockerhub`\":{\"username\":\"`vault kv get -field=DOCKERHUB_USERNAME secret/groupe-<group_number>/dockerhub`\",\"password\":\"`vault kv get -field=DOCKERHUB_ACCESS_TOKEN secret/groupe-<group_number>/dockerhub`\"}}}" > ${CI_PROJECT_DIR}/.docker/config.json
+           - echo "\"`vault kv get -field=URL secret/groupe-<group_number>/dockerhub`\":{\"username\":\"`vault kv get -field=DOCKERHUB_USERNAME secret/groupe-<group_number>/dockerhub`\",\"password\":\"`vault kv get -field=DOCKERHUB_ACCESS_TOKEN secret/groupe-<group_number>/dockerhub`\"}" > ${CI_PROJECT_DIR}/.docker/config.json
            - vault token revoke -self
          cache:
            key: dockerconfig
@@ -101,7 +101,8 @@ Il va donc falloir tester le build directement dans Gitlab CI.
          paths:
            - ".docker/config.json"
        script:
-         - cp -a .docker/config.json /kaniko/.docker/config.json
+         - export DOCKER_CONFIG=$(cat .docker/config.json)
+         - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"},${DOCKER_CONFIG}}}" > ${CI_PROJECT_DIR}/.docker/config.json
          - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile Dockerfile --destination $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG
      ```
 3. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
