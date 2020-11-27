@@ -27,7 +27,7 @@ Nous allons tester et builder l'image. Exceptionellement nous ne pourrons pas te
 Il va donc falloir tester le build directement dans Gitlab CI.
 
 0. Créez une issue `Check Dockerfile and requirements` dans le dépôt Gitlab `application`, puis une Merge Request
-1. Toujours dans le dépôt application, et la branche précédente, créez le fichier `.gitlab-ci.yml` à la racine.
+1. Créez le fichier `.gitlab-ci.yml` à la racine.
    - Settez l'image avec `image: captnbp/gitlab-ci-image:v2.9.7`
 2. Préparez les stages suivants : test, build
 3. Nous allons intégrer les différents checks que nous avons fait précédement dans des jobs indépendants au sein du stage `test`:
