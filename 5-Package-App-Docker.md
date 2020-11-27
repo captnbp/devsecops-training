@@ -123,8 +123,8 @@ Il va donc falloir tester le build directement dans Gitlab CI.
 3. Ajoutez le scan d'image image façon Gitlab https://docs.gitlab.com/ee/user/application_security/container_scanning/
    ```yaml
    container_scanning:
-     stage: security
-     image: $SECURE_ANALYZERS_PREFIX/klar:$CS_MAJOR_VERSION
+     stage: test
+     image: "$CS_ANALYZER_IMAGE"
      variables:
        # By default, use the latest clair vulnerabilities database, however, allow it to be overridden here with a specific image
        # to enable container scanning to run offline, or to provide a consistent list of vulnerabilities for integration testing purposes
@@ -134,6 +134,7 @@ Il va donc falloir tester le build directement dans Gitlab CI.
        # file. See https://docs.gitlab.com/ee/user/application_security/container_scanning/index.html#overriding-the-container-scanning-template
        # for details
        GIT_STRATEGY: none
+       CS_ANALYZER_IMAGE: $SECURE_ANALYZERS_PREFIX/klar:$CS_MAJOR_VERSION
      allow_failure: true
      services:
        - name: $CLAIR_DB_IMAGE
@@ -143,5 +144,7 @@ Il va donc falloir tester le build directement dans Gitlab CI.
      artifacts:
        reports:
          container_scanning: gl-container-scanning-report.json
+     dependencies: []
+
    ```
 4. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
