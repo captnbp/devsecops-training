@@ -102,7 +102,7 @@ Il va donc falloir tester le build directement dans Gitlab CI.
            - ".docker/config.json"
        script:
          - export DOCKER_CONFIG=$(cat .docker/config.json)
-         - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"},${DOCKER_CONFIG}}}" > ${CI_PROJECT_DIR}/.docker/config.json
+         - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"},${DOCKER_CONFIG}}}" > /kaniko/.docker/config.json
          - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile Dockerfile --destination $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG
      ```
 3. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
