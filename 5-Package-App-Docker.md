@@ -123,7 +123,7 @@ Il va donc falloir tester le build directement dans Gitlab CI.
 3. Ajoutez le scan d'image image façon Gitlab https://docs.gitlab.com/ee/user/application_security/container_scanning/
    ```yaml
    container_scanning:
-     stage: test
+     stage: security
      image: "$CS_ANALYZER_IMAGE"
      variables:
        # By default, use the latest clair vulnerabilities database, however, allow it to be overridden here with a specific image
