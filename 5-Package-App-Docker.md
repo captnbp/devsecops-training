@@ -2,7 +2,7 @@
 
 Nous allons sécuriser, packager, updater l'application démo suivante écrite en Python : https://github.com/Azure-Samples/flask-postgresql-app.git
 
-0. Créez une issue `Nouvelle demo app` dans le déôt Gitlab `application`, puis une Merge Request
+0. Créez une issue `Nouvelle demo app` dans le dépôt Gitlab `application`, puis une Merge Request
 1. Dans votre terminal code-hitema, git clonez le dépôt `application` dans `$HOME/code`
 2. Clonez l'application https://github.com/Azure-Samples/flask-postgresql-app.git dans votre répertoire `$HOME/code`
 3. Une fois que c'est fait, copier tout les fichiers du dépôt flask-postgresql-app dans le répertoire de votre dépôt `application`
