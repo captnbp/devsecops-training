@@ -56,7 +56,7 @@
      "DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" dist-upgrade",
      "DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" curl apt-transport-https linux-image-generic-hwe-20.04 linux-headers-generic-hwe-20.04 byobu git parted sudo vim",
      "DEBIAN_FRONTEND=noninteractive apt-get -y remove linux-image-generic",
-     "apt-get update && apt-get install -y -qq --no-install-recommends docker.io python3-docker",
+     "apt-get update && apt-get install -y -qq --no-install-recommends docker.io python3-docker python3-psycopg2",
      "usermod -aG docker ubuntu",
      "DEBIAN_FRONTEND=noninteractive apt-get autoclean && apt-get -y autoremove && rm -rf /var/lib/apt/lists/*",
      "echo \"TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem\" > /etc/ssh/sshd_config.d/vault.conf",
