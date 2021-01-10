@@ -28,12 +28,12 @@ resource "vault_policy" "dev-group" {
     path "database/roles/backup-groupe-${count.index}-dev" {
       capabilities = [ "create", "read", "update", "delete", "list" ]
     }
-    path "database/roles/app-groupe-${count.index}-dev" {
+    path "database/roles/application-groupe-${count.index}-dev" {
       capabilities = [ "create", "read", "update", "delete", "list" ]
     }
 
     # Create and manage ACL policies
-    path "sys/policies/acl/db-groupe-${count.index}-dev" {
+    path "sys/policies/acl/application-groupe-${count.index}-dev" {
       capabilities = ["create", "read", "update", "delete", "list", "sudo"]
     }
     path "sys/policies/acl/rundeck-groupe-${count.index}-dev" {
@@ -46,15 +46,15 @@ resource "vault_policy" "dev-group" {
     }
 
     # Create and manage roles
-    path "auth/approle/role/db-groupe-${count.index}-dev" {
+    path "auth/approle/role/application-groupe-${count.index}-dev" {
       capabilities = [ "create", "read", "update", "delete", "list" ]
     }
     # Get role-id
-    path "auth/approle/role/db-groupe-${count.index}-dev/role-id" {
+    path "auth/approle/role/application-groupe-${count.index}-dev/role-id" {
       capabilities = [ "read" ]
     }
     # Get secret-id
-    path "auth/approle/role/db-groupe-${count.index}-dev/secret-id" {
+    path "auth/approle/role/application-groupe-${count.index}-dev/secret-id" {
       capabilities = [ "update" ]
     }
 
@@ -103,12 +103,12 @@ resource "vault_policy" "prd-group" {
     path "database/roles/backup-groupe-${count.index}-prd" {
       capabilities = [ "create", "read", "update", "delete", "list" ]
     }
-    path "database/roles/app-groupe-${count.index}-prd" {
+    path "database/roles/application-groupe-${count.index}-prd" {
       capabilities = [ "create", "read", "update", "delete", "list" ]
     }
 
     # Create and manage ACL policies
-    path "sys/policies/acl/db-groupe-${count.index}-prd" {
+    path "sys/policies/acl/application-groupe-${count.index}-prd" {
       capabilities = ["create", "read", "update", "delete", "list", "sudo"]
     }
     path "sys/policies/acl/rundeck-groupe-${count.index}-prd" {
@@ -121,15 +121,15 @@ resource "vault_policy" "prd-group" {
     }
 
     # Create and manage roles
-    path "auth/approle/role/db-groupe-${count.index}-prd" {
+    path "auth/approle/role/application-groupe-${count.index}-prd" {
       capabilities = [ "create", "read", "update", "delete", "list" ]
     }
     # Get role-id
-    path "auth/approle/role/db-groupe-${count.index}-prd/role-id" {
+    path "auth/approle/role/application-groupe-${count.index}-prd/role-id" {
       capabilities = [ "read" ]
     }
     # Get secret-id
-    path "auth/approle/role/db-groupe-${count.index}-prd/secret-id" {
+    path "auth/approle/role/application-groupe-${count.index}-prd/secret-id" {
       capabilities = [ "update" ]
     }
 
