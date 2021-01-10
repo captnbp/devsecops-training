@@ -15,7 +15,7 @@ Voici le détail :
   - Nom : variable `environnement`
   - Image OS : variable `image`
   - Activer IPv6 sur la VM
-  - Tags : hitema,group-<group number>,variable `environnement`
+  - Tags : hitema,group-<group_number>,variable `environnement`
   - L'option suivante activée dans la VM de type `scaleway_instance_server` :
     ```hcl
     root_volume {
@@ -70,7 +70,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
    - Créez la variable d'environnement dans le Terminal de Code-Hitema :
      ```bash
      export VAULT_TOKEN=<Le token précédement récupéré>
-     export GROUPE_NUMBER=<groupe number>
+     export GROUPE_NUMBER=<group_number>
      ```
    - Exportez les les variables d'environnement nécessaire à l'exécution de Terraform :
      ```bash

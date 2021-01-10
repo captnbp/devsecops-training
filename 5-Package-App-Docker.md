@@ -51,12 +51,12 @@ Il va donc falloir tester le build directement dans Gitlab CI.
 0. Créez une issue `Build Dockerfile` dans le dépôt Gitlab `application`, puis une Merge Request
 1. Afin d'éviter de se faire blacklister par Docker Hub (rate limit) :
    - Inscrivez-vous sur le site https://hub.docker.com/, puis créez un Access Token ici : https://hub.docker.com/settings/security
-   - Stockez votre access token Docker Hub dans Vault dans le secret nommé : `groupe-<group number>/dockerhub` en mettant les 2 keys suivantes :
+   - Stockez votre access token Docker Hub dans Vault dans le secret nommé : `groupe-<group_number>/dockerhub` en mettant les 2 keys suivantes :
      - `DOCKERHUB_USERNAME` -> votre username de votre compte Docker Hub
      - `DOCKERHUB_ACCESS_TOKEN` -> votre access token
      - `URL` = `https://index.docker.io/v1/` (cf. https://github.com/GoogleContainerTools/kaniko#pushing-to-docker-hub)
    - Dans `.gitlab-ci.yml`, créez un stage `prepare` et un job `vault` associé à ce stage
-   - Dans notre job `vault`, il faudra aller faire un `vault read groupe-<group number>/dockerhub` pour chaque key du secret afin de les intégrer à la création du fichier `/kaniko/.docker/config.json` (en plus des creds déjà settés dans l'exemple de la doc Gitlab)
+   - Dans notre job `vault`, il faudra aller faire un `vault read groupe-<group_number>/dockerhub` pour chaque key du secret afin de les intégrer à la création du fichier `/kaniko/.docker/config.json` (en plus des creds déjà settés dans l'exemple de la doc Gitlab)
      - Créer un job qui récupère le compte Docker Hub depuis Vault, construit le fichier `docker.json`, et le met en cache.
        ```yaml
        vault:

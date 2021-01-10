@@ -126,14 +126,14 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
    ```yaml
    - name: Check if valid Postgresql admin password already exist
      hashivault_read:
-       secret: "groupe-<groupe_number>/postgresql-admin-password"
+       secret: "groupe-<group_number>/postgresql-admin-password"
      register: stat_postgresql_admin_password
      ignore_errors: yes
      delegate_to: 127.0.0.1
 
    - name: Generate a random Postgresql admin password if it doesn't exist and write it in Vault
      hashivault_write:
-       secret: "groupe-<groupe_number>/postgresql-admin-password"
+       secret: "groupe-<group_number>/postgresql-admin-password"
        data:
          username: root
          password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
@@ -142,14 +142,14 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
 
    - name: Check if valid Postgresql application account already exist
      hashivault_read:
-       secret: "groupe-<groupe_number>/postgresql-application-password"
+       secret: "groupe-<group_number>/postgresql-application-password"
      register: stat_postgresql_application_password
      ignore_errors: yes
      delegate_to: 127.0.0.1
 
    - name: Generate a random Postgresql application account if it doesn't exist and write it in Vault
      hashivault_write:
-       secret: "groupe-<groupe_number>/postgresql-application-password"
+       secret: "groupe-<group_number>/postgresql-application-password"
        data:
          username: application
          password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
@@ -164,7 +164,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
    - Créez la variable d'environnement dans le Terminal de Code-Hitema :
      ```bash
      export VAULT_TOKEN=<Le token précédement récupéré>
-     export GROUPE_NUMBER=<groupe number>
+     export GROUPE_NUMBER=<group_number>
      ```
    - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
      ```bash
@@ -223,7 +223,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
          labels:
            co.elastic.logs/module: postgresql
          env:
-           POSTGRES_PASSWORD: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-admin-password:password auth_method=token') }}"
+           POSTGRES_PASSWORD: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/postgresql-admin-password:password auth_method=token') }}"
            POSTGRES_USER: root
          register: postgresql
      ```
@@ -239,39 +239,20 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
        name: postgresql-client-12
        update_cache: yes
 
-   - name: Create a new database with name "application"
-     community.general.postgresql_db:
-       name: application
-       state: present
-       login_host: localhost
-       port: 5432
-       login_user: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-admin-password:username auth_method=token') }}"
-       login_password: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-admin-password:password auth_method=token') }}"
-
    # Create user with a cleartext password if it does not exist or update its password.
    # The password will be encrypted with SCRAM algorithm (available since PostgreSQL 10)
    - name: Create application user in Postgresql
      community.general.postgresql_user:
-       db: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-application-password:username auth_method=token') }}"
-       name: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-application-password:username auth_method=token') }}"
-       password: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-application-password:password auth_method=token') }}"
+       db: postgres
+       name: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/postgresql-application-password:username auth_method=token') }}"
+       password: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/postgresql-application-password:password auth_method=token') }}"
        priv: "ALL"
        login_host: localhost
        port: 5432
-       login_user: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-admin-password:username auth_method=token') }}"
-       login_password: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-admin-password:password auth_method=token') }}"
+       login_user: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/postgresql-admin-password:username auth_method=token') }}"
+       login_password: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/postgresql-admin-password:password auth_method=token') }}"
      environment:
        PGOPTIONS: "-c password_encryption=scram-sha-256"
-
-   - name: Reassign all object in database
-     community.general.postgresql_owner:
-       db: application
-       new_owner: application
-       obj_type: database
-       login_host: localhost
-       port: 5432
-       login_user: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-admin-password:username auth_method=token') }}"
-       login_password: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-admin-password:password auth_method=token') }}"
    ```
 5. Nous allons maintenant tester notre playbook en CLI depuis le terminal code-hitema:
    - Ouvrez la page https://vault-hitema.doca.cloud/ui/ et récupérez votre `VAULT_TOKEN` :
@@ -281,7 +262,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
    - Créez la variable d'environnement dans le Terminal de Code-Hitema :
      ```bash
      export VAULT_TOKEN=<Le token précédement récupéré>
-     export GROUPE_NUMBER=<groupe number>
+     export GROUPE_NUMBER=<group_number>
      ```
    - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
      ```bash
@@ -323,7 +304,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
 4. Scaleway assigne un nom DNS à chaque VM créée. Il est formé de cette manière : <uuid de la VM>.pub.instances.scw.cloud (https://www.scaleway.com/en/docs/instance-domain-name-change/). L'inventaire dynamique Ansible récupère l'uuid de la VM et le met à disposition dans une variable de type fact. Pour lister l'intégralité des facts, utilisez la commande suivante depuis code-hitema :
    ```bash
    export VAULT_TOKEN=<Le token précédement récupéré>
-   export GROUPE_NUMBER=<groupe number>
+   export GROUPE_NUMBER=<group_number>
    export SCW_TOKEN=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
    ansible -i scaleway-ansible-inventory.yml -m ansible.builtin.setup production -e ansible_user=root
    ```
@@ -337,14 +318,15 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
        state: started
        image: "{{ image }}"
        restart_policy: always
+       user: root
        networks:
          - name: web
          - name: db
        env:
-         DBUSER: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-application-password:username auth_method=token') }}"
-         DBPASS: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-application-password:password auth_method=token') }}"
+         DBUSER: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/postgresql-application-password:username auth_method=token') }}"
+         DBPASS: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/postgresql-application-password:password auth_method=token') }}"
          DBHOST: postgresql
-         DBNAME: application
+         DBNAME: postgres
        labels:
          - "traefik.enable=true"
          ## Scaleway assigne un nom DNS à chaque VM créée. Il est formé de cette manière : <uuid de la VM>.pub.instances.scw.cloud
@@ -375,6 +357,38 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
          - "traefik.http.middlewares.application.headers.featurepolicy=camera 'none'; geolocation 'none'; microphone 'none'; payment 'none'; usb 'none'; vr 'none';"
          - "traefik.http.middlewares.application.headers.customresponseheaders.X-Robots-Tag=none,noarchive,nosnippet,notranslate,noimageindex,"
    ```
+6. Il faut maintenant corriger l'image Docker de notre application :
+   - Remplacez le contenu du fichier `Dockerfile` avec :
+     ```
+     FROM python:3.8
+
+     COPY requirements.txt /
+
+     WORKDIR /
+
+     RUN pip3 install -r ./requirements.txt --no-cache-dir
+
+     COPY app/ /app/
+     COPY run.sh /usr/local/bin/run.sh
+
+     RUN chmod 755 /usr/local/bin/run.sh
+
+     WORKDIR /app
+     RUN useradd -ms /bin/bash python-flask
+     USER python-flask
+
+     ENV FLASK_APP=app.py
+     CMD /usr/local/bin/run.sh
+     ```
+   - Créez le fichier `run.sh`
+     ```bash
+     #!/bin/bash
+     /usr/local/bin/flask db upgrade
+     /usr/local/bin/flask run -h 0.0.0.0 -p 5000
+     ```
+   - Supprimez la dépendance `Jinja2==2.9.6` dans `requirements.txt`
+   - Faites un git commit + git push sur votre branche pour rebuilder votre image Docker
+   - Dès que c'est fait, récupérez le nom complet de votre image Docker. Cela nous servira pour les étapes de test manuel dans Code-Hitema
 6. Nous allons maintenant tester notre playbook en CLI depuis le terminal code-hitema:
    - Ouvrez la page https://vault-hitema.doca.cloud/ui/ et récupérez votre `VAULT_TOKEN` :
 
@@ -383,7 +397,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
    - Créez la variable d'environnement dans le Terminal de Code-Hitema :
      ```bash
      export VAULT_TOKEN=<Le token précédement récupéré>
-     export GROUPE_NUMBER=<groupe number>
+     export GROUPE_NUMBER=<group_number>
      ```
    - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
      ```bash
@@ -400,13 +414,13 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
      vault write -field=signed_key ssh/sign/students public_key=@$HOME/.ssh/id_ed25519.pub > $HOME/.ssh/id_ed25519-cert.pub
      /home/coder/.local/bin/ansible-lint .
      ansible-inventory --list -i scaleway-ansible-inventory.yml
-     ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml --syntax-check
-     ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml
+     ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml --syntax-check -e image=<nom complet de votre image>
+     ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml -e image=<nom complet de votre image>
      ```
    - Enfin, vérifiez que l'application est bien accessible à l'adresse `https://<uuid de la VM>.pub.instances.scw.cloud`
 7. Si le test manuel est passé, commitez votre code sur la branche et pushez
    ```bash
-   git commit ansible/roles/postgresql/tasks/main.yml -m "Deploy application"
+   git commit ansible/playbook.yml Dockerfile ansible/roles/postgresql/tasks/main.yml -m "Deploy application"
    git push
    ```
 8. Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
