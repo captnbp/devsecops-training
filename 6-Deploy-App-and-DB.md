@@ -126,30 +126,30 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
    ```yaml
    - name: Check if valid Postgresql admin password already exist
      hashivault_read:
-       secret: "secret/groupe-<groupe_number>/postgresql-admin-password"
+       secret: "groupe-<groupe_number>/postgresql-admin-password"
      register: stat_postgresql_admin_password
      ignore_errors: yes
      delegate_to: 127.0.0.1
 
    - name: Generate a random Postgresql admin password if it doesn't exist and write it in Vault
      hashivault_write:
-       secret: "secret/groupe-<groupe_number>/postgresql-admin-password"
+       secret: "groupe-<groupe_number>/postgresql-admin-password"
        data:
-         username: postgres
+         username: root
          password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
      when: stat_postgresql_admin_password.failed
      delegate_to: 127.0.0.1
 
    - name: Check if valid Postgresql application account already exist
      hashivault_read:
-       secret: "secret/groupe-<groupe_number>/postgresql-application-password"
+       secret: "groupe-<groupe_number>/postgresql-application-password"
      register: stat_postgresql_application_password
      ignore_errors: yes
      delegate_to: 127.0.0.1
 
    - name: Generate a random Postgresql application account if it doesn't exist and write it in Vault
      hashivault_write:
-       secret: "secret/groupe-<groupe_number>/postgresql-application-password"
+       secret: "groupe-<groupe_number>/postgresql-application-password"
        data:
          username: application
          password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
@@ -196,6 +196,8 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
 
 > Petit rappel, dans le TP 4 Ansible, nous avons créé une partition data sur le volume bloc (créé dans le TP Terraform) et nous l'avons monté dans `/data`. Nous allons utilisé ce volume bloc persistant et répliqué pour stocker les données de notre BDD.
 
+> Attention, nous n'allons pas implémenter **TLS ni l'audit de sécurité sur la base Postgresql** (pas le temps dans le TP). Dans la vraie vie, c'est indispensable afin de sécuriser le flux de données, mais aussi pour tracer toutes les actions sur la BDD et et détecter des attaques.
+
 0. Créez une issue `Create Postgresql DB + User from Vault` dans le dépôt Gitlab `application`, puis créez la Merge Request et sa branche associée.
 1. Dans Code-Hitema, pullez le code et basculez sur la nouvelle branche.
 2. A laide des modules Ansible suivants : 
@@ -222,6 +224,8 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
            co.elastic.logs/module: postgresql
          env:
            POSTGRES_PASSWORD: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<groupe_number>/postgresql-admin-password:password auth_method=token') }}"
+           POSTGRES_USER: root
+         register: postgresql
      ```
 4. On va maintenant créer la DB de notre application et son user/role dans `ansible/roles/postgresql/tasks/main.yml` à la suite des tasks pour le déploiement via Docker :
    ```yaml
@@ -238,7 +242,6 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
    - name: Create a new database with name "application"
      community.general.postgresql_db:
        name: application
-       owner: application
        state: present
        login_host: localhost
        port: 5432
