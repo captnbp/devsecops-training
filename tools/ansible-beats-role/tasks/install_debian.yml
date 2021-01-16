@@ -1,0 +1,29 @@
+---
+- name: Debian - Ensure apt-transport-https is installed
+  apt:
+    name: apt-transport-https
+    state: present
+    cache_valid_time: 86400
+  register: beat_install
+  become: yes
+
+- name: Debian - Add Beats repository key
+  become: yes
+  apt_key: 
+    url: "http://packages.elasticsearch.org/GPG-KEY-elasticsearch"
+    state: present
+
+- name: Debian - Add beats repository
+  become: yes
+  apt_repository:
+    repo: "deb {{ repo_url }} stable main"
+    state: present
+
+- name: Debian - Ensure {{ beat }} is installed
+  become: yes
+  apt:
+    name: '{{ beat }}{% if beat == "heartbeat" %}-elastic{% endif %}{% if beats_version is defined and beats_version != "" %}={{ beats_version }}{% endif %}'
+    state: present
+    cache_valid_time: 86400
+  notify: "Restart {{ beat }} service"
+...

@@ -1,0 +1,43 @@
+---
+# required variables for using this role
+# you should add them to your playbook
+vault_monitoring_account_path: "/secret/{{ product | lower }}/common/monitoring_account"
+vault_artifactory_account_path: "/secret/{{ product_owner | lower }}/common/artifactory_ro"
+# ecosystem: the ecosystem of the user of the product
+# product: Product name Ex elk
+# product_owner: the ecosystem of the product owner
+# project_name: should be equals to dpi project_name for dpi product and project_name for external playbook
+
+elasticsearch_url: ""
+kibana_url: ""
+
+elk_auth_type_cloud_id: False
+
+beats_major_version: "7.x"
+beats_version: "7.10.1"
+beats_install_url: "https://artifacts.elastic.co/downloads/beats"
+beats_allow_upgrades: True
+
+use_repository: True
+
+home_dir: "/usr/share"
+config_dir: "/etc"
+data_dir: "/var/lib"
+log_dir: "/var/log"
+
+sysd_path: "/usr/lib/systemd/system"
+
+repo_url: "https://artifacts.elastic.co/packages/{{ beats_major_version }}/apt"
+
+username_password_auth: True
+api_key_auth: False
+
+api_key: ""
+
+cluster_uuid: ""
+
+packetbeat_enabled: False
+
+metricbeat_modules:
+  - system
+...

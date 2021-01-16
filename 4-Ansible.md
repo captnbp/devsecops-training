@@ -355,7 +355,6 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
            - "--certificatesresolvers.letsencryptresolver.acme.email={{ lookup('env','GITLAB_USER_EMAIL') }}"
            - "--certificatesresolvers.letsencryptresolver.acme.storage=/letsencrypt/acme.json"
            - "--accesslog=true"
-           - "--accesslog.filepath=/var/log/access.log"
          restart_policy: always
          published_ports:
            - "80:80"
@@ -364,7 +363,6 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
            - name: web
          volumes:
            - /var/run/docker.sock:/var/run/docker.sock
-           - /var/log/:/var/log/traefik
            # To persist certificates
            - traefik-certificates:/letsencrypt
          labels:

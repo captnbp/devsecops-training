@@ -1,0 +1,12 @@
+[Unit]
+Description=packetbeat
+Documentation=https://www.elastic.co/guide/en/packetbeat/packetbeat/current/index.html
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart={{ home_dir }}/packetbeat/packetbeat -e -c {{ config_dir }}/packetbeat/packetbeat.yml -path.home {{ home_dir }}/packetbeat -path.config {{ config_dir }}/packetbeat -path.data {{ data_dir }}/packetbeat -path.logs {{ log_dir }}/packetbeat
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

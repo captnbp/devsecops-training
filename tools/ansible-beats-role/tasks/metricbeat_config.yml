@@ -1,0 +1,118 @@
+---
+- name: Create systemd folder
+  become: yes
+  file:
+    path: /usr/lib/systemd/system
+    state: directory
+    mode: 0755
+  tags:
+    - metricbeat_systemd_service
+  when: not use_repository
+
+- name: Create Metricbeat folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  with_items:
+    - "{{ config_dir }}/metricbeat"
+    - "{{ config_dir }}/metricbeat/modules.d"
+    - "{{ data_dir }}/metricbeat"
+    - "{{ log_dir }}/metricbeat"
+  tags:
+    - metricbeat_folders
+  when: not use_repository
+
+- name: Copy Metricbeat fields.yaml file
+  become: yes
+  copy:
+    src: "{{ home_dir }}/metricbeat/fields.yml"
+    dest: "{{ config_dir }}/metricbeat/fields.yml"
+    owner: root
+    group: root
+    mode: 0600
+    remote_src: yes
+  notify: Restart metricbeat service
+  tags:
+    - metricbeat_config_files
+  when: not use_repository
+
+- name: Deploy custom metricbeat.yml
+  become: yes
+  template:
+    src: metricbeat.yml.j2
+    dest: "{% if use_repository %}/etc/metricbeat{% else %}{{ config_dir }}/metricbeat{% endif %}/metricbeat.yml"
+    owner: root
+    group: root
+    mode: 0600
+  notify: Restart metricbeat service
+  tags:
+    - metricbeat_config_files
+
+- name: Deploy system metrics configuration
+  become: yes
+  template:
+    src: "metricbeat_{{ item }}.yml.j2"
+    dest: "{% if use_repository %}/etc/metricbeat{% else %}{{ config_dir }}/metricbeat{% endif %}/modules.d/{{ item }}.yml"
+    owner: root
+    group: root
+    mode: 0600
+  notify: Restart metricbeat service
+  tags:
+    - metricbeat_config_files
+  with_items: "{{ metricbeat_modules }}"
+
+- name: Check if the keystore already exist
+  become: yes
+  stat:
+    path: "{{ data_dir }}/metricbeat/metricbeat.keystore"
+  register: metricbeat_keystore
+  tags:
+    - always
+    - metricbeat_keystore
+
+- name: Create metricbeat's keystore if not existing
+  become: yes
+  shell: "metricbeat -c {{ config_dir }}/metricbeat/metricbeat.yml -E path.config={{ config_dir }}/metricbeat -E path.data={{ data_dir }}/metricbeat keystore create"
+  when: not metricbeat_keystore.stat.exists
+  tags:
+    - metricbeat_keystore
+
+- name: Add monitoring password in the keystore
+  become: yes
+  shell: echo "{{ monitoring_account.value.password }}" | metricbeat -c {{ config_dir }}/metricbeat/metricbeat.yml -E path.config={{ config_dir }}/metricbeat -E path.data={{ data_dir }}/metricbeat keystore add ES_PASSWORD --stdin --force
+  tags:
+    - metricbeat_keystore
+  when: username_password_auth
+
+- name: Add monitoring api_key in the keystore
+  become: yes
+  shell: echo "{{ monitoring_account.value.api_key }}" | metricbeat -c {{ config_dir }}/metricbeat/metricbeat.yml -E path.config={{ config_dir }}/metricbeat -E path.data={{ data_dir }}/metricbeat keystore add ES_API_KEY --stdin --force
+  tags:
+    - metricbeat_keystore
+  when: api_key_auth
+
+- name: Set Metricbeat's systemd service
+  become: yes
+  template:
+    src: metricbeat_systemd.service.j2
+    dest: "{{ sysd_path }}/metricbeat.service"
+    mode: 0644
+    force: yes
+  notify:
+    - Restart metricbeat service
+  tags:
+    - metricbeat_systemd_service
+  when: not use_repository
+
+- name: Service metricbeat start
+  become: yes
+  systemd:
+    name: metricbeat
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+...
