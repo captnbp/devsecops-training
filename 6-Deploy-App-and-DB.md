@@ -214,7 +214,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
         community.general.docker_container:
           name: postgresql
           state: started
-          image: postgresql:13
+          image: postgres:13
           restart_policy: always
           published_ports:
             - "5432:5432" # A ne pas faire dans la vraie vie !! C'est juste pour simplifier le TP quand on branchera Vault et le monitoring. Dans la vraie vie on mettrait un conteneur dédié au monitoring et un autre pour Vault, réliés au network DB par exemple.
