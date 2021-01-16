@@ -285,7 +285,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
       ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml
       ```
       ![Ansible](images/ansible-postgresql-1.png)
-    - Enfin, vérifiez que le compte Postgresql fonctionne bien depuis la VM avec la commande `psql -U application -h 127.0.0.1 -W application`
+    - Enfin, vérifiez que le compte Postgresql fonctionne bien depuis la VM avec la commande `psql -U application -h 127.0.0.1 -W postgres`
 6.  Si le test manuel est passé, commitez votre code sur la branche et pushez
     ```bash
     git commit ansible/roles/postgresql/tasks/main.yml -m "Create Postgresql DB and User from Vault"
