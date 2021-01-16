@@ -1,0 +1,105 @@
+---
+- name: Create systemd folder
+  become: yes
+  file:
+    path: /usr/lib/systemd/system
+    state: directory
+    mode: 0755
+  tags:
+    - heartbeat_systemd_service
+  when: not use_repository
+
+- name: Create Heartbeat folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  with_items:
+    - "{{ config_dir }}/heartbeat"
+    - "{{ config_dir }}/heartbeat/monitors.d"
+    - "{{ data_dir }}/heartbeat"
+    - "{{ log_dir }}/heartbeat"
+  tags:
+    - heartbeat_folders
+  when: not use_repository
+
+- name: Copy Heartbeat fields.yaml file
+  become: yes
+  copy:
+    src: "{{ home_dir }}/heartbeat/fields.yml"
+    dest: "{{ config_dir }}/heartbeat/fields.yml"
+    owner: root
+    group: root
+    mode: 0600
+    remote_src: yes
+  notify: Restart heartbeat service
+  tags:
+    - heartbeat_config_files
+  when: not use_repository
+
+- name: Deploy Heartbeat's config file
+  become: yes
+  template:
+    src: heartbeat.yml.j2
+    dest: "{% if use_repository %}/etc/heartbeat{% else %}{{ config_dir }}/heartbeat{% endif %}/heartbeat.yml"
+    owner: root
+    group: root
+    mode: 0600
+  notify: Restart heartbeat service
+  tags:
+    - heartbeat_config_files
+
+- name: Check if the keystore already exist
+  become: yes
+  stat:
+    path: "{{ data_dir }}/heartbeat/heartbeat.keystore"
+  register: heartbeat_keystore
+  tags:
+    - always
+    - heartbeat_keystore
+
+- name: Create heartbeat's keystore if not existing
+  become: yes
+  shell: "heartbeat -c {{ config_dir }}/heartbeat/heartbeat.yml -E path.config={{ config_dir }}/heartbeat -E path.data={{ data_dir }}/heartbeat keystore create"
+  when: not heartbeat_keystore.stat.exists
+  tags:
+    - heartbeat_keystore
+
+- name: Add monitoring password in the keystore
+  become: yes
+  shell: echo "{{ monitoring_account.value.password }}" | heartbeat -c {{ config_dir }}/heartbeat/heartbeat.yml -E path.config={{ config_dir }}/heartbeat -E path.data={{ data_dir }}/heartbeat keystore add ES_PASSWORD --stdin --force
+  tags:
+    - heartbeat_keystore
+  when: username_password_auth
+
+- name: Add monitoring api_key in the keystore
+  become: yes
+  shell: echo "{{ monitoring_account.value.api_key }}" | heartbeat -c {{ config_dir }}/heartbeat/heartbeat.yml -E path.config={{ config_dir }}/heartbeat -E path.data={{ data_dir }}/heartbeat keystore add ES_API_KEY --stdin --force
+  tags:
+    - heartbeat_keystore
+  when: api_key_auth
+
+- name: Set Heartbeat's systemd service
+  become: yes
+  template:
+    src: heartbeat_systemd.service.j2
+    dest: "{{ sysd_path }}/heartbeat-elastic.service"
+    mode: 0644
+    force: yes
+  notify:
+    - Restart heartbeat service
+  tags:
+    - heartbeat_systemd_service
+  when: not use_repository
+
+- name: Service heartbeat start
+  become: yes
+  systemd:
+    name: heartbeat-elastic
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+...

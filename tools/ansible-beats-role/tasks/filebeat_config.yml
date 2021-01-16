@@ -1,0 +1,117 @@
+---
+- name: Create systemd folder
+  become: yes
+  file:
+    path: /usr/lib/systemd/system
+    state: directory
+    mode: 0755
+  when: not use_repository
+
+- name: Create Filebeat folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  with_items:
+    - "{{ config_dir }}/filebeat"
+    - "{{ config_dir }}/filebeat/modules.d"
+    - "{{ config_dir }}/filebeat/prospectors.d"
+    - "{{ config_dir }}/filebeat/inputs.d"
+    - "{{ data_dir }}/filebeat"
+    - "{{ log_dir }}/filebeat"
+  tags:
+    - filebeat_folders
+  when: not use_repository
+
+- name: Copy Filebeat fields.yaml file
+  become: yes
+  copy:
+    src: "{{ home_dir }}/filebeat/fields.yml"
+    dest: "{{ config_dir }}/filebeat/fields.yml"
+    owner: root
+    group: root
+    mode: 0600
+    remote_src: yes
+  notify: Restart filebeat service
+  tags:
+    - filebeat_config_files
+  when: not use_repository
+
+- name: Deploy custom filebeat.yml
+  become: yes
+  template:
+    src: filebeat.yml.j2
+    dest: "{% if use_repository %}/etc/filebeat{% else %}{{ config_dir }}/filebeat{% endif %}/filebeat.yml"
+    owner: root
+    group: root
+    mode: 0600
+  notify: Restart filebeat service
+  tags:
+    - filebeat_config_files
+
+- name: Deploy system logs configuration
+  become: yes
+  template:
+    src: filebeat_system.yml.j2
+    dest: "{% if use_repository %}/etc/filebeat{% else %}{{ config_dir }}/filebeat{% endif %}/modules.d/system.yml"
+    owner: root
+    group: root
+    mode: 0600
+  notify: Restart filebeat service
+  tags:
+    - filebeat_config
+
+- name: Check if the keystore already exist
+  become: yes
+  stat:
+    path: "{{ data_dir }}/filebeat/filebeat.keystore"
+  register: filebeat_keystore
+  tags:
+    - always
+    - filebeat_keystore
+
+- name: Create filebeat's keystore if not existing
+  become: yes
+  shell: "filebeat -c {{ config_dir }}/filebeat/filebeat.yml -E path.config={{ config_dir }}/filebeat -E path.data={{ data_dir }}/filebeat keystore create"
+  when: not filebeat_keystore.stat.exists
+  tags:
+    - filebeat_keystore
+
+- name: Add monitoring password in the keystore
+  become: yes
+  shell: echo "{{ monitoring_account.value.password }}" | filebeat -c {{ config_dir }}/filebeat/filebeat.yml -E path.config={{ config_dir }}/filebeat -E path.data={{ data_dir }}/filebeat keystore add ES_PASSWORD --stdin --force
+  tags:
+    - filebeat_keystore
+  when: username_password_auth
+
+- name: Add monitoring api_key in the keystore
+  become: yes
+  shell: echo "{{ monitoring_account.value.api_key }}" | filebeat -c {{ config_dir }}/filebeat/filebeat.yml -E path.config={{ config_dir }}/filebeat -E path.data={{ data_dir }}/filebeat keystore add ES_API_KEY --stdin --force
+  tags:
+    - filebeat_keystore
+  when: api_key_auth
+
+- name: Set Filebeat's systemd service
+  become: yes
+  template:
+    src: filebeat_systemd.service.j2
+    dest: "{{ sysd_path }}/filebeat.service"
+    mode: 0644
+    force: yes
+  notify:
+    - Restart filebeat service
+  tags:
+    - filebeat_systemd_service
+  when: not use_repository
+
+- name: Service filebeat start
+  become: yes
+  systemd:
+    name: filebeat
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+...

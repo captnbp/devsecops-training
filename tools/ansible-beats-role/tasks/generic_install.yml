@@ -1,0 +1,31 @@
+---
+- name: Install {{ beat }}
+  get_url:
+    url: "{{ beats_install_url }}/{{ beat }}/{{ beat }}-{{ beats_version }}-linux-x86_64.tar.gz"
+    dest: "/var/tmp/{{ beat }}-{{ beats_version }}.tar.gz"
+    mode: 0664
+    timeout: 600
+
+- name: Create bin folder
+  become: yes
+  file:
+    path: "{{ home_dir }}/{{ beat }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Untar {{ beat }}
+  become: yes
+  unarchive:
+    remote_src: yes
+    src: "/var/tmp/{{ beat }}-{{ beats_version }}.tar.gz"
+    dest: "{{ home_dir }}/{{ beat }}"
+    extra_opts:
+      - "--strip-components=1"
+
+- name: Clean archive
+  file:
+    path: "/var/tmp/{{ beat }}-{{ beats_version }}.tar.gz"
+    state: absent
+...

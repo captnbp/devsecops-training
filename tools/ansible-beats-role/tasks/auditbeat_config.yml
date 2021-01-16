@@ -1,0 +1,132 @@
+---
+- name: Create systemd folder
+  become: yes
+  file:
+    path: /usr/lib/systemd/system
+    state: directory
+    mode: 0755
+  tags:
+    - auditbeat_systemd_service
+  when: not use_repository
+
+- name: Create Auditbeat folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  with_items:
+    - "{{ config_dir }}/auditbeat"
+    - "{{ config_dir }}/auditbeat/conf.d"
+    - "{{ data_dir }}/auditbeat"
+    - "{{ log_dir }}/auditbeat"
+  tags:
+    - auditbeat_folders
+  when: not use_repository
+
+- name: Create Auditbeat folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  with_items:
+
+    - "/etc/auditbeat/conf.d"
+  tags:
+    - auditbeat_folders
+  when: use_repository
+
+- name: Copy Auditbeat fields.yaml file
+  become: yes
+  copy:
+    src: "{{ home_dir }}/auditbeat/fields.yml"
+    dest: "{{ config_dir }}/auditbeat/fields.yml"
+    owner: root
+    group: root
+    mode: 0600
+    remote_src: yes
+  notify: Restart auditbeat service
+  tags:
+    - auditbeat_config_files
+  when: not use_repository
+
+- name: Deploy Auditbeat's config file
+  become: yes
+  template:
+    src: auditbeat.yml.j2
+    dest: "{% if use_repository %}/etc/auditbeat{% else %}{{ config_dir }}/auditbeat{% endif %}/auditbeat.yml"
+    owner: root
+    group: root
+    mode: 0600
+  notify: Restart auditbeat service
+  tags:
+    - auditbeat_config_files
+
+- name: Deploy Auditbeat's System Module config file
+  become: yes
+  template:
+    src: auditbeat_system_module.yml.j2
+    dest: "{% if use_repository %}/etc/auditbeat{% else %}{{ config_dir }}/auditbeat{% endif %}/conf.d/system.yml"
+    owner: root
+    group: root
+    mode: 0600
+  notify: Restart auditbeat service
+  tags:
+    - auditbeat_config_files
+
+- name: Check if the keystore already exist
+  become: yes
+  stat:
+    path: "{{ data_dir }}/auditbeat/auditbeat.keystore"
+  register: auditbeat_keystore
+  tags:
+    - always
+    - auditbeat_keystore
+
+- name: Create auditbeat's keystore if not existing
+  become: yes
+  shell: "auditbeat -c {{ config_dir }}/auditbeat/auditbeat.yml -E path.config={{ config_dir }}/auditbeat -E path.data={{ data_dir }}/auditbeat keystore create"
+  when: not auditbeat_keystore.stat.exists
+  tags:
+    - auditbeat_keystore
+
+- name: Add monitoring password in the keystore
+  become: yes
+  shell: echo "{{ monitoring_account.value.password }}" | auditbeat -c {{ config_dir }}/auditbeat/auditbeat.yml -E path.config={{ config_dir }}/auditbeat -E path.data={{ data_dir }}/auditbeat keystore add ES_PASSWORD --stdin --force
+  tags:
+    - auditbeat_keystore
+  when: username_password_auth
+
+- name: Add monitoring api_key in the keystore
+  become: yes
+  shell: echo "{{ monitoring_account.value.api_key }}" | auditbeat -c {{ config_dir }}/auditbeat/auditbeat.yml -E path.config={{ config_dir }}/auditbeat -E path.data={{ data_dir }}/auditbeat keystore add ES_API_KEY --stdin --force
+  tags:
+    - auditbeat_keystore
+  when: api_key_auth
+
+- name: Set Auditbeat's systemd service
+  become: yes
+  template:
+    src: auditbeat_systemd.service.j2
+    dest: "{{ sysd_path }}/auditbeat.service"
+    mode: 0644
+    force: yes
+  notify:
+    - Restart auditbeat service
+  tags:
+    - auditbeat_systemd_service
+  when: not use_repository
+
+- name: Service auditbeat start
+  become: yes
+  systemd:
+    name: auditbeat
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+...

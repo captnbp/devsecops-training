@@ -1,0 +1,140 @@
+---
+- name: Read  monitoring account from Vault
+  hashivault_read:
+    secret: "{{ vault_monitoring_account_path }}"
+  register: monitoring_account
+  delegate_to: 127.0.0.1
+  tags:
+    - beats_vault
+
+- name: Set URL
+  set_fact:
+    es_url: "{{ monitoring_account.value.url }}"
+  when: monitoring_account.value.url is defined
+
+- name: Set URL
+  set_fact:
+    es_url: "{{ elasticsearch_url }}"
+  when: monitoring_account.value.url is not defined
+
+- name: Install Filebeat
+  import_tasks: install_debian.yml
+  vars:
+    beat: filebeat
+  tags:
+    - filebeat
+    - filebeat_install
+  when: use_repository
+
+- name: Install Filebeat
+  import_tasks: generic_install.yml
+  vars:
+    beat: filebeat
+  tags:
+    - filebeat
+    - filebeat_install
+  when: not use_repository
+
+- name: Configure Filebeat
+  import_tasks: filebeat_config.yml
+  tags:
+    - filebeat
+    - filebeat_config
+
+- name: Install Metricbeat
+  import_tasks: install_debian.yml
+  vars:
+    beat: metricbeat
+  tags:
+    - metricbeat
+    - metricbeat_install
+  when: use_repository
+
+- name: Install Metricbeat
+  import_tasks: generic_install.yml
+  vars:
+    beat: metricbeat
+  tags:
+    - metricbeat
+    - metricbeat_install
+  when: not use_repository
+
+- name: Configure Metricbeat
+  import_tasks: metricbeat_config.yml
+  tags:
+    - metricbeat
+    - metricbeat_config
+
+- name: Install Heartbeat
+  import_tasks: install_debian.yml
+  vars:
+    beat: heartbeat
+  tags:
+    - heartbeat
+    - heartbeat_install
+  when: use_repository
+
+- name: Install Heartbeat
+  import_tasks: generic_install.yml
+  vars:
+    beat: heartbeat
+  tags:
+    - heartbeat
+    - heartbeat_install
+  when: not use_repository
+
+- name: Configure Heartbeat
+  import_tasks: heartbeat_config.yml
+  tags:
+    - heartbeat
+    - heartbeat_config
+
+- name: Install Auditbeat
+  import_tasks: install_debian.yml
+  vars:
+    beat: auditbeat
+  tags:
+    - auditbeat
+    - auditbeat_install
+  when: use_repository
+
+- name: Install Auditbeat
+  import_tasks: generic_install.yml
+  vars:
+    beat: auditbeat
+  tags:
+    - auditbeat
+    - auditbeat_install
+  when: not use_repository
+
+- name: Configure Auditbeat
+  import_tasks: auditbeat_config.yml
+  tags:
+    - auditbeat
+    - auditbeat_config
+
+- name: Install Packetbeat
+  import_tasks: install_debian.yml
+  vars:
+    beat: packetbeat
+  tags:
+    - packetbeat
+    - packetbeat_install
+  when: use_repository and packetbeat_enabled
+
+- name: Install Packetbeat
+  import_tasks: generic_install.yml
+  vars:
+    beat: packetbeat
+  tags:
+    - packetbeat
+    - packetbeat_install
+  when: not use_repository and packetbeat_enabled
+
+- name: Configure Packetbeat
+  import_tasks: packetbeat_config.yml
+  tags:
+    - packetbeat
+    - packetbeat_config
+  when: packetbeat_enabled
+...

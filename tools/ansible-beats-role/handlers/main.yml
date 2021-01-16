@@ -1,0 +1,37 @@
+---
+
+- name: Restart filebeat service
+  become: yes
+  systemd:
+    name: "filebeat"
+    state: restarted
+    daemon_reload: yes
+
+- name: Restart metricbeat service
+  become: yes
+  systemd:
+    name: "metricbeat"
+    state: restarted
+    daemon_reload: yes
+
+- name: Restart heartbeat service
+  become: yes
+  systemd:
+    name: "heartbeat-elastic"
+    state: restarted
+    daemon_reload: yes
+
+- name: Restart auditbeat service
+  become: yes
+  systemd:
+    name: "auditbeat"
+    state: restarted
+    daemon_reload: yes
+
+- name: Restart packetbeat service
+  become: yes
+  systemd:
+    name: "packetbeat"
+    state: restarted
+    daemon_reload: yes
+...

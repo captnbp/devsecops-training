@@ -1,0 +1,120 @@
+---
+- name: Create systemd folder
+  become: yes
+  file:
+    path: /usr/lib/systemd/system
+    state: directory
+    mode: 0755
+  tags:
+    - packetbeat_systemd_service
+  when: not use_repository
+
+- name: Create packetbeat folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  with_items:
+    - "{{ config_dir }}/packetbeat"
+    - "{{ config_dir }}/packetbeat/conf.d"
+    - "{{ data_dir }}/packetbeat"
+    - "{{ log_dir }}/packetbeat"
+  tags:
+    - packetbeat_folders
+  when: not use_repository
+
+- name: Create packetbeat folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  with_items:
+
+    - "/etc/packetbeat/conf.d"
+  tags:
+    - packetbeat_folders
+  when: use_repository
+
+- name: Copy packetbeat fields.yaml file
+  become: yes
+  copy:
+    src: "{{ home_dir }}/packetbeat/fields.yml"
+    dest: "{{ config_dir }}/packetbeat/fields.yml"
+    owner: root
+    group: root
+    mode: 0600
+    remote_src: yes
+  notify: Restart packetbeat service
+  tags:
+    - packetbeat_config_files
+  when: not use_repository
+
+- name: Deploy packetbeat's config file
+  become: yes
+  template:
+    src: packetbeat.yml.j2
+    dest: "{% if use_repository %}/etc/packetbeat{% else %}{{ config_dir }}/packetbeat{% endif %}/packetbeat.yml"
+    owner: root
+    group: root
+    mode: 0600
+  notify: Restart packetbeat service
+  tags:
+    - packetbeat_config_files
+
+- name: Check if the keystore already exist
+  become: yes
+  stat:
+    path: "{{ data_dir }}/packetbeat/packetbeat.keystore"
+  register: packetbeat_keystore
+  tags:
+    - always
+    - packetbeat_keystore
+
+- name: Create packetbeat's keystore if not existing
+  become: yes
+  shell: "packetbeat -c {{ config_dir }}/packetbeat/packetbeat.yml -E path.config={{ config_dir }}/packetbeat -E path.data={{ data_dir }}/packetbeat keystore create"
+  when: not packetbeat_keystore.stat.exists
+  tags:
+    - packetbeat_keystore
+
+- name: Add monitoring password in the keystore
+  become: yes
+  shell: echo "{{ monitoring_account.value.password }}" | packetbeat -c {{ config_dir }}/packetbeat/packetbeat.yml -E path.config={{ config_dir }}/packetbeat -E path.data={{ data_dir }}/packetbeat keystore add ES_PASSWORD --stdin --force
+  tags:
+    - packetbeat_keystore
+  when: username_password_auth
+
+- name: Add monitoring api_key in the keystore
+  become: yes
+  shell: echo "{{ monitoring_account.value.api_key }}" | packetbeat -c {{ config_dir }}/packetbeat/packetbeat.yml -E path.config={{ config_dir }}/packetbeat -E path.data={{ data_dir }}/packetbeat keystore add ES_API_KEY --stdin --force
+  tags:
+    - packetbeat_keystore
+  when: api_key_auth
+
+- name: Set packetbeat's systemd service
+  become: yes
+  template:
+    src: packetbeat_systemd.service.j2
+    dest: "{{ sysd_path }}/packetbeat.service"
+    mode: 0644
+    force: yes
+  notify:
+    - Restart packetbeat service
+  tags:
+    - packetbeat_systemd_service
+  when: not use_repository
+
+- name: Service packetbeat start
+  become: yes
+  systemd:
+    name: packetbeat
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+...
