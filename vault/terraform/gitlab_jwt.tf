@@ -102,5 +102,11 @@ resource "vault_policy" "gitlab" {
     path "secret/groupe-${count.index}/dockerhub" {
       capabilities = [ "read", "list" ]
     }
+    path "secret/groupe-${count.index}/postgresql-admin-password" {
+      capabilities = [ "create", "update", "delete", "read", "list" ]
+    }
+    path "secret/groupe-${count.index}/postgresql-application-password" {
+      capabilities = [ "create", "update", "delete", "read", "list" ]
+    }
   EOT
 }
