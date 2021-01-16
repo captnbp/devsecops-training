@@ -227,7 +227,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
           env:
             POSTGRES_PASSWORD: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/postgresql-admin-password:password auth_method=token') }}"
             POSTGRES_USER: root
-          register: postgresql
+        register: postgresql
       ```
 4.  On va maintenant créer la DB de notre application et son user/role dans `ansible/roles/postgresql/tasks/main.yml` à la suite des tasks pour le déploiement via Docker :
     ```yaml
