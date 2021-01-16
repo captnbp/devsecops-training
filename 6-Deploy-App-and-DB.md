@@ -184,6 +184,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
      ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml --syntax-check
      ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml
      ```
+     ![Ansible](images/ansible-postgresql-0.png)
    - Enfin, vérifiez que les 2 comptes Postgresql sont bien présents dans Vault
 10. Si le test manuel est passé, commitez votre code sur la branche et pushez
     ```bash
@@ -288,7 +289,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
    git commit ansible/roles/postgresql/tasks/main.yml -m "Create Postgresql DB and User from Vault"
    git push
    ```
-11. Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
+7. Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
 
 ## Déploiement de l'application
 
