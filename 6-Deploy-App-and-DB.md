@@ -208,7 +208,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
     
     Ajoutez les tasks suivantes dans `ansible/roles/postgresql/tasks/main.yml` à la suite des tasks pour Vault :
     - Créez le Docker network (type bridge) nommé `db` (on va isoler le réseau virtuel de la DB de celui de la couche web)
-    - Deploy Traefik
+    - Deploy postgresql
       ```yaml
       - name: Deploy Postgresql
         community.general.docker_container:
