@@ -108,10 +108,10 @@ resource "vault_policy" "prd-group" {
     }
 
     # Create and manage ACL policies
-    path "sys/policies/application-groupe-${count.index}-prd" {
+    path "sys/policy/application-groupe-${count.index}-prd" {
       capabilities = ["create", "read", "update", "delete", "list", "sudo"]
     }
-    path "sys/policies/rundeck-groupe-${count.index}-prd" {
+    path "sys/policy/rundeck-groupe-${count.index}-prd" {
       capabilities = ["create", "read", "update", "delete", "list", "sudo"]
     }
 
