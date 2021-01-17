@@ -130,5 +130,25 @@ resource "vault_policy" "gitlab" {
     path "sys/policy/rundeck-groupe-${count.index}-prd" {
       capabilities = ["create", "read", "update", "delete", "list", "sudo"]
     }
+
+    # Configure the database secret engine and create roles
+    path "database/config/" {
+      capabilities = [ "read", "list" ]
+    }
+    path "database/config/postgresql-groupe-${count.index}-prd" {
+      capabilities = [ "create", "read", "update", "delete", "list" ]
+    }
+    path "database/roles/" {
+      capabilities = [ "read", "list" ]
+    }
+    path "database/roles/monitoring-groupe-${count.index}-prd" {
+      capabilities = [ "create", "read", "update", "delete", "list" ]
+    }
+    path "database/roles/backup-groupe-${count.index}-prd" {
+      capabilities = [ "create", "read", "update", "delete", "list" ]
+    }
+    path "database/roles/application-groupe-${count.index}-prd" {
+      capabilities = [ "create", "read", "update", "delete", "list" ]
+    }
   EOT
 }
