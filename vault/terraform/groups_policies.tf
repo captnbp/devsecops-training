@@ -106,6 +106,16 @@ resource "vault_policy" "prd-group" {
     path "database/roles/application-groupe-${count.index}-prd" {
       capabilities = [ "create", "read", "update", "delete", "list" ]
     }
+    
+    path "database/creds/monitoring-groupe-${count.index}-prd" {
+      capabilities = [ "read", "list" ]
+    }
+    path "database/creds/backup-groupe-${count.index}-prd" {
+      capabilities = [ "read", "list" ]
+    }
+    path "database/creds/application-groupe-${count.index}-prd" {
+      capabilities = [ "read", "list" ]
+    }
 
     # Create and manage ACL policies
     path "sys/policy/application-groupe-${count.index}-prd" {
