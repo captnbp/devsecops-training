@@ -212,7 +212,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
       ```yaml
       - name: Deploy Postgresql
         community.general.docker_container:
-          name: postgresql
+          name: postgres
           state: started
           image: postgres:13
           restart_policy: always
@@ -338,9 +338,9 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
           - name: web
           - name: db
         env:
-          DBUSER: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/postgresql-application-password:username auth_method=token') }}"
-          DBPASS: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/postgresql-application-password:password auth_method=token') }}"
-          DBHOST: postgresql
+          DBUSER: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/postgresql-admin-password:username auth_method=token') }}"
+          DBPASS: "{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/postgresql-admin-password:password auth_method=token') }}"
+          DBHOST: postgres
           DBNAME: postgres
         labels:
           traefik.enable: "true"
