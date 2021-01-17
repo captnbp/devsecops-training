@@ -155,7 +155,7 @@ Passons à l'implémentation :
           path: /data/db
         register: data_db
       ```
-    - Ajouter la directive suivante aux 3 tasks "Create a new database with name "application", "Create application user in Postgresql", "Reassign all object in database"
+    - Ajouter la directive suivante à la task "Create application user in Postgresql"
       ```yaml
         when: data_db.stat.isdir is not defined
       ```
