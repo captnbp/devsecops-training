@@ -315,6 +315,18 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
     > Ne pas confondre avec les UUIDs des disques/devices/volumes.
 5.  Dans `ansible/roles/application/tasks/main.yml` :
     ```yaml
+    - name: Create a network
+      community.general.docker_network:
+        name: web
+        driver: bridge
+    
+    - name: Log into private registry and force re-authorization
+      community.general.docker_login:
+        registry_url: "{{ lookup('env', 'CI_REGISTRY') }}"
+        username: "{{ lookup('env', 'CI_REGISTRY_USER') }}"
+        password: "{{ lookup('env', 'CI_REGISTRY_PASSWORD') }}"
+        reauthorize: yes
+
     - name: Deploy application
       community.general.docker_container:
         name: application
@@ -331,34 +343,34 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
           DBHOST: postgresql
           DBNAME: postgres
         labels:
-          - "traefik.enable=true"
+          traefik.enable: "true"
           ## Scaleway assigne un nom DNS à chaque VM créée. Il est formé de cette manière : <uuid de la VM>.pub.instances.scw.cloud
           # L'inventaire dynamique Ansible récupère l'uuid de la VM et le met à disposition dans la variable (fact) que vous avez trouvé ci-dessus
           # On est donc capables de recomposer le nom DNS unique de la VM à partir de son UUID et de la nomenclature Scaleway.
           # Le but ici est de dire à Traefik de rediriger les requêtes arrivant avec l'url https://{{ nom_de_la_variable_retrouvée }}.pub.instances.scw.cloud vers notre application
           # Et de générer un certificat TLS Let's Encrypt reconnu par nos navigateurs.
           # Vous voyez, c'est pas compliqué les certificats ;-)
-          - "traefik.http.routers.application.rule=Host(`{{ <nom_de_la_variable_retrouvée> }}.pub.instances.scw.cloud`)"
-          - "traefik.http.routers.application.entrypoints=websecure"
-          - "traefik.http.routers.application.tls.certresolver=letsencryptresolver"
+          traefik.http.routers.application.rule: "Host(`{{ <nom_de_la_variable_retrouvée> }}.pub.instances.scw.cloud`)"
+          traefik.http.routers.application.entrypoints: "websecure"
+          traefik.http.routers.application.tls.certresolver: "letsencryptresolver"
           ## Le port utilisé par notre application dans son conteneur est le port 5000
-          - "traefik.http.services.application.loadbalancer.server.port=5000" 
+          traefik.http.services.application.loadbalancer.server.port: "5000"
           ## Middlewares
           ## On ajoute des headers HTTP pour améliorer la sécurité de notre application (redirection HTTP->HTTPS, HSTS, Cross site scripting, frames, API navigateur, scan de robots)
-          - "traefik.http.middlewares.application.headers.addvaryheader=true" 
-          - "traefik.http.middlewares.application.headers.hostsproxyheaders=X-Forwarded-Host"
-          - "traefik.http.middlewares.application.headers.sslRedirect=true"
-          - "traefik.http.middlewares.application.headers.sslproxyheaders.X-Forwarded-Proto=https"
-          - "traefik.http.middlewares.application.headers.stsseconds=63072000"
-          - "traefik.http.middlewares.application.headers.stsincludesubdomains=true"
-          - "traefik.http.middlewares.application.headers.stspreload=true"
-          - "traefik.http.middlewares.application.headers.forcestsheader=true"
-          - "traefik.http.middlewares.application.headers.framedeny=true"
-          - "traefik.http.middlewares.application.headers.contenttypenosniff=true"
-          - "traefik.http.middlewares.application.headers.browserxssfilter=true"
-          - "traefik.http.middlewares.application.headers.referrerpolicy=same-origin"
-          - "traefik.http.middlewares.application.headers.featurepolicy=camera 'none'; geolocation 'none'; microphone 'none'; payment 'none'; usb 'none'; vr 'none';"
-          - "traefik.http.middlewares.application.headers.customresponseheaders.X-Robots-Tag=none,noarchive,nosnippet,notranslate,noimageindex,"
+          traefik.http.middlewares.application.headers.addvaryheader: "true" 
+          traefik.http.middlewares.application.headers.hostsproxyheaders: "X-Forwarded-Host"
+          traefik.http.middlewares.application.headers.sslRedirect: "true"
+          traefik.http.middlewares.application.headers.sslproxyheaders.X-Forwarded-Proto: "https"
+          traefik.http.middlewares.application.headers.stsseconds: "63072000"
+          traefik.http.middlewares.application.headers.stsincludesubdomains: "true"
+          traefik.http.middlewares.application.headers.stspreload: "true"
+          traefik.http.middlewares.application.headers.forcestsheader: "true"
+          traefik.http.middlewares.application.headers.framedeny: "true"
+          traefik.http.middlewares.application.headers.contenttypenosniff: "true"
+          traefik.http.middlewares.application.headers.browserxssfilter: "true"
+          traefik.http.middlewares.application.headers.referrerpolicy: "same-origin"
+          traefik.http.middlewares.application.headers.featurepolicy: "camera 'none'; geolocation 'none'; microphone 'none'; payment 'none'; usb 'none'; vr 'none';"
+          traefik.http.middlewares.application.headers.customresponseheaders.X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
     ```
 6.  Il faut maintenant corriger l'image Docker de notre application :
     - Remplacez le contenu du fichier `Dockerfile` avec :
