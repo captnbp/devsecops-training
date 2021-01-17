@@ -136,7 +136,7 @@ Pour cela nous allons ajouter la règle suivante dans le `scaleway_instance_secu
 5. Pensez à bien déployer la règle firewall ajoutée en lançant le job `deploy_app` dans votre pipeline sur la brache `master`
 6. Assurez-vous que la règle firewall a bien été déployée pour passer à la suite.
 
-### Configuration de Vault pour lanager les utilisateurs de Postgresql
+### Configuration de Vault pour manager les utilisateurs de Postgresql
 
 Le but ici est de mettre en place la rotation automatique de credentials pour notre application.
 

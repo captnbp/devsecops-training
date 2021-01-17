@@ -13,6 +13,11 @@ resource "vault_mount" "database" {
   type = "database"
 }
 
+resource "vault_auth_backend" "approle" {
+  path = "approle"
+  type = "approle"
+}
+
 resource "vault_jwt_auth_backend" "gitlab_oidc" {
   description  = "Authenticate Vault user using Gitlab OIDC provider"
   path = "oidc"

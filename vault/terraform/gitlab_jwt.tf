@@ -159,5 +159,31 @@ resource "vault_policy" "gitlab" {
     path "database/creds/application-groupe-${count.index}-prd" {
       capabilities = [ "read", "list" ]
     }
+
+    # Create and manage roles
+    path "auth/approle/role/application-groupe-${count.index}-prd" {
+      capabilities = [ "create", "read", "update", "delete", "list" ]
+    }
+    # Get role-id
+    path "auth/approle/role/application-groupe-${count.index}-prd/role-id" {
+      capabilities = [ "read" ]
+    }
+    # Get secret-id
+    path "auth/approle/role/application-groupe-${count.index}-prd/secret-id" {
+      capabilities = [ "update" ]
+    }
+
+    # Create and manage roles for rundeck
+    path "auth/approle/role/rundeck-groupe-${count.index}-prd" {
+      capabilities = [ "create", "read", "update", "delete", "list" ]
+    }
+    # Get role-id
+    path "auth/approle/role/rundeck-groupe-${count.index}-prd/role-id" {
+      capabilities = [ "read" ]
+    }
+    # Get secret-id
+    path "auth/approle/role/rundeck-groupe-${count.index}-prd/secret-id" {
+      capabilities = [ "update" ]
+    }
   EOT
 }
