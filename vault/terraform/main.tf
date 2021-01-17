@@ -8,6 +8,11 @@ provider "vault" {
   # address = "https://vault.example.net:8200"
 }
 
+resource "vault_mount" "db" {
+  path = "database"
+  type = "database"
+}
+
 resource "vault_jwt_auth_backend" "gitlab_oidc" {
   description  = "Authenticate Vault user using Gitlab OIDC provider"
   path = "oidc"
