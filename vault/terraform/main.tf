@@ -8,7 +8,7 @@ provider "vault" {
   # address = "https://vault.example.net:8200"
 }
 
-resource "vault_mount" "db" {
+resource "vault_mount" "database" {
   path = "database"
   type = "database"
 }

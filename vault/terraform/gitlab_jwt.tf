@@ -108,5 +108,27 @@ resource "vault_policy" "gitlab" {
     path "secret/groupe-${count.index}/postgresql-application-password" {
       capabilities = [ "create", "update", "delete", "read", "list" ]
     }
+
+    # Create and manage ACL policies
+    path "sys/policies/acl/application-groupe-${count.index}-prd" {
+      capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+    }
+    
+    path "sys/policies/acl/rundeck-groupe-${count.index}-prd" {
+      capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+    }
+
+    # To list policies - Step 3
+    path "sys/policies/acl" {
+      capabilities = ["list"]
+    }
+
+    # Create and manage ACL policies
+    path "sys/policies/application-groupe-${count.index}-prd" {
+      capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+    }
+    path "sys/policies/rundeck-groupe-${count.index}-prd" {
+      capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+    }
   EOT
 }
