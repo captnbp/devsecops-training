@@ -177,7 +177,6 @@ Passons à l'implémentation :
           url: "{{ ansible_product_uuid }}.pub.instances.scw.cloud"
           connection_url: "postgresql://{{ '{{' }}username{{ '}}' }}:{{ '{{' }}password{{ '}}' }}@{{ db_url }}:5432/postgres?sslmode=disable"
       delegate_to: 127.0.0.1
-      when: data_db.stat.isdir is not defined
       tags:
         - vault_database
         - vault_database_postgresql
