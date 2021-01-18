@@ -71,13 +71,13 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
       environment:
         name: production
       before_script:
-        - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-0 token_ttl=30 jwt=$CI_JOB_JWT)"
-        - export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-0/scaleway)"
-        - export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-0/scaleway)"
-        - export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-0/scaleway)"
-        - export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-0/scaleway)"
-        - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-0/scaleway)"
-        - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-0/scaleway)"
+        - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-<groupe_number> token_ttl=30 jwt=$CI_JOB_JWT)"
+        - export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<groupe_number>/scaleway)"
+        - export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<groupe_number>/scaleway)"
+        - export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<groupe_number>/scaleway)"
+        - export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<groupe_number>/scaleway)"
+        - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<groupe_number>/scaleway)"
+        - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<groupe_number>/scaleway)"
       script:
         # Install ssh-agent if not already installed
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
