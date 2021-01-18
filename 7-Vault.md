@@ -377,6 +377,7 @@ Passons à l'implémentation :
       hashivault_approle_role_secret:
         name: application-groupe-<group_number>-prd
       register: secret_id
+      delegate_to: 127.0.0.1
     ```
 4.  Dans `ansible/roles/application/tasks/main.yml` en pensant à bien remplacer `<group_number>` par votre numéro de groupe :
     - Supprimez les variables `DBUSER` et `DBPASSWORD` de la task `Deploy application`
