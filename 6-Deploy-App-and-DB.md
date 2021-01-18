@@ -71,7 +71,6 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
       environment:
         name: production
       before_script:
-        - cd ${TF_ROOT}
         - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-0 token_ttl=30 jwt=$CI_JOB_JWT)"
         - export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-0/scaleway)"
         - export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-0/scaleway)"
