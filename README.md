@@ -20,7 +20,9 @@ CD/CD by Gitlab : https://docs.gitlab.com/ee/ci/introduction/
 3. [Terraform](3-Terraform.md)
 4. [Ansible](4-Ansible.md)
 5. [Package App](5-Package-App-Docker.md)
-6. [Deploy App](6-Deploy-App-and-DB.md)
+6. [Deploy App + DB](6-Deploy-App-and-DB.md)
+7. [Vault](7-Vault.md)
+6. [Monitoring/Observability](8-Monitoring.md)
 
 ## Week 2
 
