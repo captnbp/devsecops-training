@@ -188,6 +188,14 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
    - Afin d'être sûr de déployer sur la bonne VM, le playbook devra s'exécuter sur le groupe de `hosts: production`
    - Le remote user devra être `root`
    - Le role à exécuter est `partitions`
+   - Enfin, ajoutez au tout début du fichier :
+     ```yaml
+     - hosts: localhost
+       tasks:
+         - fail:
+             msg: "[ERROR] Empty inventory. No host available."
+           when: groups.production|length == 0
+     ```
 7. Nous allons maintenant tester notre playbook en CLI depuis le terminal code-hitema:
    - Ouvrez la page https://vault-hitema.doca.cloud/ui/ et récupérez votre `VAULT_TOKEN` :
 
