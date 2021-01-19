@@ -56,8 +56,8 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
 3.  Dans `.gitlab-ci.yml` ajouter un stage `deploy` en dernier.
 4.  Ajoutez les jobs suivants dans `.gitlab-ci.yml` à la fin :
     ```yaml
-    # Remplacez l'image existante avec la v2.9.9
-    image: captnbp/gitlab-ci-image:v2.9.9
+    # Remplacez l'image existante avec la v2.9.10
+    image: captnbp/gitlab-ci-image:v2.9.10
     
     # A la fin du fichier
     ansible_lint:
