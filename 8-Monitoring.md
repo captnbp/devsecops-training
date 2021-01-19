@@ -309,7 +309,7 @@ Passons à l'implémentation dans Metricbeat :
       /home/coder/.local/bin/ansible-lint .
       ansible-inventory --list -i scaleway-ansible-inventory.yml
       ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml --syntax-check
-      ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml
+      ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml -e image=<nom complet de votre image>
       ```
 6.  Allez dans Kibana, cherchez les dashboard pour Postgresql et vérifiez que vous avez bien des remontées de métriques
     ![Kibana Postgresql](images/metricbeat-postgresql-overview.png)
