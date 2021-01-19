@@ -99,7 +99,16 @@ resource "vault_policy" "gitlab" {
     path "secret/groupe-${count.index}/scaleway" {
       capabilities = [ "read", "list" ]
     }
+    path "secret/groupe-${count.index}/scaleway_s3_backup" {
+      capabilities = [ "read", "list" ]
+    }
+    path "secret/groupe-${count.index}/passphrase_s3_backup" {
+      capabilities = [ "read", "list" ]
+    }
     path "secret/groupe-${count.index}/dockerhub" {
+      capabilities = [ "read", "list" ]
+    }
+    path "secret/groupe-${count.index}/elasticsearch" {
       capabilities = [ "read", "list" ]
     }
     path "secret/groupe-${count.index}/postgresql-admin-password" {
