@@ -15,15 +15,16 @@ CD/CD by Gitlab : https://docs.gitlab.com/ee/ci/introduction/
 
 ## Week 1
 
-1. [Setup](1-Setup.md)
-2. [Packer](2-Packer.md)
-3. [Terraform](3-Terraform.md)
-4. [Ansible](4-Ansible.md)
-5. [Package App](5-Package-App-Docker.md)
-6. [Deploy App + DB](6-Deploy-App-and-DB.md)
-7. [Vault](7-Vault.md)
-6. [Monitoring/Observability](8-Monitoring.md)
+1.  [Setup](1-Setup.md)
+2.  [Packer](2-Packer.md)
+3.  [Terraform](3-Terraform.md)
+4.  [Ansible](4-Ansible.md)
+5.  [Package App](5-Package-App-Docker.md)
 
 ## Week 2
 
-**In progress**
+1.  [Deploy App + DB](6-Deploy-App-and-DB.md)
+2.  [Vault](7-Vault.md)
+3.  [Monitoring/Observability](8-Monitoring.md)
+4.  [Backup / Restore BDD](9-Backup-Restore.md)
+5.  **TBD** TLS sur Postgresql ?
