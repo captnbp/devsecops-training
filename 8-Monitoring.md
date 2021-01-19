@@ -194,6 +194,7 @@ Nous allons aussi reconfigurer Traefik pour qu'il mette à disposition ses logs 
 6.  Dans `.gitlab-ci.yml`, et dans le job `postconf`, ajoutez la ligne suivante en tant que première commande du script :
     ```yaml
       script:
+        - apt-get update -y && apt-get install git -y
         - ansible-galaxy install 'git+https://gitlab.com/captnbp/ansible-beats-role.git'
     ```
 7.  Nous allons maintenant tester notre playbook en CLI depuis le terminal code-hitema:
