@@ -261,8 +261,8 @@ Passons à l'implémentation dans Metricbeat :
 1.  Dans Code-Hitema, pullez le code et basculez sur la nouvelle branche.
 2.  Créez la structure de répertoires suivante :
     ```bash
-    mkdir ansible/roles/application/templates
-    touch ansible/roles/application/templates/metricbeat.yml.j2
+    mkdir ansible/roles/postgresql/templates
+    touch ansible/roles/postgresql/templates/metricbeat.yml.j2
     ```
 3.  Ajoutez les tasks suivantes au début de `ansible/roles/postgresql/tasks/main.yml` en pensant à bien remplacer `<group_number>` par votre numéro de groupe :
     ```yaml
