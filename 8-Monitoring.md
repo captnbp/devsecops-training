@@ -269,6 +269,14 @@ Passons à l'implémentation dans Metricbeat :
     - name: Get a dynamic Postgresql account for our application
       set_fact:
         db_monitoring_account: "{{ lookup('community.general.hashi_vault', 'database/creds/monitoring-groupe-<group_number>-prd auth_method=token') }}"
+
+    - name: Deploy Metricbeat config
+      template:
+        src: metricbeat.yml.j2
+        dest: /etc/metricbeat/modules.d/postgresql.yml
+        mode: 0600
+        owner: root
+        group: root
     ```
 4.  Ajouter un fichier `ansible/roles/postgresql/templates/metricbeat.yml.j2` :
     ```yaml
@@ -278,7 +286,7 @@ Passons à l'implémentation dans Metricbeat :
         - database
         - bgwriter
         - activity
-      hosts: ["postgres://127.0.0.1:5432?sslmode=disable"]
+      hosts: ["postgres://127.0.0.1:5432/postgres?sslmode=disable"]
       username: "{{ db_monitoring_account.username }}"
       password: "{{ db_monitoring_account.password }}"
     ```
