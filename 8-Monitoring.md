@@ -311,15 +311,22 @@ Passons à l'implémentation dans Metricbeat :
       ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml --syntax-check
       ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml -e image=<nom complet de votre image>
       ```
-6.  Allez dans Kibana, cherchez les dashboard pour Postgresql et vérifiez que vous avez bien des remontées de métriques
+6.  Connectez vous sur votre VM, et lancer les quatre commandes suivantes :
+    ```bash
+    metricbeat setup
+    filebeat setup
+    auditbeat setup
+    heartbeat setup
+    ```
+7.  Allez dans Kibana, cherchez les dashboard pour Postgresql et vérifiez que vous avez bien des remontées de métriques
     ![Kibana Postgresql](images/metricbeat-postgresql-overview.png)
-7.  Si le test manuel est passé, commitez votre code sur la branche et pushez
+8.  Si le test manuel est passé, commitez votre code sur la branche et pushez
     ```bash
     git add ansible/roles/application/templates/metricbeat.yml.j2
     git commit ansible/roles/application/templates/metricbeat.yml.j2 ansible/roles/postgresql/tasks/main.yml -m "Monitore Postgresql"
     git push
     ```
-8.  Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
+9.  Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
 
 ## APM
 
