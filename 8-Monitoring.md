@@ -539,7 +539,7 @@ Implémentation :
       /home/coder/.local/bin/ansible-lint .
       ansible-inventory --list -i scaleway-ansible-inventory.yml
       ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml --syntax-check
-      ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml
+      ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml -e image=<nom complet de votre image>
       ```
 7.  Si le test manuel est passé, commitez votre code sur la branche et pushez
     ```bash
@@ -698,7 +698,7 @@ Nous allons donc ajouter les labels manquants à notre application :
       /home/coder/.local/bin/ansible-lint .
       ansible-inventory --list -i scaleway-ansible-inventory.yml
       ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml --syntax-check
-      ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml
+      ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml -e image=<nom complet de votre image>
       ```
 6.  Rendez-vous dans l'onglet `Uptime` de Kibana afin de retrouver votre check HTTP. Vous pourrez y voir le status mais aussi la validité du certificat TLS que Traefik a généré et fait signer pour notre application :
     ![Uptime](images/elastic-5.png)
