@@ -322,6 +322,7 @@ Passons à l'implémentation dans Metricbeat :
 6.  Connectez vous sur votre VM, et lancer les quatre commandes suivantes :
     ```bash
     metricbeat setup
+    metricbeat setup --machine-learning --dashboards
     filebeat setup
     auditbeat setup
     heartbeat setup
