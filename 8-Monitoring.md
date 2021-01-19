@@ -331,8 +331,8 @@ Passons à l'implémentation dans Metricbeat :
     ![Kibana Postgresql](images/metricbeat-postgresql-overview.png)
 8.  Si le test manuel est passé, commitez votre code sur la branche et pushez
     ```bash
-    git add ansible/roles/application/templates/metricbeat.yml.j2
-    git commit ansible/roles/application/templates/metricbeat.yml.j2 ansible/roles/postgresql/tasks/main.yml -m "Monitore Postgresql"
+    git add ansible/roles/postgresql/templates/metricbeat.yml.j2
+    git commit ansible/roles/postgresql/templates/metricbeat.yml.j2 ansible/roles/postgresql/tasks/main.yml -m "Monitore Postgresql"
     git push
     ```
 9.  Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
