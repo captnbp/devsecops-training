@@ -444,7 +444,7 @@ Implémentation :
 2.  Ajoutez le packages Python dans `requirements.txt` : `elastic-apm[flask]`
 3.  Ajoutez dans la task `Deploy application` de `ansible/roles/application/tasks/main.yml` en pensant à bien remplacer `<group_number>` par votre numéro de groupe les variables d'environnement suivantes :
     ```yaml
-    APM_SECRET_PATH: "secret/groupe-<group_number>/elasticsearch"
+    APM_SECRET_PATH: "groupe-<group_number>/elasticsearch"
     APM_SERVICE_NAME: production
     ```
 

@@ -241,6 +241,10 @@ Passons à l'implémentation :
           path "sys/leases/revoke/database/creds/application-groupe-<group_number>-prd/+" {
             capabilities = [ "update" ]
           }
+
+          path "secret/groupe-<group_number>/elasticsearch" {
+            capabilities = [ "read", "list" ]
+          }
       delegate_to: 127.0.0.1
       tags:
         - vault_database
