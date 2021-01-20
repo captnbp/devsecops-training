@@ -462,10 +462,6 @@ Implémentation :
     client.is_authenticated()
     db_account = client.secrets.database.generate_credentials(os.environ['VAULT_DATABASE_ROLE'])
 
-    print("Type:")
-    print(type(db_account))
-    pprint.pprint(db_account)
-
     database_uri = 'postgresql+psycopg2://{dbuser}:{dbpass}@{dbhost}/{dbname}'.format(
       dbuser=db_account['data']['username'],
       dbpass=db_account['data']['password'],
