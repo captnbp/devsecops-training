@@ -577,14 +577,6 @@ Nous allons donc ajouter les labels manquants à notre application :
 
 0.  Créez une issue `Monitore our application URL` dans le dépôt Gitlab `application`, puis créez la Merge Request et sa branche associée.
 1.  Dans Code-Hitema, pullez le code et basculez sur la nouvelle branche.
-2.  Ajoutez les labels suivants au conteneur de notre application dans `ansible/roles/application/tasks/main.yml` dans la task `Deploy application`
-    ```yaml
-        labels:
-          co.elastic.monitor/type: http
-          co.elastic.monitor/hosts: "https://{{ ansible_product_uuid }}.pub.instances.scw.cloud:443"
-          co.elastic.monitor/schedule: "@every 5s"
-    ```
-    > Ce mode de configuration est actuellement bugué : https://github.com/elastic/beats/issues/17771 On va donc contourner ci-dessous
 3.  Ajoutez le fichier `ansible/roles/application/templates/hearbeat.yml.j2`
     ```yaml
     # These files contain a list of monitor configurations identical
