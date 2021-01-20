@@ -570,14 +570,14 @@ Implémentation :
 
 Heartbeat https://www.elastic.co/guide/en/beats/heartbeat/current/monitor-http-options.html
 
-L'agent Hearbeat est configuré pour détecter les URLs HTTPS à monitorer en lisant les labels des conteneurs Docker que nous déployons.
+L'agent heartbeat est configuré pour détecter les URLs HTTPS à monitorer en lisant les labels des conteneurs Docker que nous déployons.
 Cf. https://gitlab.com/captnbp/ansible-beats-role/-/blob/master/templates/heartbeat.yml.j2#L23
 
 Nous allons donc ajouter les labels manquants à notre application :
 
 0.  Créez une issue `Monitore our application URL` dans le dépôt Gitlab `application`, puis créez la Merge Request et sa branche associée.
 1.  Dans Code-Hitema, pullez le code et basculez sur la nouvelle branche.
-3.  Ajoutez le fichier `ansible/roles/application/templates/hearbeat.yml.j2`
+3.  Ajoutez le fichier `ansible/roles/application/templates/heartbeat.yml.j2`
     ```yaml
     # These files contain a list of monitor configurations identical
     # to the heartbeat.monitors section in heartbeat.yml
@@ -670,7 +670,7 @@ Nous allons donc ajouter les labels manquants à notre application :
     - name: Set URL Monitoring
       ansible.builtin.template:
         src: heartbeat.yml.j2
-        dest: /etc/hearbeat/monitors.d/application.yml
+        dest: /etc/heartbeat/monitors.d/application.yml
         owner: root
         group: root
         mode: '0644'
@@ -709,8 +709,8 @@ Nous allons donc ajouter les labels manquants à notre application :
     ![Certificate](images/elastic-6.png)
 7.  Si le test manuel est passé, commitez votre code sur la branche et pushez
     ```bash
-    git add ansible/roles/application/templates/hearbeat.yml.j2
-    git commit ansible/roles/application/templates/hearbeat.yml.j2 ansible/roles/application/tasks/main.yml -m "Monitore our application URL"
+    git add ansible/roles/application/templates/heartbeat.yml.j2
+    git commit ansible/roles/application/templates/heartbeat.yml.j2 ansible/roles/application/tasks/main.yml -m "Monitore our application URL"
     git push
     ```
 7.  Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
