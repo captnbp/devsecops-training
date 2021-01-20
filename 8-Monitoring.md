@@ -441,7 +441,7 @@ Implémentation :
 
 0.  Créez une issue `Add APM to application` dans le dépôt Gitlab `application`, puis créez la Merge Request et sa branche associée.
 1.  Dans Code-Hitema, pullez le code et basculez sur la nouvelle branche.
-2.  Ajoutez le packages Python dans `requirements.txt` : `elastic-apm[flask]`
+2.  Ajoutez les packages Python dans `requirements.txt` : `elastic-apm[flask]` et `blinker`
 3.  Ajoutez dans la task `Deploy application` de `ansible/roles/application/tasks/main.yml` en pensant à bien remplacer `<group_number>` par votre numéro de groupe les variables d'environnement suivantes :
     ```yaml
     APM_SECRET_PATH: "groupe-<group_number>/elasticsearch"
