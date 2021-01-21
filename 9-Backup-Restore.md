@@ -28,44 +28,7 @@ Nous voulons aussi pouvoir restorer la BDD. Mais uniquement via un `trigger` Git
     - type : scaleway_object_bucket (https://registry.terraform.io/providers/scaleway/scaleway/latest/docs/resources/object_bucket)
     - name: var.environnement
     - acl: private
-    - tags: les mêmes que la VM
-3.  Pour tester en local depuis le terminal de code-hitema avant de commiter :
-    - Ouvrez la page https://vault-hitema.doca.cloud/ui/ et récupérez votre `VAULT_TOKEN` :
-
-      ![Vault Token](images/vault-3.png)
-      
-    - Créez la variable d'environnement dans le Terminal de Code-Hitema :
-      ```bash
-      export VAULT_TOKEN=<Le token précédement récupéré>
-      export GROUPE_NUMBER=<group_number>
-      ```
-    - Exportez les les variables d'environnement nécessaire à l'exécution de Terraform :
-      ```bash
-      export SCW_DEFAULT_PROJECT_ID=$(vault read -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_DEFAULT_ORGANIZATION_ID=$(vault read -field=SCW_DEFAULT_ORGANIZATION_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_ACCESS_KEY=$(vault read -field=SCW_ACCESS_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_DEFAULT_REGION=$(vault read -field=SCW_DEFAULT_REGION secret/groupe-${GROUPE_NUMBER}/scaleway)
-      ```
-    - Puis :
-      ```bash
-      cd terraform
-      terraform init
-      terraform validate -var image=${SCW_IMAGE} -var environnement="cli"
-      terraform plan -var image=${SCW_IMAGE} -var environnement="cli"
-      terraform apply -var image=${SCW_IMAGE} -var environnement="cli"
-      ```
-4.  Maintenant que votre déploiement Terraform est fonctionnel en test, nous allons le **destroy** pour passer à l'industrialisation :
-    ```bash
-    terraform destroy -var image=${SCW_IMAGE} -var environnement="cli"
-    ```
-5.  Si le test manuel est passé, commitez votre code sur la branche et pushez
-    ```bash
-    git commit terraform/main.tf -m "Deploy S3 bucket"
-    git push
-    ```
-6.  Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
+3.  Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
 
 ### Création d'un nouveau jeu d'access/secret key Scaleway pour le bucket S3
 
