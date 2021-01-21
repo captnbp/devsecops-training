@@ -26,7 +26,7 @@ Nous voulons aussi pouvoir restorer la BDD. Mais uniquement via un `trigger` Git
 1.  Dans Code-Hitema, pullez le code et basculez sur la nouvelle branche.
 2.  Dans `terraform/main.tf` ajoutez la ressource suivante :
     - type : scaleway_object_bucket (https://registry.terraform.io/providers/scaleway/scaleway/latest/docs/resources/object_bucket)
-    - name: "groupe_<group_number>_s3_backup"
+    - name: "groupe-<group_number>-s3-backup"
     - acl: private
 3.  Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
 
