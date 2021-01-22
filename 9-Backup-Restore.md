@@ -62,7 +62,7 @@ Nous voulons aussi pouvoir restorer la BDD. Mais uniquement via un `trigger` Git
     except:
       - schedules
     ```
-3.  Ajoutez un stage `backup` avant le stage `deploy` dans `.gitlab-ci.yml`
+3.  Ajoutez un stage `backup` après le stage `deploy` dans `.gitlab-ci.yml`
 3.  Créez un nouveau job à la fin du fichier :
     ```yaml
     backup_db:on-schedule:
