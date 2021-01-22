@@ -6,7 +6,8 @@ Afin de faciliter la configuration de l'image de la VM, nous allons utiliser Ans
 
 Ensuite, nous utiliserons une nouvelle fois pour faire de la post-configuration de notre VM déployée.
 
-Cours sur Ansible : https://docs.google.com/presentation/d/1y7JRD_yCUBOLE22fXfak5Zt6qeMQMYSpyK8P6YB0lio/edit#slide=id.ga201d4bac2_0_68 
+Cours sur Ansible : https://docs.google.com/presentation/d/1y7JRD_yCUBOLE22fXfak5Zt6qeMQMYSpyK8P6YB0lio/edit?usp=sharing
+
 ## Sécurisation de base de notre image VM (image)
 
 Nous allons appliquer l'amélioration suivante de sécurité à notre image VM :
