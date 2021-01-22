@@ -41,7 +41,7 @@
 
 ## Création des dépôts Gitlab
 
-Cours sur Gitlab CI : https://docs.google.com/presentation/d/1Iu_xR9ab1uzolNxr6-NMCCnDNveh2QGAqeJMvMqQu5A/edit?pli=1#slide=id.gab477f5ee1_0_73 
+Cours sur Gitlab CI : https://docs.google.com/presentation/d/1Iu_xR9ab1uzolNxr6-NMCCnDNveh2QGAqeJMvMqQu5A/edit?usp=sharing
 
 Créer 3 projets Gitlab (**`image`**, **`infrastructure`** et **`application`**) dans votre sous-groupe Gitlab **group_< number >**
   
