@@ -72,26 +72,27 @@ Nous voulons aussi pouvoir restorer la BDD. Mais uniquement via un `trigger` Git
         - schedules
         - master
       script:
+        - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
         - export DB_ACCOUNT=$(vault read -format=json database/creds/backup-groupe-<group_number>-prd)
         - export PGPASSWORD=$(echo $DB_ACCOUNT | jq .data.password  | cut -d '"' -f2)
-        - export ENCRYPTION_KEY=$(vault read -field=passphrase secret/groupe-<group_number>/passphrase_s3_backup)
+        - export RESTIC_PASSWORD=$(vault read -field=passphrase secret/groupe-<group_number>/passphrase_s3_backup)
         - export S3_CREDENTIALS=$(vault read -format=json secret/groupe-<group_number>/scaleway_s3_backup)
+        - export AWS_ACCESS_KEY_ID=$(echo $S3_CREDENTIALS | jq .data.SCW_ACCESS_KEY  | cut -d '"' -f2)
+        - export AWS_SECRET_ACCESS_KEY=$(echo $S3_CREDENTIALS | jq .data.SCW_SECRET_KEY  | cut -d '"' -f2)
         - <le reste de votre script !>
         - ...
     ```
-4.  Complétez le script en vous aidant des outils suivants (au choix):
+4.  Complétez le script en vous aidant des outils suivants :
 
     - `pg_dump`
-    - `mc` / `restic` (https://www.scaleway.com/en/docs/how-to-migrate-object-storage-buckets-with-minio/#-Configuring-the-Minio-Client-and-Migrating-Data) et (https://restic.net/)
+    - `restic` https://restic.net/
 
     Pour :
 
     - Faire le dump des tables de la BDD `postgres` de notre applications uniquement
     - Compresser le dump avec `gzip` (Ex. `pg_dump base_de_donnees options | gzip > nom_fichier.gz`)
     - Nommez le fichier avec la date et l'heure courante
-    - Chiffrez le fichier et pushez-le dans le bucket S3 avec au choix:
-      - `gpg --passphrase ${ENCRYPTION_KEY}` + Minio Client `mc`
-      - `restic` (methode préférée car restic sait gérer la rotation des backups, le chiffrement, le backup différentiel)
+    - Chiffrez le fichier et pushez-le dans le bucket S3 avec `restic`
 5.  Une fois le script fonctionnel, testez-le.
 6.  Si le backup se passe bien, schedulez votre job toutes les nuits de la semaine dans Gitlab CI, et demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche.
 
@@ -107,10 +108,13 @@ Nous voulons aussi pouvoir restorer la BDD. Mais uniquement via un `trigger` Git
       only:
         - trigger
       script:
+        - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
         - export DB_ACCOUNT=$(vault read -format=json database/creds/backup-groupe-<group_number>-prd)
         - export PGPASSWORD=$(echo $DB_ACCOUNT | jq .data.password  | cut -d '"' -f2)
-        - export ENCRYPTION_KEY=$(vault read -field=passphrase secret/groupe-<group_number>/passphrase_s3_backup)
+        - export RESTIC_PASSWORD=$(vault read -field=passphrase secret/groupe-<group_number>/passphrase_s3_backup)
         - export S3_CREDENTIALS=$(vault read -format=json secret/groupe-<group_number>/scaleway_s3_backup)
+        - export AWS_ACCESS_KEY_ID=$(echo $S3_CREDENTIALS | jq .data.SCW_ACCESS_KEY  | cut -d '"' -f2)
+        - export AWS_SECRET_ACCESS_KEY=$(echo $S3_CREDENTIALS | jq .data.SCW_SECRET_KEY  | cut -d '"' -f2)
         - <le reste de votre script !>
         - ...
     ```
