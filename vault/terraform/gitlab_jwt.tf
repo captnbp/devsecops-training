@@ -156,6 +156,9 @@ resource "vault_policy" "gitlab" {
     path "database/roles/backup-groupe-${count.index}-prd" {
       capabilities = [ "create", "read", "update", "delete", "list" ]
     }
+    path "database/roles/restore-groupe-${count.index}-prd" {
+      capabilities = [ "create", "read", "update", "delete", "list" ]
+    }
     path "database/roles/application-groupe-${count.index}-prd" {
       capabilities = [ "create", "read", "update", "delete", "list" ]
     }
@@ -163,6 +166,9 @@ resource "vault_policy" "gitlab" {
       capabilities = [ "read", "list" ]
     }
     path "database/creds/backup-groupe-${count.index}-prd" {
+      capabilities = [ "read", "list" ]
+    }
+    path "database/creds/restore-groupe-${count.index}-prd" {
       capabilities = [ "read", "list" ]
     }
     path "database/creds/application-groupe-${count.index}-prd" {
