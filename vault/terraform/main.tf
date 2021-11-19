@@ -23,8 +23,8 @@ resource "vault_jwt_auth_backend" "gitlab_oidc" {
   path = "oidc"
   type = "oidc"
   oidc_discovery_url = "https://gitlab.com"
-  oidc_client_id = "552bd9ab910c33884e76c9bb7323c8dfe2bd24320eecb0fc9106835087abc6a8"
-  oidc_client_secret = "054146be36dee14376f43b1f83ef5ba5d5dafbfca1a4abd8396f5e23bd7496cb"
+  oidc_client_id = "5d239a55568c051cb1da88208d6492da97f4dc708cce007d2b1317ba9bd98608"
+  oidc_client_secret = "4d27b47473c65dbe756907bacbc9ed286236a1aeaf0ca5f83e50dcad41fa9fa4"
   bound_issuer = "localhost"
   default_role = "default"
 }
@@ -35,7 +35,7 @@ resource "vault_jwt_auth_backend_role" "gitlab_oidc_admin" {
   token_policies  = ["default", "admin"]
   token_ttl       = "86000"
 
-  bound_audiences = ["552bd9ab910c33884e76c9bb7323c8dfe2bd24320eecb0fc9106835087abc6a8"]
+  bound_audiences = ["5d239a55568c051cb1da88208d6492da97f4dc708cce007d2b1317ba9bd98608"]
   user_claim      = "sub"
   role_type       = "oidc"
   oidc_scopes     = ["openid"]
@@ -45,7 +45,7 @@ resource "vault_jwt_auth_backend_role" "gitlab_oidc_admin" {
     "https://vault-hitema.doca.cloud/ui/vault/auth/oidc/oidc/callback"
   ]
   bound_claims    = { 
-    groups = "hitema-devsecops-2020/group_0"
+    groups = "h3-hitema-devsecops-2021/groupe_0"
   }
 }
 

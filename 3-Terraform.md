@@ -15,7 +15,7 @@ Voici le détail :
   - Nom : variable `environnement`
   - Image OS : variable `image`
   - Activer IPv6 sur la VM
-  - Tags : hitema,group-<group_number>,variable `environnement`
+  - Tags : hitema,groupe-<group_number>,variable `environnement`
   - L'option suivante activée dans la VM de type `scaleway_instance_server` :
     ```hcl
     root_volume {
@@ -128,7 +128,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 2. Intégration de Terraform à Gitlab CI dans le fichier `.gitlab-ci.yml` du dépôt `infrastructure`. Créez le `.gitlab-ci.yml` suivant :
    ```yaml
    default:
-     image: captnbp/gitlab-ci-image:v2.9.7
+     image: captnbp/gitlab-ci-image:1.6.0
 
      cache:
        key: production

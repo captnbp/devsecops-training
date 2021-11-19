@@ -7,14 +7,14 @@ resource "vault_jwt_auth_backend" "gitlab_jwt" {
 }
 
 resource "vault_jwt_auth_backend_role" "packer" {
-  count = 54
+  count = 22
   backend         = vault_jwt_auth_backend.gitlab_jwt.path
   role_name       = "packer-groupe-${count.index}"
   token_policies  = ["default", "groupe-${count.index}-gitlab", "beats-role-${count.index}"]
   token_explicit_max_ttl = 600
 
   bound_claims = {
-    project_path = "hitema-devsecops-2020/group_${count.index}/image"
+    project_path = "h3-hitema-devsecops-2021/groupe_${count.index}/image"
   }
 
   user_claim      = "user_email"
@@ -22,14 +22,14 @@ resource "vault_jwt_auth_backend_role" "packer" {
 }
 
 resource "vault_jwt_auth_backend_role" "dev" {
-  count = 54
+  count = 22
   backend         = vault_jwt_auth_backend.gitlab_jwt.path
   role_name       = "dev-groupe-${count.index}"
   token_policies  = ["default", "gitlab-ssh", "groupe-${count.index}-gitlab", "db-groupe-${count.index}-dev", "rundeck-groupe-${count.index}-dev", "beats-role-${count.index}"]
   token_explicit_max_ttl = 600
 
   bound_claims = {
-    namespace_path = "hitema-devsecops-2020/group_${count.index}"
+    namespace_path = "h3-hitema-devsecops-2021/groupe_${count.index}"
     ref_type = "branch"
     ref_protected = false
   }
@@ -39,14 +39,14 @@ resource "vault_jwt_auth_backend_role" "dev" {
 }
 
 resource "vault_jwt_auth_backend_role" "prd" {
-  count = 54
+  count = 22
   backend         = vault_jwt_auth_backend.gitlab_jwt.path
   role_name       = "prd-groupe-${count.index}"
   token_policies  = ["default", "gitlab-ssh", "groupe-${count.index}-gitlab", "db-groupe-${count.index}-prd", "rundeck-groupe-${count.index}-prd", "beats-role-${count.index}"]
   token_explicit_max_ttl = 600
 
   bound_claims = {
-    namespace_path = "hitema-devsecops-2020/group_${count.index}"
+    namespace_path = "h3-hitema-devsecops-2021/groupe_${count.index}"
     ref = "master"
     ref_type = "branch"
     ref_protected = true
@@ -57,14 +57,14 @@ resource "vault_jwt_auth_backend_role" "prd" {
 }
 
 resource "vault_jwt_auth_backend_role" "infrastructure" {
-  count = 54
+  count = 22
   backend         = vault_jwt_auth_backend.gitlab_jwt.path
   role_name       = "infrastructure-groupe-${count.index}"
   token_policies  = ["default", "gitlab-ssh", "groupe-${count.index}-gitlab", "db-groupe-${count.index}-dev", "rundeck-groupe-${count.index}-dev", "db-groupe-${count.index}-prd", "rundeck-groupe-${count.index}-prd", "beats-role-${count.index}"]
   token_explicit_max_ttl = 600
 
   bound_claims = {
-    project_path = "hitema-devsecops-2020/group_${count.index}/infrastructure"
+    project_path = "h3-hitema-devsecops-2021/groupe_${count.index}/infrastructure"
   }
 
   user_claim      = "user_email"
@@ -72,14 +72,14 @@ resource "vault_jwt_auth_backend_role" "infrastructure" {
 }
 
 resource "vault_jwt_auth_backend_role" "application" {
-  count = 54
+  count = 22
   backend         = vault_jwt_auth_backend.gitlab_jwt.path
   role_name       = "application-groupe-${count.index}"
   token_policies  = ["default", "gitlab-ssh", "groupe-${count.index}-gitlab", "db-groupe-${count.index}-dev", "rundeck-groupe-${count.index}-dev", "db-groupe-${count.index}-prd", "rundeck-groupe-${count.index}-prd", "beats-role-${count.index}"]
   token_explicit_max_ttl = 600
 
   bound_claims = {
-    project_path = "hitema-devsecops-2020/group_${count.index}/application"
+    project_path = "h3-hitema-devsecops-2021/groupe_${count.index}/application"
   }
 
   user_claim      = "user_email"
@@ -87,7 +87,7 @@ resource "vault_jwt_auth_backend_role" "application" {
 }
 
 resource "vault_policy" "gitlab" {
-  count = 54
+  count = 22
   name = "groupe-${count.index}-gitlab"
 
   policy = <<EOT

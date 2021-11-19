@@ -8,7 +8,7 @@
       
       > **Attention** : merci de mettre votre prénom et nom en tant que Full Name dans votre compte, sinon on ne vous retrouvera pas pour la notation...)
 
-    - Venir voir un prof pour se faire ajouter au sous-groupe **group_< number >**
+    - Venir voir un prof pour se faire ajouter au sous-groupe **groupe_< number >**
 0. Création du compte cloud Scaleway
     - Demandez à votre professeur de vous ajouter à l'organisation Scaleway Hitema
     - Vous allez recevoir un mail pour créer votre compte Scaleway
@@ -18,6 +18,7 @@
 ## Configuration de Mattermost
 
 0. Télécharger et installer Mattermost à partir de https://mattermost.com/download/#mattermostApps (Documentation : https://docs.mattermost.com/install/desktop.html)
+0. Activez votre compte via cette invitation https://mattermost-hitema.doca.cloud/signup_user_complete/?id=uu1u3jn3m7ys9kx6tfkpiinpka
 1. Configurer le server Mattermost privé au démarrage en mettant l'url suivante : https://mattermost-hitema.doca.cloud
 
    ![Installation](images/mattermost-1.png)
@@ -31,11 +32,11 @@
 
    ![Town Square](images/mattermost-3.png)
 
-4. Créer un channel par groupe nommé **group_< number >**
+4. Créer un channel par groupe nommé **groupe_< number >**
 
    ![Group](images/mattermost-4.png)
 
-5. Ajouter votre binôme à votre channel Mattermost **group_< number >**
+5. Ajouter votre binôme à votre channel Mattermost **groupe_< number >**
 
    ![Group](images/mattermost-5.png)
 
@@ -43,7 +44,7 @@
 
 Cours sur Gitlab CI : https://docs.google.com/presentation/d/1Iu_xR9ab1uzolNxr6-NMCCnDNveh2QGAqeJMvMqQu5A/edit?usp=sharing
 
-Créer 3 projets Gitlab (**`image`**, **`infrastructure`** et **`application`**) dans votre sous-groupe Gitlab **group_< number >**
+Créer 3 projets Gitlab (**`image`**, **`infrastructure`** et **`application`**) dans votre sous-groupe Gitlab **groupe_< number >**
   
 > **Attention** : merci de mettre les noms de projets en minuscules
 
@@ -92,7 +93,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
 
 ### Création des clés SSH
 
-0. Créer un jeu de clé ssh avec `ssh-keygen -t ed25519 -C <Prénom> -N ""` dans le Terminal Code-Hitema
+0. Créer un jeu de clé ssh avec `ssh-keygen -t ed25519 -C "${JUPYTERHUB_USER}" -N ""` dans le Terminal Code-Hitema
 1. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_ed25519.pub` dans la liste de clé du compte Scaleway (https://console.scaleway.com/project/)
 2. Chaque étudiant doit ajouter sa clé publique ssh `cat $HOME/.ssh/id_ed25519.pub` dans son compte Gitlab: https://gitlab.com/profile/keys
     
@@ -103,7 +104,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
 0. Se rendre dans les settings de votre profile Gitlab : https://gitlab.com/-/profile/personal_access_tokens
 1. Créer votre personal access token avec les paramètres suivants :
     - Name : `VScode`
-    - Expiration : `2021-01-31`
+    - Expiration : `2021-12-31`
     - Scopes : tout cocher
 
     ![Group](images/gitlab-0.png)
@@ -120,7 +121,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
 
 ### Images Packer
 
-0. Créer un projet (dépôt) nommé **`image`** dans votre sous-groupe `hitema-devsecops-2020/group_<group_number>`
+0. Créer un projet (dépôt) nommé **`image`** dans votre sous-groupe `h3-hitema-devsecops-2021/groupe_<group_number>`
 0. Créer une issue dans le dépôt **`image`** nommée `Création de la structure de base du dépôt`
 0. Depuis cette issue, créer une merge request (bouton en bas). Cela va aussi créer une branche de travail à utiliser ci-dessous
 0. Création de la structure de répertoire du projet **`image`**
@@ -137,7 +138,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     # Dans votre Terminal code-hitema
     mkdir -p $HOME/code
     cd $HOME/code
-    git clone git@gitlab.com:hitema-devsecops-2020/group_<group_number>/image.git
+    git clone git@gitlab.com:h3-hitema-devsecops-2021/groupe_<group_number>/image.git
 
     cd image
     git checkout <branche créée dans la merge request de l issue>
@@ -151,7 +152,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     ```
 ### Gestion de l'infrastructure via Terraform
 
-0. Créer un projet (dépôt) nommé **`infrastructure`** dans votre sous-groupe `hitema-devsecops-2020/group_<group_number>`
+0. Créer un projet (dépôt) nommé **`infrastructure`** dans votre sous-groupe `h3-hitema-devsecops-2021/groupe_<group_number>`
 0. Créer une issue dans le dépôt **`infrastructure`** nommée `Création de la structure de base du dépôt`
 0. Depuis cette issue, créer une merge request (bouton en bas). Cela va aussi créer une branche de travail à utiliser ci-dessous
 0. Création de la structure de répertoire du projet **`infrastructure`**
@@ -168,7 +169,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     ```sh
     # Dans votre Terminal code-hitema
     cd $HOME/code
-    git clone git@gitlab.com:hitema-devsecops-2020/group_<group_number>/infrastructure.git
+    git clone git@gitlab.com:h3-hitema-devsecops-2021/groupe_<group_number>/infrastructure.git
 
     cd infrastructure
     git checkout <branche créée dans la merge request de l issue>
@@ -183,7 +184,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
 
 ### Application hello-world
 
-0. Créer un projet (dépôt) nommé **`application`** dans votre sous-groupe `hitema-devsecops-2020/group_<group_number>`
+0. Créer un projet (dépôt) nommé **`application`** dans votre sous-groupe `h3-hitema-devsecops-2021/groupe_<group_number>`
 
 ## Création d'un jeu d'API keys Scaleway dans votre projet Scaleway
 

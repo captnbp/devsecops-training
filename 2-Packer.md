@@ -93,7 +93,7 @@ git push --tags
 ## Packer dans Gitlab CI
 
 1. Intégration de Packer à Gitlab CI dans le fichier `.gitlab-ci.yml` du dépôt `image` :
-   - Pour tous les jobs, utiliser l'image Docker `captnbp/gitlab-ci-image:v2.9.7`
+   - Pour tous les jobs, utiliser l'image Docker `captnbp/gitlab-ci-image:1.6.0`
    - Ajoutez le `before_script` suivant à votre fichier `.gitlab-ci.yml`
      ```yaml
        before_script:

@@ -1,11 +1,11 @@
 resource "vault_jwt_auth_backend_role" "gitlab_oidc_groups" {
-  count = 54
+  count = 22
   backend         = vault_jwt_auth_backend.gitlab_oidc.path
   role_name       = "groupe-${count.index}"
   token_policies  = ["default", "students-ssh", "beats-groupe-${count.index}", "groupe-${count.index}-dev", "groupe-${count.index}-prd", "rundeck-groupe-${count.index}-dev", "rundeck-groupe-${count.index}-prd", "db-groupe-${count.index}-dev", "db-groupe-${count.index}-prd"]
   token_ttl       = "86000"
 
-  bound_audiences = ["552bd9ab910c33884e76c9bb7323c8dfe2bd24320eecb0fc9106835087abc6a8"]
+  bound_audiences = ["5d239a55568c051cb1da88208d6492da97f4dc708cce007d2b1317ba9bd98608"]
   user_claim      = "sub"
   role_type       = "oidc"
   oidc_scopes     = ["openid"]
@@ -15,6 +15,6 @@ resource "vault_jwt_auth_backend_role" "gitlab_oidc_groups" {
     "https://vault-hitema.doca.cloud/ui/vault/auth/oidc/oidc/callback"
   ]
   bound_claims    = { 
-    groups = "hitema-devsecops-2020/group_${count.index}"
+    groups = "h3-hitema-devsecops-2021/groupe_${count.index}"
   }
 }

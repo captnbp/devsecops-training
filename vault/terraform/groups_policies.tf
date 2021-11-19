@@ -1,5 +1,5 @@
 resource "vault_policy" "dev-group" {
-  count = 54
+  count = 22
   name = "groupe-${count.index}-dev"
 
   policy = <<EOT
@@ -74,7 +74,7 @@ resource "vault_policy" "dev-group" {
 }
 
 resource "vault_policy" "prd-group" {
-  count = 54
+  count = 22
   name = "groupe-${count.index}-prd"
 
   policy = <<EOT

@@ -67,7 +67,7 @@ Nous voulons aussi pouvoir restorer la BDD. Mais uniquement via un `trigger` Git
     ```yaml
     backup_db:on-schedule:
       stage: backup
-      image: captnbp/gitlab-ci-image:v2.9.10
+      image: captnbp/gitlab-ci-image:1.6.0
       only:
         - schedules
         - master
@@ -104,7 +104,7 @@ Nous voulons aussi pouvoir restorer la BDD. Mais uniquement via un `trigger` Git
 1.  Créez un nouveau job à la fin du fichier `.gitlab-ci.yml` :
     ```yaml
     restore_db:
-      image: captnbp/gitlab-ci-image:v2.9.10
+      image: captnbp/gitlab-ci-image:1.6.0
       only:
         - trigger
       script:

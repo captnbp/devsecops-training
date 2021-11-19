@@ -1,5 +1,5 @@
 resource "vault_policy" "beats" {
-  count = 54
+  count = 22
   name = "beats-groupe-${count.index}"
 
   policy = <<EOT
