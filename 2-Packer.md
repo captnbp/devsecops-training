@@ -16,7 +16,7 @@
 
 0. Cours sur Packer : https://docs.google.com/presentation/d/1lZ-t84Wtr2YD3iqBRkflcQ2KU3TrsHnMkEqSb8xiE2E/edit?usp=sharing
 1. Créez une nouvelle issue nommée `Création d'une image VM Scaleway avec Packer` puis créez sa Merge Request. Ensuite pullez le code, et changez de branche pour utiliser la nouvelle branche
-2. Nous allons utiliser l'image `cf44b8f5-77e2-42ed-8f1e-09ed5bb028fc` (Ubuntu 20.04), le commercial_type `DEV1-S`, le ssh_username `root`
+2. Nous allons utiliser l'image `606e0cef-acc9-474b-92d4-70a2bba98b5d` (Ubuntu 20.04), le commercial_type `DEV1-S`, le ssh_username `root`
 3. Template pour le fichier `packer/packer.json`:
 
    ```json
@@ -84,14 +84,15 @@
 
 Tip: 
 ```
-git checkout master
+git checkout main
 git pull
-git tag -a v1.0.0
+git tag -a v1.0.0 -m 1.0.0
 git push --tags
 ```
 
 ## Packer dans Gitlab CI
 
+0. Créez une nouvelle issue nommée `Création d'une pipeline Gitlab CI pour Packer` puis créez sa Merge Request. Ensuite pullez le code, et changez de branche pour utiliser la nouvelle branche
 1. Intégration de Packer à Gitlab CI dans le fichier `.gitlab-ci.yml` du dépôt `image` :
    - Pour tous les jobs, utiliser l'image Docker `captnbp/gitlab-ci-image:1.6.0`
    - Ajoutez le `before_script` suivant à votre fichier `.gitlab-ci.yml`
@@ -110,7 +111,10 @@ git push --tags
    - Créer un job `build_packer` dans le stage `build` qui buildera l'image Packer (https://www.packer.io/docs/commands/build)
       
       ![packer](images/packer.png)
+   - Sur la nouvelle branche, commiter, push et vérifier le résultat
    - Aller vérifier que l'image a été créée dans https://console.scaleway.com/instance/images
+
+2. Demandez une revue de code à votre professeur, puis une fois la Merge Request approuvée, mergez la branche.
 
 ## Stockage des secrets Scaleway dans Hashicorp Vault
 
@@ -146,14 +150,14 @@ Afin de mieux sécuriser les clés d'API Scaleway, nous allons les stocker dans 
        else
          export IMAGE_TAG=${CI_COMMIT_TAG}
        fi
-       export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=packer-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
-       export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
-       export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
-       export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<group_number>/scaleway)"
-       export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
-       export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<group_number>/scaleway)"
-       export SCW_DEFAULT_REGION="$(vault kv get -field=SCW_DEFAULT_REGION secret/groupe-<group_number>/scaleway)"
-       export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
+       export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=packer-groupe-${GROUP_NUMBER} token_ttl=30 jwt=$CI_JOB_JWT)"
+       export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUP_NUMBER}/scaleway)"
+       export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUP_NUMBER}/scaleway)"
+       export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-${GROUP_NUMBER}/scaleway)"
+       export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)"
+       export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-${GROUP_NUMBER}/scaleway)"
+       export SCW_DEFAULT_REGION="$(vault kv get -field=SCW_DEFAULT_REGION secret/groupe-${GROUP_NUMBER}/scaleway)"
+       export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)"
      ```
 6. Aller vérifier que l'image a été créée dans https://console.scaleway.com/instance/images
 7. Demandez une revue de code à votre professeur, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche master en `1.0.1`

@@ -72,11 +72,11 @@ Nous voulons aussi pouvoir restorer la BDD. Mais uniquement via un `trigger` Git
         - schedules
         - master
       script:
-        - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
-        - export DB_ACCOUNT=$(vault read -format=json database/creds/backup-groupe-<group_number>-prd)
+        - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-${GROUP_NUMBER} token_ttl=30 jwt=$CI_JOB_JWT)"
+        - export DB_ACCOUNT=$(vault read -format=json database/creds/backup-groupe-${GROUP_NUMBER}-prd)
         - export PGPASSWORD=$(echo $DB_ACCOUNT | jq .data.password  | cut -d '"' -f2)
-        - export RESTIC_PASSWORD=$(vault read -field=passphrase secret/groupe-<group_number>/passphrase_s3_backup)
-        - export S3_CREDENTIALS=$(vault read -format=json secret/groupe-<group_number>/scaleway_s3_backup)
+        - export RESTIC_PASSWORD=$(vault read -field=passphrase secret/groupe-${GROUP_NUMBER}/passphrase_s3_backup)
+        - export S3_CREDENTIALS=$(vault read -format=json secret/groupe-${GROUP_NUMBER}/scaleway_s3_backup)
         - export AWS_ACCESS_KEY_ID=$(echo $S3_CREDENTIALS | jq .data.SCW_ACCESS_KEY  | cut -d '"' -f2)
         - export AWS_SECRET_ACCESS_KEY=$(echo $S3_CREDENTIALS | jq .data.SCW_SECRET_KEY  | cut -d '"' -f2)
         - <le reste de votre script !>
@@ -108,11 +108,11 @@ Nous voulons aussi pouvoir restorer la BDD. Mais uniquement via un `trigger` Git
       only:
         - trigger
       script:
-        - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
-        - export DB_ACCOUNT=$(vault read -format=json database/creds/backup-groupe-<group_number>-prd)
+        - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-${GROUP_NUMBER} token_ttl=30 jwt=$CI_JOB_JWT)"
+        - export DB_ACCOUNT=$(vault read -format=json database/creds/backup-groupe-${GROUP_NUMBER}-prd)
         - export PGPASSWORD=$(echo $DB_ACCOUNT | jq .data.password  | cut -d '"' -f2)
-        - export RESTIC_PASSWORD=$(vault read -field=passphrase secret/groupe-<group_number>/passphrase_s3_backup)
-        - export S3_CREDENTIALS=$(vault read -format=json secret/groupe-<group_number>/scaleway_s3_backup)
+        - export RESTIC_PASSWORD=$(vault read -field=passphrase secret/groupe-${GROUP_NUMBER}/passphrase_s3_backup)
+        - export S3_CREDENTIALS=$(vault read -format=json secret/groupe-${GROUP_NUMBER}/scaleway_s3_backup)
         - export AWS_ACCESS_KEY_ID=$(echo $S3_CREDENTIALS | jq .data.SCW_ACCESS_KEY  | cut -d '"' -f2)
         - export AWS_SECRET_ACCESS_KEY=$(echo $S3_CREDENTIALS | jq .data.SCW_SECRET_KEY  | cut -d '"' -f2)
         - <le reste de votre script !>

@@ -258,7 +258,6 @@ Passons à l'implémentation :
     - Créez la variable d'environnement dans le Terminal de Code-Hitema :
       ```bash
       export VAULT_TOKEN=<Le token précédement récupéré>
-      export GROUPE_NUMBER=<group_number>
       ```
     - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash
@@ -320,7 +319,6 @@ Passons à l'implémentation :
     - Créez la variable d'environnement dans le Terminal de Code-Hitema :
       ```bash
       export VAULT_TOKEN=<Le token précédement récupéré>
-      export GROUPE_NUMBER=<group_number>
       ```
     - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash

@@ -65,9 +65,9 @@ Il va donc falloir tester le build directement dans Gitlab CI.
          variables:
            VAULT_ADDR: https://vault-hitema.doca.cloud:443
          script:
-           - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
+           - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-${GROUP_NUMBER} token_ttl=30 jwt=$CI_JOB_JWT)"
            - mkdir -p .docker
-           - echo "\"`vault kv get -field=URL secret/groupe-<group_number>/dockerhub`\":{\"username\":\"`vault kv get -field=DOCKERHUB_USERNAME secret/groupe-<group_number>/dockerhub`\",\"password\":\"`vault kv get -field=DOCKERHUB_ACCESS_TOKEN secret/groupe-<group_number>/dockerhub`\"}" > ${CI_PROJECT_DIR}/.docker/config.json
+           - echo "\"`vault kv get -field=URL secret/groupe-${GROUP_NUMBER}/dockerhub`\":{\"username\":\"`vault kv get -field=DOCKERHUB_USERNAME secret/groupe-${GROUP_NUMBER}/dockerhub`\",\"password\":\"`vault kv get -field=DOCKERHUB_ACCESS_TOKEN secret/groupe-${GROUP_NUMBER}/dockerhub`\"}" > ${CI_PROJECT_DIR}/.docker/config.json
            - vault token revoke -self
          cache:
            key: dockerconfig

@@ -37,7 +37,6 @@ Nous allons appliquer l'amélioration suivante de sécurité à notre image VM :
    - Créez la variable d'environnement dans le Terminal de Code-Hitema :
      ```bash
      export VAULT_TOKEN=<Le token précédement récupéré>
-     export GROUPE_NUMBER=<group_number>
      ```
    - Exportez les les variables d'environnement nécessaire à l'exécution de Packer :
      ```bash
@@ -205,7 +204,6 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
    - Créez la variable d'environnement dans le Terminal de Code-Hitema :
      ```bash
      export VAULT_TOKEN=<Le token précédement récupéré>
-     export GROUPE_NUMBER=<group_number>
      ```
    - Exportez les les variables d'environnement nécessaire à l'exécution de Packer :
      ```bash
@@ -394,7 +392,6 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
    - Créez la variable d'environnement dans le Terminal de Code-Hitema :
      ```bash
      export VAULT_TOKEN=<Le token précédement récupéré>
-     export GROUPE_NUMBER=<group_number>
      ```
    - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
      ```bash

@@ -205,7 +205,6 @@ Nous allons aussi reconfigurer Traefik pour qu'il mette à disposition ses logs 
     - Créez la variable d'environnement dans le Terminal de Code-Hitema :
       ```bash
       export VAULT_TOKEN=<Le token précédement récupéré>
-      export GROUPE_NUMBER=<group_number>
       ```
     - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash
@@ -298,7 +297,6 @@ Passons à l'implémentation dans Metricbeat :
     - Créez la variable d'environnement dans le Terminal de Code-Hitema :
       ```bash
       export VAULT_TOKEN=<Le token précédement récupéré>
-      export GROUPE_NUMBER=<group_number>
       ```
     - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash
@@ -403,7 +401,6 @@ Doc : https://doc.traefik.io/traefik/observability/tracing/elastic/
     - Créez la variable d'environnement dans le Terminal de Code-Hitema :
       ```bash
       export VAULT_TOKEN=<Le token précédement récupéré>
-      export GROUPE_NUMBER=<group_number>
       ```
     - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash
@@ -532,7 +529,6 @@ Implémentation :
     - Créez la variable d'environnement dans le Terminal de Code-Hitema :
       ```bash
       export VAULT_TOKEN=<Le token précédement récupéré>
-      export GROUPE_NUMBER=<group_number>
       ```
     - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash
@@ -683,7 +679,6 @@ Nous allons donc ajouter les labels manquants à notre application :
     - Créez la variable d'environnement dans le Terminal de Code-Hitema :
       ```bash
       export VAULT_TOKEN=<Le token précédement récupéré>
-      export GROUPE_NUMBER=<group_number>
       ```
     - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash

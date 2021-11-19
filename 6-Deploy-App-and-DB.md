@@ -164,7 +164,6 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
     - Créez la variable d'environnement dans le Terminal de Code-Hitema :
       ```bash
       export VAULT_TOKEN=<Le token précédement récupéré>
-      export GROUPE_NUMBER=<group_number>
       ```
     - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash
@@ -263,7 +262,6 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
     - Créez la variable d'environnement dans le Terminal de Code-Hitema :
       ```bash
       export VAULT_TOKEN=<Le token précédement récupéré>
-      export GROUPE_NUMBER=<group_number>
       ```
     - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash
@@ -306,7 +304,6 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
 4.  Scaleway assigne un nom DNS à chaque VM créée. Il est formé de cette manière : <uuid de la VM>.pub.instances.scw.cloud (https://www.scaleway.com/en/docs/instance-domain-name-change/). L'inventaire dynamique Ansible récupère l'uuid de la VM et le met à disposition dans une variable de type fact. Pour lister l'intégralité des facts, utilisez la commande suivante depuis code-hitema :
     ```bash
     export VAULT_TOKEN=<Le token précédement récupéré>
-    export GROUPE_NUMBER=<group_number>
     export SCW_TOKEN=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
     ansible -i scaleway-ansible-inventory.yml -m ansible.builtin.setup production -e ansible_user=root
     ```
@@ -411,7 +408,6 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
     - Créez la variable d'environnement dans le Terminal de Code-Hitema :
       ```bash
       export VAULT_TOKEN=<Le token précédement récupéré>
-      export GROUPE_NUMBER=<group_number>
       ```
     - Exportez les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash

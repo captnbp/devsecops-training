@@ -15,34 +15,7 @@
       
       > **Attention** : merci de mettre votre prénom et nom dans votre profile Scaleway, sinon on ne vous retrouvera pas pour la notation...)
 
-## Configuration de Mattermost
-
-0. Télécharger et installer Mattermost à partir de https://mattermost.com/download/#mattermostApps (Documentation : https://docs.mattermost.com/install/desktop.html)
-0. Activez votre compte via cette invitation https://mattermost-hitema.doca.cloud/signup_user_complete/?id=uu1u3jn3m7ys9kx6tfkpiinpka
-1. Configurer le server Mattermost privé au démarrage en mettant l'url suivante : https://mattermost-hitema.doca.cloud
-
-   ![Installation](images/mattermost-1.png)
-
-2. Puis se loguer en utilisant le SSO Gitlab
-
-   ![Login](images/mattermost-2.png)
-   ![Login](images/mattermost-6.png)
-
-3. Vous êtes logué :
-
-   ![Town Square](images/mattermost-3.png)
-
-4. Créer un channel par groupe nommé **groupe_< number >**
-
-   ![Group](images/mattermost-4.png)
-
-5. Ajouter votre binôme à votre channel Mattermost **groupe_< number >**
-
-   ![Group](images/mattermost-5.png)
-
 ## Création des dépôts Gitlab
-
-Cours sur Gitlab CI : https://docs.google.com/presentation/d/1Iu_xR9ab1uzolNxr6-NMCCnDNveh2QGAqeJMvMqQu5A/edit?usp=sharing
 
 Créer 3 projets Gitlab (**`image`**, **`infrastructure`** et **`application`**) dans votre sous-groupe Gitlab **groupe_< number >**
   
@@ -90,6 +63,11 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
    ![Group](images/code-server-5.png)
 
 0. Fermer le shell bash (`Ctrl+D`) puis ouvrir à nouveau le terminal avec le shell Zsh (`Ctrl+Shift+C`)
+0. Personaliser et lancer les commandes suivantes dans votre terminal :
+    ```sh
+    export GROUP_NUMBER=<group_number>
+    echo "export GROUP_NUMBER=${GROUP_NUMBER}" > ${HOME}/.zshrc
+    ```
 
 ### Création des clés SSH
 
@@ -138,7 +116,8 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     # Dans votre Terminal code-hitema
     mkdir -p $HOME/code
     cd $HOME/code
-    git clone git@gitlab.com:h3-hitema-devsecops-2021/groupe_<group_number>/image.git
+    git config pull.rebase false
+    git clone git@gitlab.com:h3-hitema-devsecops-2021/groupe_${GROUP_NUMBER}/image.git
 
     cd image
     git checkout <branche créée dans la merge request de l issue>
@@ -169,7 +148,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     ```sh
     # Dans votre Terminal code-hitema
     cd $HOME/code
-    git clone git@gitlab.com:h3-hitema-devsecops-2021/groupe_<group_number>/infrastructure.git
+    git clone git@gitlab.com:h3-hitema-devsecops-2021/groupe_${GROUP_NUMBER}/infrastructure.git
 
     cd infrastructure
     git checkout <branche créée dans la merge request de l issue>

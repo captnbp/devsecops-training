@@ -70,7 +70,6 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
    - Créez la variable d'environnement dans le Terminal de Code-Hitema :
      ```bash
      export VAULT_TOKEN=<Le token précédement récupéré>
-     export GROUPE_NUMBER=<group_number>
      ```
    - Exportez les les variables d'environnement nécessaire à l'exécution de Terraform :
      ```bash
@@ -142,14 +141,14 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 
    before_script:
      - cd ${TF_ROOT}
-     - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=infrastructure-groupe-<group_number> token_ttl=30 jwt=$CI_JOB_JWT)"
-     - export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
-     - export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<group_number>/scaleway)"
-     - export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<group_number>/scaleway)"
-     - export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
-     - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<group_number>/scaleway)"
-     - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<group_number>/scaleway)"
-     - export SCW_DEFAULT_REGION="$(vault kv get -field=SCW_DEFAULT_REGION secret/groupe-<group_number>/scaleway)"
+     - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=infrastructure-groupe-${GROUP_NUMBER} token_ttl=30 jwt=$CI_JOB_JWT)"
+     - export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUP_NUMBER}/scaleway)"
+     - export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUP_NUMBER}/scaleway)"
+     - export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-${GROUP_NUMBER}/scaleway)"
+     - export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)"
+     - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)"
+     - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-${GROUP_NUMBER}/scaleway)"
+     - export SCW_DEFAULT_REGION="$(vault kv get -field=SCW_DEFAULT_REGION secret/groupe-${GROUP_NUMBER}/scaleway)"
      - export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.1 -o json | jq -r ".[0].ID")
 
    stages:
