@@ -189,6 +189,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      dependencies:
        - plan
      when: manual
+     auto_stop_in: 2 day
      only:
        - main
    ```
@@ -204,4 +205,5 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
    - Le job `apply` doit se lancer et déployer notre infrastructure de production
    - Connectez-vous en ssh à votre VM pour valider le fonctionnement en suivant la procédure décrite précédement.
    - Rendez-vous dans l'onglet `Operations -> Environments`, constatez que l'environnement `production`est bien présent. 
-7. Faire une démo et revue à votre professeur.
+8. Faire une démo et revue à votre professeur.
+9. Lancer la destruction de notre infrastructure en cliquant sur `Destroy` dans `Operations -> Environments`

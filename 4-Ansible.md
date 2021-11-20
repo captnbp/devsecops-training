@@ -54,14 +54,8 @@ Nous allons appliquer l'amélioration suivante de sécurité à notre image VM :
      packer validate packer.json
      packer build packer.json
      ```
-6. Si le test est passé, commitez votre code sur la branche et pushez
-   ```bash
-   git commit packer/playbook.yml packer/packer.json -m "Install fail2ban with Ansible"
-   git tag -a v1.0.3
-   git push
-   git push --tags
-   ```
-5. Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche main en `1.0.3`
+5. Si le test est passé, commitez votre code sur la branche et pushez
+6. Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche main en `1.0.3`
 
 ## Post-configuration de la VM (infrastructure)
 
@@ -159,6 +153,8 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
 1. Dans Code-Hitema, pullez le code et basculez sur la nouvelle branche.
 2. Créez la structure de répertoires suivante :
    ```bash
+   touch postconf_vm/playbook.yml
+   touch postconf_vm/scaleway-ansible-inventory.yml
    mkdir postconf_vm/roles
    mkdir postconf_vm/roles/partitions
    mkdir postconf_vm/roles/partitions/tasks
@@ -266,7 +262,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
          - vault write -field=signed_key ssh/sign/gitlab public_key="${SSH_PUB_KEY}" > ${HOME}/.ssh/id_ed25519.pub
          
          # Deploy
-         - cd postconf_vm
+         - cd ${CI_PROJECT_DIR}/postconf_vm
          - ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml --syntax-check
          - ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml
        only:
