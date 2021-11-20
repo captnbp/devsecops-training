@@ -57,7 +57,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      required_providers {
        scaleway = {
          source = "scaleway/scaleway"
-         version = "1.17.0"
+         version = "2.1.0"
        }
      }
    }
@@ -73,19 +73,19 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      ```
    - Exportez les les variables d'environnement nécessaire à l'exécution de Terraform :
      ```bash
-     export SCW_DEFAULT_PROJECT_ID=$(vault read -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
-     export SCW_DEFAULT_ORGANIZATION_ID=$(vault read -field=SCW_DEFAULT_ORGANIZATION_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
-     export SCW_ACCESS_KEY=$(vault read -field=SCW_ACCESS_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
-     export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
-     export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUPE_NUMBER}/scaleway)
-     export SCW_DEFAULT_REGION=$(vault read -field=SCW_DEFAULT_REGION secret/groupe-${GROUPE_NUMBER}/scaleway)
-     export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.1 -o json | jq -r ".[0].ID")
+     export SCW_DEFAULT_PROJECT_ID=$(vault read -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUP_NUMBER}/scaleway)
+     export SCW_DEFAULT_ORGANIZATION_ID=$(vault read -field=SCW_DEFAULT_ORGANIZATION_ID secret/groupe-${GROUP_NUMBER}/scaleway)
+     export SCW_ACCESS_KEY=$(vault read -field=SCW_ACCESS_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
+     export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
+     export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUP_NUMBER}/scaleway)
+     export SCW_DEFAULT_REGION=$(vault read -field=SCW_DEFAULT_REGION secret/groupe-${GROUP_NUMBER}/scaleway)
+     export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.1 -o json | jq -r ".[0].id")
      ```
    - Puis :
      ```bash
      cd terraform
      terraform init
-     terraform validate -var image=${SCW_IMAGE} -var environnement="cli"
+     terraform validate
      terraform plan -var image=${SCW_IMAGE} -var environnement="cli"
      terraform apply -var image=${SCW_IMAGE} -var environnement="cli"
      ```
@@ -149,7 +149,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)"
      - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-${GROUP_NUMBER}/scaleway)"
      - export SCW_DEFAULT_REGION="$(vault kv get -field=SCW_DEFAULT_REGION secret/groupe-${GROUP_NUMBER}/scaleway)"
-     - export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.1 -o json | jq -r ".[0].ID")
+     - export SCW_IMAGE=$(scw instance image list name=ubuntu-hitema-1.0.1 -o json | jq -r ".[0].id")
 
    stages:
      - prepare
@@ -165,7 +165,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
    validate:
      stage: validate
      script:
-       - gitlab-terraform validate -var image=${SCW_IMAGE} -var environnement="production"
+       - gitlab-terraform validate
 
    plan:
      stage: plan

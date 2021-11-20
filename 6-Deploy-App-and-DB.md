@@ -71,13 +71,13 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
       environment:
         name: production
       before_script:
-        - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-<groupe_number> token_ttl=30 jwt=$CI_JOB_JWT)"
-        - export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<groupe_number>/scaleway)"
-        - export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<groupe_number>/scaleway)"
-        - export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<groupe_number>/scaleway)"
-        - export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<groupe_number>/scaleway)"
-        - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<groupe_number>/scaleway)"
-        - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<groupe_number>/scaleway)"
+        - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-<GROUP_NUMBER> token_ttl=30 jwt=$CI_JOB_JWT)"
+        - export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<GROUP_NUMBER>/scaleway)"
+        - export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<GROUP_NUMBER>/scaleway)"
+        - export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<GROUP_NUMBER>/scaleway)"
+        - export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<GROUP_NUMBER>/scaleway)"
+        - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<GROUP_NUMBER>/scaleway)"
+        - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<GROUP_NUMBER>/scaleway)"
       script:
         # Install ssh-agent if not already installed
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
@@ -167,12 +167,12 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
       ```
     - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash
-      export SCW_DEFAULT_PROJECT_ID=$(vault read -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_DEFAULT_ORGANIZATION_ID=$(vault read -field=SCW_DEFAULT_ORGANIZATION_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_ACCESS_KEY=$(vault read -field=SCW_ACCESS_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_TOKEN=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
+      export SCW_DEFAULT_PROJECT_ID=$(vault read -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_DEFAULT_ORGANIZATION_ID=$(vault read -field=SCW_DEFAULT_ORGANIZATION_ID secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_ACCESS_KEY=$(vault read -field=SCW_ACCESS_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_TOKEN=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
       ```
     - Puis :
       ```bash
@@ -265,12 +265,12 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
       ```
     - Exportez les les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash
-      export SCW_DEFAULT_PROJECT_ID=$(vault read -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_DEFAULT_ORGANIZATION_ID=$(vault read -field=SCW_DEFAULT_ORGANIZATION_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_ACCESS_KEY=$(vault read -field=SCW_ACCESS_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_TOKEN=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
+      export SCW_DEFAULT_PROJECT_ID=$(vault read -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_DEFAULT_ORGANIZATION_ID=$(vault read -field=SCW_DEFAULT_ORGANIZATION_ID secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_ACCESS_KEY=$(vault read -field=SCW_ACCESS_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_TOKEN=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
       ```
     - Puis :
       ```bash
@@ -304,7 +304,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
 4.  Scaleway assigne un nom DNS à chaque VM créée. Il est formé de cette manière : <uuid de la VM>.pub.instances.scw.cloud (https://www.scaleway.com/en/docs/instance-domain-name-change/). L'inventaire dynamique Ansible récupère l'uuid de la VM et le met à disposition dans une variable de type fact. Pour lister l'intégralité des facts, utilisez la commande suivante depuis code-hitema :
     ```bash
     export VAULT_TOKEN=<Le token précédement récupéré>
-    export SCW_TOKEN=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
+    export SCW_TOKEN=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
     ansible -i scaleway-ansible-inventory.yml -m ansible.builtin.setup production -e ansible_user=root
     ```
     Retrouvez le nom de la variable qui contient l'UUID de votre VM, garder le nom dans un coin, on va s'en servir ci-dessous.
@@ -416,12 +416,12 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
       ```
     - Exportez les variables d'environnement nécessaire à l'exécution d'Ansible :
       ```bash
-      export SCW_DEFAULT_PROJECT_ID=$(vault read -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_DEFAULT_ORGANIZATION_ID=$(vault read -field=SCW_DEFAULT_ORGANIZATION_ID secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_ACCESS_KEY=$(vault read -field=SCW_ACCESS_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUPE_NUMBER}/scaleway)
-      export SCW_TOKEN=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUPE_NUMBER}/scaleway)
+      export SCW_DEFAULT_PROJECT_ID=$(vault read -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_DEFAULT_ORGANIZATION_ID=$(vault read -field=SCW_DEFAULT_ORGANIZATION_ID secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_ACCESS_KEY=$(vault read -field=SCW_ACCESS_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_SECRET_KEY=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_DEFAULT_ZONE=$(vault read -field=SCW_DEFAULT_ZONE secret/groupe-${GROUP_NUMBER}/scaleway)
+      export SCW_TOKEN=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
       export CI_REGISTRY="registry.gitlab.com"
       ```
     - Puis :

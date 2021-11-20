@@ -116,7 +116,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     # Dans votre Terminal code-hitema
     mkdir -p $HOME/code
     cd $HOME/code
-    git config pull.rebase false
+    git config --global pull.rebase false
     git clone git@gitlab.com:h3-hitema-devsecops-2021/groupe_${GROUP_NUMBER}/image.git
 
     cd image
@@ -155,6 +155,12 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
 
     mkdir terraform doc postconf_vm
     touch README.md LICENSE .gitignore .gitlab-ci.yml terraform/main.tf
+
+    cat <<EOF > .gitignore
+    terraform/.terraform
+    terraform/.terraform*
+    terraform/terraform.tfstate*
+    EOF
 
     git add  terraform terraform doc postconf_vm README.md LICENSE .gitignore .gitlab-ci.yml terraform/main.tf
     git commit -a -m ":tada: Initial commit for folder structure"

@@ -50,7 +50,7 @@ Nous voulons aussi pouvoir restorer la BDD. Mais uniquement via un `trigger` Git
     - **SCW_S3_URL** : https://s3.fr-par.scw.cloud
 7.  Créez une passphrase de chriffrement/déchiffrement symétrique pour chiffre le backup depuis votre terminal code-hitema :
     ```bash
-    vault kv put secret/groupe-${GROUPE_NUMBER}/passphrase_s3_backup passphrase=$(pwgen 64 1)
+    vault kv put secret/groupe-${GROUP_NUMBER}/passphrase_s3_backup passphrase=$(pwgen 64 1)
     ```
 
 ### Création du scheduled job dans Gitlab CI
