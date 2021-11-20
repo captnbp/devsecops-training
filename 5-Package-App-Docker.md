@@ -118,7 +118,6 @@ Il va donc falloir tester le build directement dans Gitlab CI.
        Flask-Script==2.0.5
        Flask-SQLAlchemy==2.2
        itsdangerous==0.24
-       Jinja2==2.9.6
        Mako==1.0.6
        MarkupSafe==1.1.1
        packaging==16.8
@@ -137,44 +136,40 @@ Il va donc falloir tester le build directement dans Gitlab CI.
        ```
 3. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
 
-## Scan de l'image Docker à la recherche de packages vulnérables
+## Scan de l'image Docker à la recherche de packages vulnérables
 
 0. Créez une issue `Scan Docker image` dans le dépôt Gitlab `application`, puis une Merge Request
 1. Ajoutez les variables globales suivantes à votre `.gitlab-ci.yml`:
    ```yaml
    variables:
-     ROLLOUT_RESOURCE_TYPE: deployment
-     SECURE_ANALYZERS_PREFIX: "registry.gitlab.com/gitlab-org/security-products/analyzers"
-     CS_MAJOR_VERSION: 2
-     CONTAINER_SCANNING_DISABLED: "False"
+     CS_ANALYZER_IMAGE: registry.gitlab.com/security-products/container-scanning:4
    ```
 2. Créez un stage `security`
 3. Ajoutez le scan d'image image façon Gitlab https://docs.gitlab.com/ee/user/application_security/container_scanning/
    ```yaml
    container_scanning:
-     stage: security
      image: "$CS_ANALYZER_IMAGE"
+     stage: security
      variables:
-       # By default, use the latest clair vulnerabilities database, however, allow it to be overridden here with a specific image
-       # to enable container scanning to run offline, or to provide a consistent list of vulnerabilities for integration testing purposes
-       CLAIR_DB_IMAGE_TAG: "latest"
-       CLAIR_DB_IMAGE: "$SECURE_ANALYZERS_PREFIX/clair-vulnerabilities-db:$CLAIR_DB_IMAGE_TAG"
-       # Override the GIT_STRATEGY variable in your `.gitlab-ci.yml` file and set it to `fetch` if you want to provide a `clair-whitelist.yml`
-       # file. See https://docs.gitlab.com/ee/user/application_security/container_scanning/index.html#overriding-the-container-scanning-template
-       # for details
+       # To provide a `vulnerability-allowlist.yml` file, override the GIT_STRATEGY variable in your
+       # `.gitlab-ci.yml` file and set it to `fetch`.
+       # For details, see the following links:
+       # https://docs.gitlab.com/ee/user/application_security/container_scanning/index.html#overriding-the-container-scanning-template
+       # https://docs.gitlab.com/ee/user/application_security/container_scanning/#vulnerability-allowlisting
        GIT_STRATEGY: none
-       CS_ANALYZER_IMAGE: $SECURE_ANALYZERS_PREFIX/klar:$CS_MAJOR_VERSION
        DOCKER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
      allow_failure: true
-     services:
-       - name: $CLAIR_DB_IMAGE
-         alias: clair-vulnerabilities-db
-     script:
-       - /analyzer run
      artifacts:
        reports:
          container_scanning: gl-container-scanning-report.json
+       paths: [gl-container-scanning-report.json]
      dependencies: []
-
+     script:
+       - gtcs scan
+     rules:
+       - if: $CONTAINER_SCANNING_DISABLED
+         when: never
+       - if: $CI_COMMIT_BRANCH &&
+             $GITLAB_FEATURES =~ /\bcontainer_scanning\b/
    ```
 4. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
