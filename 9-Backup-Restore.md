@@ -14,7 +14,7 @@ N'ayant pas pu faire fonctionner correctement l'orchestrateur Rundeck, nous allo
 
 Gitlab CI permet de scheduller des jobs comme un cron : https://docs.gitlab.com/ee/ci/pipelines/schedules.html
 
-Nous voulons aussi que le backup de la BDD se fasse à chaque déploiement de notre application depuis la branche `master` afin d'avoir un backup frais avant chaque upgrade de l'application. En cas de problème on pourrait revenir en arrière facilement avec peu de perte de données.
+Nous voulons aussi que le backup de la BDD se fasse à chaque déploiement de notre application depuis la branche `main` afin d'avoir un backup frais avant chaque upgrade de l'application. En cas de problème on pourrait revenir en arrière facilement avec peu de perte de données.
 
 Nous voulons aussi pouvoir restorer la BDD. Mais uniquement via un `trigger` Gitlab CI : https://docs.gitlab.com/ee/ci/triggers/
 

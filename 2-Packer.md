@@ -80,7 +80,7 @@
      packer validate packer.json
      packer build packer.json
      ```
-8. Demandez une revue de code à votre professeur, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche master en `1.0.0`
+8. Demandez une revue de code à votre professeur, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche main en `1.0.0`
 
 Tip: 
 ```
@@ -160,4 +160,4 @@ Afin de mieux sécuriser les clés d'API Scaleway, nous allons les stocker dans 
        export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)"
      ```
 6. Aller vérifier que l'image a été créée dans https://console.scaleway.com/instance/images
-7. Demandez une revue de code à votre professeur, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche master en `1.0.1`
+7. Demandez une revue de code à votre professeur, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche main en `1.0.1`

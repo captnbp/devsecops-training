@@ -61,7 +61,7 @@ Nous allons appliquer l'amélioration suivante de sécurité à notre image VM :
    git push
    git push --tags
    ```
-5. Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche master en `1.0.3`
+5. Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche puis taguez la branche main en `1.0.3`
 
 ## Post-configuration de la VM (infrastructure)
 
@@ -270,7 +270,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
          - ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml --syntax-check
          - ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml
        only:
-         - master
+         - main
      ```
      - Changez le tag de l'image dans `before_script` pour avoir `1.0.3` au lieu de `1.0.1`
 10. Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.

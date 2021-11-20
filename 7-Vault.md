@@ -133,7 +133,7 @@ Pour cela nous allons ajouter la règle suivante dans le `scaleway_instance_secu
    git push
    ```
 4. Demandez une revue de code à votre professeur en l'assignant à votre MR dans Gitlab, puis une fois la Merge Request approuvée, mergez la branche et constatez le déploiement de votre playbook.
-5. Pensez à bien déployer la règle firewall ajoutée en lançant le job `deploy_app` dans votre pipeline sur la brache `master`
+5. Pensez à bien déployer la règle firewall ajoutée en lançant le job `deploy_app` dans votre pipeline sur la brache `main`
 6. Assurez-vous que la règle firewall a bien été déployée pour passer à la suite.
 
 ### Configuration de Vault pour manager les utilisateurs de Postgresql

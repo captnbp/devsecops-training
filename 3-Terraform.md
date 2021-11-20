@@ -103,11 +103,12 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 
 ## Intégration à Gitlab CI pour gérer automatiquement l'infrastructure
 
+0. Créez une nouvelle issue nommée `Intégration de Terraform dans Gitlab CI` puis créez sa Merge Request dans le dépôt `infrastructure`. Ensuite clonez le code de votre dépôt `infrastructure`, et changez de branche pour utiliser la nouvelle branche
 0. Créez le fichier `.gitignore` à la racine de votre dépôt `infrastructure`
    ```
    terraform/.terraform
-   terraform/terraform.tfstate
-   terraform/terraform.tfstate.backup
+   terraform/.terraform*
+   terraform/terraform.tfstate*
    ```
 1. Modifiez votre fichier `terraform/main.tf` pour ajouter la ligne `backend "http" {}` :
    ```hcl
@@ -119,7 +120,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      required_providers {
        scaleway = {
          source = "scaleway/scaleway"
-         version = "1.17.0"
+         version = "2.1.0"
        }
      }
    }
@@ -189,7 +190,7 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
        - plan
      when: manual
      only:
-       - master
+       - main
    ```
 3. Commitez et pushez sur votre branche. Allez ensuite dans la merge request Gitlab associée à votre branche et constatez que le pipeline tourne.
 4. Vous devriez également voir un widget dédié à Terraform dans la merge request :
@@ -202,5 +203,5 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
 7. Mergez la branche via la merge request Gitlab et constatez le fonctionnement:
    - Le job `apply` doit se lancer et déployer notre infrastructure de production
    - Connectez-vous en ssh à votre VM pour valider le fonctionnement en suivant la procédure décrite précédement.
-   - Rendez-vous dans l'onglet `Operations -> Environments`, vous 
+   - Rendez-vous dans l'onglet `Operations -> Environments`, constatez que l'environnement `production`est bien présent. 
 7. Faire une démo et revue à votre professeur.
