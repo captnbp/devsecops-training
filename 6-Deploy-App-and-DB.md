@@ -52,13 +52,11 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
     mkdir ansible/roles/postgresql/tasks
     touch ansible/roles/postgresql/tasks/main.yml
     touch ansible/playbook.yml
+    touch ansible/scaleway-ansible-inventory.yml
     ```
 3.  Dans `.gitlab-ci.yml` ajouter un stage `deploy` en dernier.
 4.  Ajoutez les jobs suivants dans `.gitlab-ci.yml` à la fin :
     ```yaml
-    # Remplacez l'image existante avec la 1.6.0
-    image: captnbp/gitlab-ci-image:1.6.0
-    
     # A la fin du fichier
     ansible_lint:
       stage: test
@@ -68,16 +66,17 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
 
     deploy_app:
       stage: deploy
+      image: captnbp/gitlab-ci-image:1.6.0
       environment:
         name: production
       before_script:
-        - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-<GROUP_NUMBER> token_ttl=30 jwt=$CI_JOB_JWT)"
-        - export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<GROUP_NUMBER>/scaleway)"
-        - export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-<GROUP_NUMBER>/scaleway)"
-        - export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-<GROUP_NUMBER>/scaleway)"
-        - export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<GROUP_NUMBER>/scaleway)"
-        - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-<GROUP_NUMBER>/scaleway)"
-        - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-<GROUP_NUMBER>/scaleway)"
+        - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=application-groupe-${GROUP_NUMBER} token_ttl=30 jwt=$CI_JOB_JWT)"
+        - export SCW_DEFAULT_PROJECT_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUP_NUMBER}/scaleway)"
+        - export SCW_DEFAULT_ORGANIZATION_ID="$(vault kv get -field=SCW_DEFAULT_PROJECT_ID secret/groupe-${GROUP_NUMBER}/scaleway)"
+        - export SCW_ACCESS_KEY="$(vault kv get -field=SCW_ACCESS_KEY secret/groupe-${GROUP_NUMBER}/scaleway)"
+        - export SCW_SECRET_KEY="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)"
+        - export SCW_DEFAULT_ZONE="$(vault kv get -field=SCW_DEFAULT_ZONE secret/groupe-${GROUP_NUMBER}/scaleway)"
+        - export SCW_TOKEN="$(vault kv get -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)"
       script:
         # Install ssh-agent if not already installed
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
