@@ -25,10 +25,13 @@ Voici le détail :
 - Créer un groupe de sécurité (attaché à la VM) qui va contenir les règles suivantes :
   - Nom : variable `environnement`
   - Inbound : policy par défaut -> drop
-    - Port TCP 22 (SSH) depuis `0.0.0.0/0`
+    - Port TCP 22 (SSH) depuis `82.64.140.134/32`
     - Port TCP 80 (HTTP) depuis `0.0.0.0/0`
     - Port TCP 443 (HTTPS) depuis `0.0.0.0/0`
   - Outbound : policy par défaut -> accept
+    - Bloquer TCP 25 vers `0.0.0.0/0`
+    - Bloquer TCP 465 vers `0.0.0.0/0`
+    - Bloquer TCP 587 vers `0.0.0.0/0`
 - Un volume de données :
   - Nom : variable `environnement`
   - Taille : 30Go
