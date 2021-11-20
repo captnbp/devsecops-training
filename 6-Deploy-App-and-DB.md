@@ -295,6 +295,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
 1.  Dans Code-Hitema, pullez le code et basculez sur la nouvelle branche.
 2.  Créez la structure de répertoires suivante :
     ```bash
+    cd $HOME/code/application
     mkdir -p ansible/roles/application
     mkdir ansible/roles/application/tasks
     touch ansible/roles/application/tasks/main.yml
@@ -304,6 +305,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
     ```bash
     export VAULT_TOKEN=<Le token précédement récupéré>
     export SCW_TOKEN=$(vault read -field=SCW_SECRET_KEY secret/groupe-${GROUP_NUMBER}/scaleway)
+    cd ansible
     ansible -i scaleway-ansible-inventory.yml -m ansible.builtin.setup production -e ansible_user=root
     ```
     Retrouvez le nom de la variable qui contient l'UUID de votre VM, garder le nom dans un coin, on va s'en servir ci-dessous.

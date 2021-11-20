@@ -128,12 +128,6 @@ Il va donc falloir tester le build directement dans Gitlab CI.
        SQLAlchemy==1.3.20
        Werkzeug==0.15.5
        ```
-     - Ajouter le fichier `run.sh` à la racine du dépôt :
-       ```sh
-       #!/bin/bash
-       /usr/local/bin/flask db upgrade
-       /usr/local/bin/flask run -h 0.0.0.0 -p 5000
-       ```
 3. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
 
 ## Scan de l'image Docker à la recherche de packages vulnérables
