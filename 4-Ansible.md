@@ -341,7 +341,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
        community.general.docker_container:
          name: traefik
          state: started
-         image: traefik:v2.3
+         image: traefik:v2.5
          command:
            - "--providers.docker.endpoint=unix:///var/run/docker.sock"
            - "--providers.docker.exposedbydefault=false"
