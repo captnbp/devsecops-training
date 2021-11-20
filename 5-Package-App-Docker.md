@@ -8,6 +8,8 @@ Nous allons sécuriser, packager, updater l'application démo suivante écrite e
 3. Une fois que c'est fait, copier tout les fichiers du dépôt flask-postgresql-app dans le répertoire de votre dépôt `application`
    ```bash
    cd $HOME/code
+   git clone https://github.com/Azure-Samples/flask-postgresql-app.git
+   git clone git@gitlab.com:h3-hitema-devsecops-2021/groupe_${GROUP_NUMBER}/application.git
    cp -a flask-postgresql-app/* flask-postgresql-app/.gitignore application/
    ```
 
@@ -126,6 +128,12 @@ Il va donc falloir tester le build directement dans Gitlab CI.
        six==1.10.0
        SQLAlchemy==1.3.20
        Werkzeug==0.15.5
+       ```
+     - Ajouter le fichier `run.sh` à la racine du dépôt :
+       ```sh
+       #!/bin/bash
+       /usr/local/bin/flask db upgrade
+       /usr/local/bin/flask run -h 0.0.0.0 -p 5000
        ```
 3. Dès que votre pipeline est fonctionnel et que les tests sont OK, commitez dans votre branche, puis soumettez la Merge Request à votre professeur pour review et approbation.
 
