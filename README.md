@@ -13,6 +13,10 @@ CD/CD by Gitlab : https://docs.gitlab.com/ee/ci/introduction/
 - Laptop Windows 10 / MacOS / Linux
 - Chrome ou Edge Chromium
 
+## Architecture
+
+![Group](images/full.png)
+
 ## Week 1
 
 1.  [Setup](1-Setup.md)

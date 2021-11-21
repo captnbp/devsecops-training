@@ -6,6 +6,8 @@ Afin de faciliter la configuration de l'image de la VM, nous allons utiliser Ans
 
 Ensuite, nous utiliserons une nouvelle fois pour faire de la post-configuration de notre VM déployée.
 
+![Group](images/tp4.png)
+
 ## Sécurisation de base de notre image VM (image)
 
 Nous allons appliquer l'amélioration suivante de sécurité à notre image VM :

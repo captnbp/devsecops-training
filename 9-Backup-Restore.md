@@ -18,6 +18,8 @@ Nous voulons aussi que le backup de la BDD se fasse à chaque déploiement de no
 
 Nous voulons aussi pouvoir restorer la BDD. Mais uniquement via un `trigger` Gitlab CI : https://docs.gitlab.com/ee/ci/triggers/
 
+![Group](images/tp9.png)
+
 ## Implémentation
 
 ### Création du bucket S3 Scaleway via Terraform

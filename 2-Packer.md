@@ -1,5 +1,7 @@
 # Build d'une image VM automatiquement via Packer et Gitlab CI
 
+![Group](images/tp2.png)
+
 ## Documentation
 
 *  Gitlab: https://docs.gitlab.com/ee/ci/introduction/

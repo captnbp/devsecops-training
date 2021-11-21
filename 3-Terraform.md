@@ -39,6 +39,8 @@ Voici le détail :
 
 Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimée d'un simple click dans la liste des environnements Gitlab pour ne pas consommer en dehors des heures de la journée de TP.
 
+![Group](images/tp3.png)
+
 ## Documentation
 
 - Gitlab: https://docs.gitlab.com/ee/ci/introduction/

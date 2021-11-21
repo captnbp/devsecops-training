@@ -1,5 +1,7 @@
 # Setup de votre environnement
 
+![Group](images/tp1.png)
+
 ## Création des groupes et ajouts dans Gitlab/Scaleway
 
 0. Création des groupes (max 2 étudiants) de travail (1 système/réseau + 1 dev)

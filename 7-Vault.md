@@ -10,6 +10,8 @@ Nous souhaitons faire gérer les comptes de base de données par Vault directeme
 Cela veut dire que l'application ou sa mécanique de déploiement vont venir demander un compte temporaire à Vault.
 Par défaut, nous allons créer un compte valide 30 jours.
 
+![Group](images/tp7.png)
+
 ## Architecture
 
 ![image](images/Vault-Integrated-RA-3_AZ.png)

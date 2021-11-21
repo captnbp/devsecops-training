@@ -90,6 +90,8 @@ Cela nous permettra de couvrir les domaines suivants du monitoring :
 
 Ensuite nous déploierons les agents [Elastic Beats](https://www.elastic.co/fr/beats/) sur notre VM afin de collecter tout ça.
 
+![Group](images/tp8.png)
+
 ## Création de votre cluster Elastic stack
 
 1.  Créer le compte Elastic Cloud https://www.elastic.co/fr/cloud/

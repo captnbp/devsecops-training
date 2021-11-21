@@ -40,6 +40,8 @@ Ils seront stockés dans Vault afin de ne pas les laisser traîner n'importe-où
 
 Nous améliorerons la gestion des credentials BDD dans le prochain TP.
 
+![Group](images/tp6.png)
+
 ## Création de 2 credentials BDD dans Ansible avec stockage dans Vault
 
 Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ansible dans le répertoire `ansible/roles` de notre dépôt `application` :
