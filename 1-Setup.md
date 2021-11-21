@@ -67,6 +67,7 @@ Fermer et ré ouvrir le navigateur https://code-hitema.doca.cloud pour avoir les
     ```sh
     export GROUP_NUMBER=<group_number>
     echo "export GROUP_NUMBER=${GROUP_NUMBER}" > ${HOME}/.zshrc
+    echo "chmod 0600 ${HOME}/.ssh/id_ed25519" >> ${HOME}/.zshrc
     ```
 
 ### Création des clés SSH

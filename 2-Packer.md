@@ -14,7 +14,6 @@
 
 ## Packer
 
-0. Cours sur Packer : https://docs.google.com/presentation/d/1lZ-t84Wtr2YD3iqBRkflcQ2KU3TrsHnMkEqSb8xiE2E/edit?usp=sharing
 1. Créez une nouvelle issue nommée `Création d'une image VM Scaleway avec Packer` puis créez sa Merge Request. Ensuite pullez le code, et changez de branche pour utiliser la nouvelle branche
 2. Nous allons utiliser l'image `606e0cef-acc9-474b-92d4-70a2bba98b5d` (Ubuntu 20.04), le commercial_type `DEV1-S`, le ssh_username `root`
 3. Template pour le fichier `packer/packer.json`:
