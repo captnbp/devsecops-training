@@ -146,7 +146,7 @@ Nous allons aussi reconfigurer Traefik pour qu'il mette à disposition ses logs 
       community.general.docker_container:
         name: traefik
         state: started
-        image: traefik:v2.3
+        image: traefik:v2.5
         command:
           - "--providers.docker.endpoint=unix:///var/run/docker.sock"
           - "--providers.docker.exposedbydefault=false"
@@ -359,7 +359,7 @@ Doc : https://doc.traefik.io/traefik/observability/tracing/elastic/
       community.general.docker_container:
         name: traefik
         state: started
-        image: traefik:v2.3
+        image: traefik:v2.5
         command:
           - "--providers.docker.endpoint=unix:///var/run/docker.sock"
           - "--providers.docker.exposedbydefault=false"
@@ -379,7 +379,7 @@ Doc : https://doc.traefik.io/traefik/observability/tracing/elastic/
           - "--tracing.elastic=true"
           - "--tracing.elastic.serverurl=\"{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/elasticsearch:apm_url auth_method=token') }}\""
           - "--tracing.elastic.secrettoken=\"{{ lookup('community.general.hashi_vault', 'secret/groupe-<group_number>/elasticsearch:apm_token auth_method=token') }}\""
-          - "--tracing.elastic.serviceenvironment=\"production\""
+          - "--tracing.elastic.serviceenvironment=\"traefik\""
         restart_policy: always
         published_ports:
           - "80:80"
@@ -442,17 +442,18 @@ Implémentation :
 3.  Ajoutez dans la task `Deploy application` de `ansible/roles/application/tasks/main.yml` en pensant à bien remplacer `<group_number>` par votre numéro de groupe les variables d'environnement suivantes :
     ```yaml
     APM_SECRET_PATH: "groupe-<group_number>/elasticsearch"
-    APM_SERVICE_NAME: production
+    APM_SERVICE_NAME: guestbook
     ```
 
 4.  Dans `app/app.py`, remplacez :
     ```python
-    import os, hvac, pprint
+    import os, hvac, pprint, logging
 
     from flask import Flask, render_template, request
     from flask_migrate import Migrate
     from flask_sqlalchemy import SQLAlchemy
     from elasticapm.contrib.flask import ElasticAPM
+    #from elasticapm.handlers.logging import LoggingHandler
 
     client = hvac.Client()
     client.auth.approle.login(os.environ['VAULT_ROLE_ID'], secret_id=os.environ['VAULT_SECRET_ID'])
@@ -467,7 +468,7 @@ Implémentation :
     )
 
     app = Flask(__name__)
-    apm = ElasticAPM(app)
+    apm = ElasticAPM(app, logging=True)
     app.config.update(
         SQLALCHEMY_DATABASE_URI=database_uri,
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
@@ -501,11 +502,13 @@ Implémentation :
         from models import Guest
         guests = Guest.query.all()
         return render_template('guest_list.html', guests=guests)
+        apm.capture_message('List registered guests')
 
 
     @app.route('/register', methods=['GET'])
     def view_registration_form():
         return render_template('guest_registration.html')
+        apm.capture_message('Print registration form')
 
 
     @app.route('/register', methods=['POST'])
@@ -517,6 +520,7 @@ Implémentation :
         guest = Guest(name, email)
         db.session.add(guest)
         db.session.commit()
+        apm.capture_message('Guest registered')
 
         return render_template(
             'guest_confirmation.html', name=name, email=email)
@@ -542,7 +546,7 @@ Implémentation :
     - Puis :
       ```bash
       ansible-galaxy install 'git+https://gitlab.com/captnbp/ansible-beats-role.git'
-      cd ansible/
+      cd $HOME/code/application/ansible
       vault write -field=signed_key ssh/sign/students public_key=@$HOME/.ssh/id_ed25519.pub > $HOME/.ssh/id_ed25519-cert.pub
       /home/coder/.local/bin/ansible-lint .
       ansible-inventory --list -i scaleway-ansible-inventory.yml
@@ -551,6 +555,7 @@ Implémentation :
       ```
 7.  Si le test manuel est passé, commitez votre code sur la branche et pushez
     ```bash
+    cd $HOME/code/application/
     git commit app/app.py requirements.txt ansible/roles/application/tasks/main.yml -m "Add APM to application"
     git push
     ```
@@ -692,7 +697,7 @@ Nous allons donc ajouter les labels manquants à notre application :
     - Puis :
       ```bash
       ansible-galaxy install 'git+https://gitlab.com/captnbp/ansible-beats-role.git'
-      cd ansible/
+      cd $HOME/code/application/ansible
       vault write -field=signed_key ssh/sign/students public_key=@$HOME/.ssh/id_ed25519.pub > $HOME/.ssh/id_ed25519-cert.pub
       /home/coder/.local/bin/ansible-lint .
       ansible-inventory --list -i scaleway-ansible-inventory.yml
@@ -704,6 +709,7 @@ Nous allons donc ajouter les labels manquants à notre application :
     ![Certificate](images/elastic-6.png)
 7.  Si le test manuel est passé, commitez votre code sur la branche et pushez
     ```bash
+    cd $HOME/code/application/
     git add ansible/roles/application/templates/heartbeat.yml.j2
     git commit ansible/roles/application/templates/heartbeat.yml.j2 ansible/roles/application/tasks/main.yml -m "Monitore our application URL"
     git push

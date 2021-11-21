@@ -175,7 +175,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
       ```
     - Puis :
       ```bash
-      cd ansible/
+      cd $HOME/code/application/ansible/
       vault write -field=signed_key ssh/sign/students public_key=@$HOME/.ssh/id_ed25519.pub > $HOME/.ssh/id_ed25519-cert.pub
       /home/coder/.local/bin/ansible-lint .
       ansible-inventory --list -i scaleway-ansible-inventory.yml
@@ -186,6 +186,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
     - Enfin, vérifiez que les 2 comptes Postgresql sont bien présents dans Vault
 10. Si le test manuel est passé, commitez votre code sur la branche et pushez
     ```bash
+    cd $HOME/code/application/
     git commit .gitlab-ci.yml ansible/playbook.yml ansible/scaleway-ansible-inventory.yml ansible/roles/postgresql/tasks/main.yml -m "Create Postgresql DB credentials in Vault"
     git push
     ```
@@ -273,7 +274,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
       ```
     - Puis :
       ```bash
-      cd ansible/
+      cd $HOME/code/application/ansible/
       vault write -field=signed_key ssh/sign/students public_key=@$HOME/.ssh/id_ed25519.pub > $HOME/.ssh/id_ed25519-cert.pub
       /home/coder/.local/bin/ansible-lint .
       ansible-inventory --list -i scaleway-ansible-inventory.yml
@@ -284,6 +285,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
     - Enfin, vérifiez que le compte Postgresql fonctionne bien depuis la VM avec la commande `psql -U application -h 127.0.0.1 -W postgres`
 6.  Si le test manuel est passé, commitez votre code sur la branche et pushez
     ```bash
+    cd $HOME/code/application/
     git commit ansible/roles/postgresql/tasks/main.yml -m "Create Postgresql DB and User from Vault"
     git push
     ```
@@ -427,7 +429,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
       ```
     - Puis :
       ```bash
-      cd ansible/
+      cd $HOME/code/application/ansible/
       vault write -field=signed_key ssh/sign/students public_key=@$HOME/.ssh/id_ed25519.pub > $HOME/.ssh/id_ed25519-cert.pub
       /home/coder/.local/bin/ansible-lint .
       ansible-inventory --list -i scaleway-ansible-inventory.yml
@@ -437,6 +439,7 @@ Afin d'implementer les spécifications ci-dessus, nous allons créer un role Ans
     - Enfin, vérifiez que l'application est bien accessible à l'adresse `https://<uuid de la VM>.pub.instances.scw.cloud`
 7.  Si le test manuel est passé, commitez votre code sur la branche et pushez
     ```bash
+    cd $HOME/code/application/
     git commit ansible/playbook.yml Dockerfile ansible/roles/postgresql/tasks/main.yml -m "Deploy application"
     git push
     ```

@@ -110,7 +110,7 @@ Par défaut, nous allons créer un compte valide 30 jours.
 
 ### Ouverture du Firewall pour Vault -> Postgresql
 
-Hashicorp Vault est installé sur le même serveur que Mattermost `90.127.9.6`. Il faut lui donner accès à l'instance Postgresql que nous avons déployé sans donner accès à tout Internet afin d'éviter le vol direct de données.
+Hashicorp Vault est installé sur le serveur ayant l'adresse IP suivante `82.64.140.134`. Il faut lui donner accès à l'instance Postgresql que nous avons déployé sans donner accès à tout Internet afin d'éviter le vol direct de données.
 
 > Dans la vraie vie, on ne fait jamais une ouverture entrante Internet vers une base de données. Vault serait installé dans notre réseau local afin d'éviter ce genre d'ouverture sauvage.
 
@@ -122,13 +122,14 @@ Pour cela nous allons ajouter la règle suivante dans le `scaleway_instance_secu
     ```hcl
     inbound_rule {
       action    = "accept"
-      ip_range  = "90.127.9.6/32"
+      ip_range  = "82.64.140.134/32"
       protocol  = "TCP"
       port      = 5432
     }
     ```
 3. Commitez votre code sur la branche et pushez
    ```bash
+   cd $HOME/code/infrastructure
    git commit terraform/main.tf -m "Allow Vault to access Postgresql"
    git push
    ```
@@ -141,7 +142,7 @@ Pour cela nous allons ajouter la règle suivante dans le `scaleway_instance_secu
 Le but ici est de mettre en place la rotation automatique de credentials pour notre application.
 
 Nous voulons que le compte BDD de l'application expire au bout d'1h et soit recréé automatiquement avec un nouveau mot de passe.
-L'intéret est que si unattaquant arrive à récupérer le compte de BDD, il ne pourra l'exploiter que max 1h. Cela limite l'impact de l'attaque.
+L'intéret est que si un attaquant arrive à récupérer le compte de BDD, il ne pourra l'exploiter que max 1h. Cela limite l'impact de l'attaque.
 
 Passons à l'implémentation :
 
@@ -270,7 +271,7 @@ Passons à l'implémentation :
       ```
     - Puis :
       ```bash
-      cd ansible/
+      cd $HOME/code/application/ansible/
       vault write -field=signed_key ssh/sign/students public_key=@$HOME/.ssh/id_ed25519.pub > $HOME/.ssh/id_ed25519-cert.pub
       /home/coder/.local/bin/ansible-lint .
       ansible-inventory --list -i scaleway-ansible-inventory.yml
@@ -279,6 +280,7 @@ Passons à l'implémentation :
       ```
 4. Commitez votre code sur la branche et pushez
    ```bash
+   cd $HOME/code/application
    git commit ansible/roles/postgresql/tasks/main.yml -m "Configure Vault to manage Postgresql credentials"
    git push
    ```
@@ -331,7 +333,7 @@ Passons à l'implémentation :
       ```
     - Puis :
       ```bash
-      cd ansible/
+      cd $HOME/code/application/ansible/
       vault write -field=signed_key ssh/sign/students public_key=@$HOME/.ssh/id_ed25519.pub > $HOME/.ssh/id_ed25519-cert.pub
       /home/coder/.local/bin/ansible-lint .
       ansible-inventory --list -i scaleway-ansible-inventory.yml
@@ -341,6 +343,7 @@ Passons à l'implémentation :
     - Utilisez votre navigateur pour tester si l'application marche bien
 5. Si le test est OK, commitez votre code sur la branche et pushez
    ```bash
+   cd $HOME/code/application
    git commit ansible/roles/application/tasks/main.yml -m "Configure application to get Postgresql credentials via Vaul dynamic secrets"
    git push
    ```
@@ -450,6 +453,7 @@ Passons à l'implémentation :
 6.  Ajoutez le package Python `hvac` dans le fichier `requirements.txt`
 7.  Commitez votre code sur la branche et pushez
    ```bash
+   cd $HOME/code/application
    git commit Dockerfile requirements.txt app/app.py ansible/roles/postgresql/tasks/main.yml ansible/roles/application/tasks/main.yml -m "Integrate Vault into the Python application"
    git push
    ```
