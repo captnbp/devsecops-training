@@ -42,7 +42,7 @@
    }
    ```
 
-4. Packer doit récupérer une variable d'environnement nommée `IMAGE_TAG` afin de rendre unique le nome de l'image. Nous utiliserons plus tard le numéro de commit ou le tag git. Se référer à la doc : https://www.packer.io/docs/templates/user-variables.html#environment-variables
+4. Packer doit récupérer une variable d'environnement nommée `IMAGE_TAG` afin de rendre unique le nome de l'image. Nous utiliserons plus tard le numéro de commit ou le tag git. Se référer à la doc : https://www.packer.io/docs/templates/legacy_json_templates/user-variables#environment-variables
 5. Nommer l'image comme ceci: `` "image_name": "ubuntu-hitema-{{user `image_tag`}}" ``
 6. Via le `provisioners` de type `shell`
    - Mettre à jour les packages de l'OS
