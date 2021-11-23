@@ -188,7 +188,7 @@ Nous allons aussi reconfigurer Traefik pour qu'il mette à disposition ses logs 
         - { role: ansible-beats-role, tags: ['beats'] }
       vars:
         # Vault secret storage
-        vault_monitoring_account_path: "groupe-<number>/elasticsearch"
+        vault_monitoring_account_path: "groupe-<group_number>/elasticsearch"
         # If using Elastic Cloud
         elk_auth_type_cloud_id: True
     ...
@@ -319,7 +319,7 @@ Passons à l'implémentation dans Metricbeat :
       ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml --syntax-check
       ansible-playbook -i scaleway-ansible-inventory.yml -l production playbook.yml -e image=<nom complet de votre image>
       ```
-6.  Connectez vous sur votre VM, et lancer les quatre commandes suivantes :
+6.  Connectez vous sur votre VM en SSH, et lancer les quatre commandes suivantes :
     ```bash
     metricbeat setup
     filebeat setup
@@ -373,6 +373,8 @@ Doc : https://doc.traefik.io/traefik/observability/tracing/elastic/
           - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
           - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
           - "--entrypoints.websecure.address=:443"
+          - "--experimental.http3=true"
+          - "--entrypoints.websecure.enablehttp3=true"
           - "--certificatesresolvers.letsencryptresolver.acme.httpchallenge=true"
           - "--certificatesresolvers.letsencryptresolver.acme.httpchallenge.entrypoint=web"
           - "--certificatesresolvers.letsencryptresolver.acme.email={{ lookup('env','GITLAB_USER_EMAIL') }}"
