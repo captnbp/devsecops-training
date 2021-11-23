@@ -86,7 +86,7 @@ Tip:
 ```
 git checkout main
 git pull
-git tag -a v1.0.0 -m 1.0.0
+git tag -a 1.0.0 -m 1.0.0
 git push --tags
 ```
 
