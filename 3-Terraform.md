@@ -193,7 +193,6 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
      dependencies:
        - plan
      when: manual
-     auto_stop_in: 2 day
      only:
        - main
    ```
