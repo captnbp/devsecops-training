@@ -15,7 +15,7 @@ Nous allons appliquer l'amélioration suivante de sécurité à notre image VM :
 
 0. Dans le dépôt `image`, créez une issue `Installation de Fail2ban pour protéger SSH des attaques par brut-force`, puis créez la Merge Request et sa branche associée.
 1. Dans Code-Hitema, pullez le code et basculez sur la nouvelle branche.
-2. En vous référant à https://www.packer.io/docs/provisioners/ansible, ajouter un 2e provisioner à votre fichier `packer/packer.json à la suite du provisionner de type shell.
+2. En vous référant à https://www.packer.io/docs/provisioners/ansible/ansible, ajouter un 2e provisioner à votre fichier `packer/packer.json à la suite du provisionner de type shell.
 3. Créer un fichier `packer/playbook.yml` et :
    - Créez le playbook qui va installer le package `fail2ban` sur l'image.
    - Ajoutez une task pour updater la liste de packages (`update_cache`) tout en installant le package `fail2ban` : https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html
