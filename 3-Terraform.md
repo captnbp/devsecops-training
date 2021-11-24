@@ -209,4 +209,4 @@ Nous voulons aussi pouvoir supprimer notre infrastructure puisse être supprimé
    - Connectez-vous en ssh à votre VM pour valider le fonctionnement en suivant la procédure décrite précédement.
    - Rendez-vous dans l'onglet `Operations -> Environments`, constatez que l'environnement `production`est bien présent. 
 8. Faire une démo et revue à votre professeur.
-9. Lancer la destruction de notre infrastructure en cliquant sur `Destroy` dans `Operations -> Environments`
+9. Lancer la destruction de notre infrastructure en cliquant sur `Destroy` dans `Deployments -> Environments`
